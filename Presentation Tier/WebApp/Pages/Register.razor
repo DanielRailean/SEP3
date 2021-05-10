@@ -1,0 +1,67 @@
+﻿@page "/Register"
+@using WebApp.Data
+@using WebApp.Models
+@using Microsoft.AspNetCore.Components
+
+@inject NavigationManager NavigationManager
+@inject IUserService UserService
+
+<h3>Registration</h3>
+<EditForm Model="@newUserItem" OnValidSubmit="@AddNewUser">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="form-group"> Email:<br/>
+        <InputText @bind-Value="newUserItem.Email"/>
+    </div>
+    <div class="form-group"> Password:<br/>
+        <InputText type="password" rows="4" @bind-Value="newUserItem.Password"/>
+    </div>
+    <div class="form-group"> First Name:<br/>
+        <InputText @bind-Value="newUserItem.FirstName"/>
+    </div>
+    <div class="form-group"> Last Name:<br/>
+        <InputText @bind-Value="newUserItem.LastName"/>
+    </div>
+    <div class="form-group"> Phone Number:<br/>
+        <InputText @bind-Value="newUserItem.PhoneNumber"/>
+    </div>
+    <div class="form-group"> Address:<br/>
+        <InputText @bind-Value="newUserItem.Address"/>
+    </div>
+    <div class="form-group"> PostalCode:<br/>
+        <InputNumber @bind-Value="newUserItem.PostalCode"/>
+    </div>
+    <p class="actions">
+        <button class="btn btn-outline-dark"type="submit">Register</button>
+    </p>
+</EditForm>
+
+@code {
+    private User newUserItem;
+
+    protected override Task OnInitializedAsync()
+    {
+        SetupNewUser();
+        return base.OnInitializedAsync();
+    }
+    
+    private async Task SetupNewUser()
+    {
+        newUserItem = new User
+        {
+            Email = "",
+            Password = "",
+            FirstName = "",
+            LastName = "",
+            PhoneNumber = "",
+            Address = "",
+            PostalCode = 0
+        };
+    }
+
+    private void AddNewUser()
+    {
+        UserService.AddUser(newUserItem);
+        NavigationManager.NavigateTo("/");
+    }
+}

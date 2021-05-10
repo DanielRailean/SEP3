@@ -1,0 +1,164 @@
+﻿@page "/myorders/{user}"
+@using WebApp.Models
+@using WebApp.Data
+
+@inject NavigationManager NavigationManager
+@inject IOrderService OrderService
+
+<h3>My Orders</h3>
+<p> 
+    Filter by Date: <input type="number" @oninput="@(arg => FilterByDate(arg))" style="width: 50px"/>
+</p>
+<p> 
+    Filter by Cost: <input type="text" @oninput="@(arg => FilterByCost(arg))" style="width: 150px"/>
+</p>
+<p> 
+    Filter by Delivered: <input type="text" @oninput="@(arg => FilterByDelivered(arg))" style="width: 150px"/>
+</p>
+
+@if (ordersToShow == null)
+    {
+    <p>
+        <em>Loading...</em>
+    </p>
+    } 
+    else if (!ordersToShow.Any())
+    {
+        <p>
+            <em>No orders.</em>
+        </p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Cost</th>
+                <th>Delivered</th>
+                <th>Payed</th>
+                <th>Amount of recipes</th>
+                <th>Remove</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in ordersToShow)
+            {
+                <tr>
+                    <td>@item.order_date</td>
+                    <td>@item.DeliveryPrice</td>
+                    <td>@item.</td>
+                    <td>@item.</td>
+                    <td>@item.Recipes.Count</td>
+                    <td>@item.</td>
+                    <td>
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <button @onclick="@(() => RemoveOrder(item.order_id))" disabled>
+                                    <i class="oi oi-trash" style="color: red"/>
+                                </button>
+                            </NotAuthorized>
+                            <Authorized>
+                                <button @onclick="@(() => RemoveOrder(item.order_id))">
+                                    <i class="oi oi-trash" style="color: red"/>
+                                </button>
+                            </Authorized>
+                        </AuthorizeView>
+                    </td>
+                    <td>
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <button @onclick="@(() => Edit(item.order_id))" disabled>
+                                    <i class="oi oi-pencil" style="color: #1b6ec2"/>
+                                </button>
+                            </NotAuthorized>
+                            <Authorized>
+                                <button @onclick="@(() => Edit(item.order_id))">
+                                    <i class="oi oi-pencil" style="color: #1b6ec2"/>
+                                </button>
+                            </Authorized>
+                        </AuthorizeView>
+                    </td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+@code {
+    private IList<Order> allOrders;
+    private IList<Order> ordersToShow;
+
+    private DateTime? filterByDate;
+    private double? filterByCost;
+    private bool? filterByDelivered;
+
+    protected override async Task OnInitializedAsync()
+    {
+        allOrders = await OrderService.GetAllOrders();
+        ordersToShow = allOrders;
+    }
+    
+    private void FilterByDate(ChangeEventArgs changeEventArgs)
+    {
+        filterByDate = null;
+        try
+        {
+            filterByDate = DateTime.Parse(changeEventArgs.Value.ToString());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        ExecuteFilter();
+    }
+    
+    private void FilterByCost(ChangeEventArgs changeEventArgs)
+    {
+        filterByCost = null;
+        try
+        {
+            filterByCost = double.Parse(changeEventArgs.Value.ToString());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        ExecuteFilter();
+    }
+    
+    private void FilterByDelivered(ChangeEventArgs changeEventArgs)
+    {
+        filterByDelivered = null;
+        try
+        {
+            filterByDelivered = Boolean.Parse(changeEventArgs.Value.ToString());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        ExecuteFilter();
+    }
+
+    private void ExecuteFilter()
+    {
+        ordersToShow = allOrders.Where(t => 
+            (filterByDate != null && t.order_date == filterByDate || filterByDate == null) &&
+            (filterByCost != null && t.TotalPrice == filterByCost || filterByCost == null) && 
+            (filterByDelivered != null && t.IsDelivered == filterByDelivered || filterByDelivered == null)
+            ).ToList();
+    }
+
+    private void Edit(int id)
+    {
+        NavigationManager.NavigateTo($"EditOrder/{id}");
+    }
+
+    private void RemoveOrder(int itemOrderId)
+    {
+        throw new NotImplementedException();
+    }
+
+}
