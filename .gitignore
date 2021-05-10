@@ -1,0 +1,19 @@
+.idea
+
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/.idea.Business logic tier.iml
+/contentModel.xml
+/projectSettingsUpdater.xml
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+/Business logic tier/API/bin/
+/Business logic tier/API/obj/
+Business logic tier/API/obj/Debug/net5.0/API.csprojAssemblyReference.cache
+Business logic tier/API/obj/Debug/net5.0/API.csprojAssemblyReference.cache
