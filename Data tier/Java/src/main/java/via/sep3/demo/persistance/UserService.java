@@ -18,14 +18,20 @@ public class UserService extends Connection implements IUserService{
     }
 
     @Override
-    public void AddUser(User user) {
+    public User RegisterUser(User user) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(
-                            "insert into Users(Email, Password) values(?,?)", Statement.RETURN_GENERATED_KEYS);
+                            "insert into Users(,UserIdEmail, Password,FirstName,LastName,Phone,Address,PostalCode) values(?,?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1,user.getUserId());
             preparedStatement.setString(1,user.getEmail());
             preparedStatement.setString(2,user.getPassword());
+            preparedStatement.setString(2,user.getFirstName());
+            preparedStatement.setString(2,user.getLastName());
+            preparedStatement.setInt(2,user.getPhone());
+            preparedStatement.setString(2,user.getAddress());
+            preparedStatement.setInt(2,user.getPostalCode());
 
             preparedStatement.executeUpdate();
 
@@ -34,23 +40,31 @@ public class UserService extends Connection implements IUserService{
         {
             throwables.printStackTrace();
         }
-
+        return user;
     }
 
     @Override
-    public User getUser(String Email) {
+    public User ValidateUser(String Email,String Password) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("select * from Users where Email = ?");
+                    connection.prepareStatement("select * from Users where FirstName= ?");
             preparedStatement.setString(1, Email);
+            preparedStatement.setString(1, Password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()){
+                int UserId = resultSet.getInt("UserId");
                 String email = resultSet.getString("Email");
-                String Password=resultSet.getString("Password");
-                User user=new User(email,Password);
+                String password=resultSet.getString("Password");
+                String FirstName=resultSet.getString("FirstName");
+                String LastName=resultSet.getString("SecondName");
+                int Phone=resultSet.getInt("Phone");
+                String Address=resultSet.getString("Address");
+                int PostalCode=resultSet.getInt("PostalCode");
+
+                User user=new User(UserId,email,password,FirstName,LastName,Phone,Address,PostalCode);
                 return user;
             }
 
@@ -64,22 +78,23 @@ public class UserService extends Connection implements IUserService{
 
 
     @Override
-    public void DeleteUser(String Email) {
+    public User RemoveUser(User user) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("delete from Users where Email = ?");
-            preparedStatement.setString(1,Email);
+            preparedStatement.setString(1,user.getEmail());
             preparedStatement.executeUpdate();
         }
         catch (SQLException e)
         {
             e.printStackTrace();
         }
+        return user;
     }
 
     @Override
-    public void UpdateUser(User user) {
+    public User UpdateUser(User user,String Password) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
@@ -95,5 +110,6 @@ public class UserService extends Connection implements IUserService{
         {
             throwables.printStackTrace();
         }
+        return user;
     }
 }

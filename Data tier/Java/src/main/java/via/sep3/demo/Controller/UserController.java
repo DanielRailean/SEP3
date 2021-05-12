@@ -10,23 +10,24 @@ public class UserController {
     @Autowired
     private IUserService UserSerivce;
 
-    @PostMapping("/AddUser")
-    public void AddUser(@RequestBody User user){
-        UserSerivce.AddUser(user);
+    @PostMapping("/RegisterUser")
+    public User RegisterUser(@RequestBody User user){
+       return UserSerivce.RegisterUser(user);
     }
 
-    @GetMapping("/GetUser")
-    public User getUser(@RequestParam String Email) {
-       return UserSerivce.getUser(Email);
+    @GetMapping("/ValidateUser")
+    public User ValidateUser(@RequestParam String Email,String Password) {
+       return UserSerivce.ValidateUser(Email,Password);
 
     }
-    @DeleteMapping("/DeleteUser")
-    public void deleteUser(@RequestHeader String Email){
-        UserSerivce.DeleteUser(Email);
+    @DeleteMapping("/RemoveUser")
+    public User RemoverUser(@RequestBody User user){
+       return UserSerivce.RemoveUser(user);
     }
 
     @PutMapping("/UpdateUser")
-    public void UpdateUser(@RequestBody User user){
-        UserSerivce.UpdateUser(user);
+    public User UpdateUser(@RequestBody User user,String Password){
+
+        return UserSerivce.UpdateUser(user,Password);
     }
 }

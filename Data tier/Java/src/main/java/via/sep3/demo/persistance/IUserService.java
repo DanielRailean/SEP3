@@ -5,8 +5,8 @@ import via.sep3.demo.Model.User;
 
 
 public interface IUserService {
-    void AddUser(User user);
-    User getUser(String Email);
-    void DeleteUser(String Email);
-    void UpdateUser(User user);
+    User RegisterUser(User user);
+    User ValidateUser(String Email,String Password);
+    User RemoveUser(User user);
+    User UpdateUser(User user,String Password);
 }
