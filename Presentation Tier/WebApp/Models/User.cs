@@ -4,7 +4,7 @@ namespace WebApp.Models
 {
     public class User
     {
-        public int user_id { get; set; }
+        public int UserId { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -15,8 +15,7 @@ namespace WebApp.Models
         [Required]
         public string LastName { get; set; }
         [Required]
-        [Phone]
-        public string PhoneNumber { get; set; }
+        public int Phone { get; set; }
         [Required]
         public string Address { get; set; }
         [Required]
