@@ -28,14 +28,17 @@ namespace API.Data
 
         private void Seed()
         {
+            Ingredient[] ingredients = {new Ingredient() {Calories = 200, Name = "Rice"}};
             Recipe[] recipes =
             {
                 new Recipe()
                 {
                     Id = 1,
                     Calories = 350,
-                    Name = "Risotto"
-                    
+                    Name = "Risotto",
+                    Price = 199.9,
+                    Ingredient = ingredients.ToList(),
+                    NutritionType = "Vegan"
                 }
             };
             allRecipes = recipes.ToList();

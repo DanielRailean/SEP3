@@ -1,36 +1,31 @@
 package via.sep3.demo.persistance;
 
 import org.springframework.stereotype.Service;
+import via.sep3.demo.Model.Administrator;
 import via.sep3.demo.Model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
-public class UserService extends Connection implements IUserService{
+public class AdministratorService extends Connection implements IAdministratorService{
+
     public java.sql.Connection getConnection() throws SQLException
     {
         return super.getConnection();
     }
 
     @Override
-    public User RegisterUser(User user) {
+    public Administrator AddAdministrator(Administrator administrator) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(
-                            "insert into Users(Email, Password,FirstName,LastName,Phone,Address,PostalCode) values(?,?)", Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1,user.getEmail());
-            preparedStatement.setString(2,user.getPassword());
-            preparedStatement.setString(2,user.getFirstName());
-            preparedStatement.setString(2,user.getLastName());
-            preparedStatement.setInt(2,user.getPhone());
-            preparedStatement.setString(2,user.getAddress());
-            preparedStatement.setInt(2,user.getPostalCode());
+                            "insert into Adminsitrators(Email, Password) values(?,?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1,administrator.getEmail());
+            preparedStatement.setString(1,administrator.getPassword());
 
             preparedStatement.executeUpdate();
 
@@ -39,32 +34,29 @@ public class UserService extends Connection implements IUserService{
         {
             throwables.printStackTrace();
         }
-        return user;
+        return administrator;
     }
 
+
     @Override
-    public User ValidateUser(String Email,String Password) {
+    public Administrator ValidateAdministrator(String Email, String Password) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("select * from Users where Email= ? & Password=?");
+                    connection.prepareStatement("select * from Administrators where Email= ? & Password=?");
             preparedStatement.setString(1, Email);
             preparedStatement.setString(1, Password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()){
-                int UserId = resultSet.getInt("UserId");
+                int id=resultSet.getInt("Id");
                 String email = resultSet.getString("Email");
                 String password=resultSet.getString("Password");
-                String FirstName=resultSet.getString("FirstName");
-                String LastName=resultSet.getString("SecondName");
-                int Phone=resultSet.getInt("Phone");
-                String Address=resultSet.getString("Address");
-                int PostalCode=resultSet.getInt("PostalCode");
 
-                User user=new User(UserId,email,password,FirstName,LastName,Phone,Address,PostalCode);
-                return user;
+
+                Administrator administrator=new Administrator(id,email,password);
+                return administrator;
             }
 
         }
@@ -76,31 +68,34 @@ public class UserService extends Connection implements IUserService{
     }
 
 
+
     @Override
-    public User RemoveUser(User user) {
+    public Administrator RemoveAdministrator(Administrator administrator) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("delete from Users where Email = ?");
-            preparedStatement.setString(1,user.getEmail());
+                    connection.prepareStatement("delete from Administrators where Email = ?");
+            preparedStatement.setString(1,administrator.getEmail());
+
             preparedStatement.executeUpdate();
         }
         catch (SQLException e)
         {
             e.printStackTrace();
         }
-        return user;
+        return administrator;
     }
 
+
     @Override
-    public User UpdateUser(User user,String Password) {
+    public Administrator UpdateAdministrator(Administrator administrator, String Password) {
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(
-                            "update Users set password value (?) where email = ?", Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1,user.getPassword());
-            preparedStatement.setString(2,user.getEmail());
+                            "update Administrators set password value (?) where email = ?", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1,administrator.getPassword());
+            preparedStatement.setString(2,administrator.getEmail());
 
             preparedStatement.executeUpdate();
 
@@ -109,6 +104,6 @@ public class UserService extends Connection implements IUserService{
         {
             throwables.printStackTrace();
         }
-        return user;
+        return administrator;
     }
 }
