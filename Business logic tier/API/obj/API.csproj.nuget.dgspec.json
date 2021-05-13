@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dd\\Documents\\SEP3\\Business logic tier\\API\\API.csproj": {}
+    "/home/dimitrian/SEP3/Business logic tier/API/API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dd\\Documents\\SEP3\\Business logic tier\\API\\API.csproj": {
+    "/home/dimitrian/SEP3/Business logic tier/API/API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dd\\Documents\\SEP3\\Business logic tier\\API\\API.csproj",
+        "projectUniqueName": "/home/dimitrian/SEP3/Business logic tier/API/API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Users\\dd\\Documents\\SEP3\\Business logic tier\\API\\API.csproj",
-        "packagesPath": "C:\\Users\\dd\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dd\\Documents\\SEP3\\Business logic tier\\API\\obj\\",
+        "projectPath": "/home/dimitrian/SEP3/Business logic tier/API/API.csproj",
+        "packagesPath": "/home/dimitrian/.nuget/packages/",
+        "outputPath": "/home/dimitrian/SEP3/Business logic tier/API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\dd\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/dimitrian/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -61,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/126/sdk/5.0.203/RuntimeIdentifierGraph.json"
         }
       }
     }

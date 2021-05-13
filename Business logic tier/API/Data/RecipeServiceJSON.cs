@@ -7,7 +7,7 @@ using API.Models;
 
 namespace API.Data
 {
-    public class RecipeServiceJSON
+    public class RecipeServiceJSON : IRecipeService
     {
         private string RecipesFile = "recipes.json";
         private IList<Recipe> allRecipes;
@@ -52,6 +52,11 @@ namespace API.Data
             var returned = allRecipes.First(i => i.Id == id);
             if (returned == null) throw new Exception("Recipe do not exist");
             return returned;
+        }
+
+        public IList<Recipe> GetAllRecipes()
+        {
+            return allRecipes;
         }
 
         public Recipe AddRecipe(Recipe recipe)

@@ -1,8 +1,15 @@
-﻿namespace API.Data
+﻿using System.Threading.Tasks;
+using API.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API.Data
 {
     public interface IRecipeController
     {
-        T
-        
+        Task<ActionResult<Recipe>> AddRecipe([FromBody] Recipe recipe);
+        Task<ActionResult<Recipe>> GetRecipe([FromBody] int id);
+        Task<ActionResult<Recipe>> GetAllRecipes();
+        Task<ActionResult<Recipe>> UpdateRecipe([FromBody] Recipe recipe);
+        Task<ActionResult<Recipe>> RemoveRecipe([FromBody] Recipe recipe);
     }
 }

@@ -1,4 +1,5 @@
-﻿using API.Models;
+﻿using System.Collections.Generic;
+using API.Models;
 
 namespace API.Data
 {
@@ -6,6 +7,7 @@ namespace API.Data
     {
         Recipe AddRecipe(Recipe recipe);
         Recipe GetRecipe(int id);
+        IList<Recipe> GetAllRecipes();
         Recipe UpdateRecipe(Recipe recipe);
         Recipe RemoveRecipe(Recipe recipe);
     }
