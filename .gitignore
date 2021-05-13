@@ -14,4 +14,4 @@
 /httpRequests/
 Business logic tier/API/bin/
 Business logic tier/API/obj/
-
+*.json
