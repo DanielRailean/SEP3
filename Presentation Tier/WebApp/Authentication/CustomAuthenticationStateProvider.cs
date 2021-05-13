@@ -13,7 +13,7 @@ namespace WebApp.Authentication
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
 private readonly IJSRuntime jsRuntime;
-        private readonly IUserService userService;
+        private IUserService userService;
         private User cachedUser;
 
         public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService)

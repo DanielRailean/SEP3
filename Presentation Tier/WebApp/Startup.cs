@@ -36,8 +36,6 @@ namespace WebApp
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Admin", a =>
-                    a.RequireAuthenticatedUser().RequireClaim("Admin"));
                 options.AddPolicy("Customer", a =>
                     a.RequireAuthenticatedUser().RequireClaim("User"));
             });
