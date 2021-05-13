@@ -6,10 +6,10 @@ namespace WebApp.Data
 {
     public interface IRecipeService
     {
-        Task<IList<Recipe>> GetAllRecipes();
-        Task<Recipe> GetRecipe(int id);
-        Task CreateRecipe(Order order);
-        Task RemoveRecipe(Order order);
-        Task UpdateRecipe(Order order);
+        Task<IList<Recipe>> GetAllRecipesAsync();
+        Task<Recipe> GetRecipeAsync(int id);
+        Task CreateRecipeAsync(Recipe recipe);
+        Task RemoveRecipeAsync(Recipe recipe);
+        Task UpdateRecipeAsync(Recipe recipe);
     }
 }

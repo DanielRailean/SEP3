@@ -1,35 +1,32 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using WebApp.Models;
 
 namespace WebApp.Data
 {
-    public class RecipeService : IRecipeService
+    public class IngredientService : IIngredientService
     {
-        private const string uri = "https://localhost:5001/recipe";
-        private readonly HttpClient client;
-        public Task<IList<Recipe>> GetAllRecipes()
+        public Task<IList<Ingredient>> GetAllIngredientsAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Recipe> GetRecipe(int id)
+        public Task<Ingredient> GetIngredientAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task CreateRecipe(Order order)
+        public Task CreateIngredientAsync(Ingredient ingredient)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task RemoveRecipe(Order order)
+        public Task RemoveIngredientAsync(int Id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task UpdateRecipe(Order order)
+        public Task UpdateIngredientAsync(int Id)
         {
             throw new System.NotImplementedException();
         }
