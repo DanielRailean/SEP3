@@ -27,5 +27,6 @@ namespace API.Models
         public string Currency { get; set; }
 
         public bool? IsDelivered { get; set; }
+        public string Status { get; set; }
     }
-}
+}+
