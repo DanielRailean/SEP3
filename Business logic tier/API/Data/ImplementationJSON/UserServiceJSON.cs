@@ -33,7 +33,7 @@ namespace API.Data
                 new User
                 {
                     Password = "1234",
-                    UserId = 1,
+                    UserId = 0,
                     Email = "dd"
                 }
             };
