@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.Models
+namespace API.Models
 {
     public class Administrator
     {
+        public int Id { get; set; }
         [Required]
         public string Email { get; set; }
         [Required]

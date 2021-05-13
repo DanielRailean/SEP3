@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.Models
+namespace API.Models
 {
     public class User
     {
         public int UserId { get; set; }
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
-        // [Required, Range(6, 255, ErrorMessage = "Password must be at least 6 characters (max. 255)")]
+        public string Email { get; set; } 
+        [Required, Range(6, 255, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; }
         [Required]
         public string FirstName { get; set; }

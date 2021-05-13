@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.Models
+namespace API.Models
 {
     public class Order
     {
-        public int order_id { get; set; }
-        public DateTime order_date { get; set; }
+        public int Id { get; set; }
+        public DateTime OrderDate { get; set; }
         public IList<Recipe> Recipes { get; set; }
         [Required]
         public string InvoiceAddress { get; set; }
