@@ -7,6 +7,7 @@ namespace API.Models
     public class Order
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
         public DateTime OrderDate { get; set; }
         public IList<Recipe> Recipes { get; set; }
         [Required]

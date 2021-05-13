@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,7 +81,24 @@ namespace API.Data
 
         public IList<Order> GetUserOrders(string email, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User user = UserService.ValidateUser(email, password);
+                IList<Order> userOrders = new List<Order>();
+                foreach (var order in allOrders)
+                {
+                    if (order.UserId == user.UserId)
+                    {
+                        userOrders.Add(order);
+                    }
+                }
+
+                return userOrders;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }
