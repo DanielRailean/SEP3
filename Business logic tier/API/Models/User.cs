@@ -1,14 +1,24 @@
-﻿namespace API.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApp.Models
 {
     public class User
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Address { get; set; }
-        public int PostalCode { get; set; }
-        public int Phone { get; set; }
         public int UserId { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        // [Required, Range(6, 255, ErrorMessage = "Password must be at least 6 characters (max. 255)")]
+        public string Password { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public int Phone { get; set; }
+        [Required]
+        public string Address { get; set; }
+        [Required]
+        public int PostalCode { get; set; }
     }
 }
