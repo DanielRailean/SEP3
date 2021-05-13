@@ -53,6 +53,12 @@ namespace API.Data
             return returned;
         }
 
+        public IList<Ingredient> GetAllIngredients()
+        {
+            
+            return allIngredients;
+        }
+
         public Ingredient AddIngredient(Ingredient ingredient)
         {
             Ingredient first = null;
