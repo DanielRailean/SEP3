@@ -1,5 +1,4 @@
 .idea
-
 ﻿# Default ignored files
 /shelf/
 /workspace.xml
@@ -13,7 +12,6 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-/Business logic tier/API/bin/
-/Business logic tier/API/obj/
-Business logic tier/API/obj/Debug/net5.0/API.csprojAssemblyReference.cache
-Business logic tier/API/obj/Debug/net5.0/API.csprojAssemblyReference.cache
+Business logic tier/API/bin/
+Business logic tier/API/obj/
+
