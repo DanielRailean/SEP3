@@ -10,6 +10,6 @@ namespace API.Data
         IList<Recipe> GetAllRecipes();
         Recipe UpdateRecipe(Recipe recipe);
         Recipe RemoveRecipe(Recipe recipe);
-        IList<Recipe> GetAllRecipes();
+       
     }
 }
