@@ -32,6 +32,7 @@ namespace API
             services.AddScoped<IUserService,UserServiceJSON>();
             services.AddScoped<IIngredientService,IngredientServiceJSON>();
             services.AddScoped<IRecipeService,RecipeServiceJSON>();
+            services.AddScoped<IOrderService,OrderServiceJSON>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

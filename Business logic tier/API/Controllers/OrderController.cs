@@ -10,22 +10,22 @@ namespace API.Controllers
     [ApiController]
     [Route("[controller]")]
 
-    public class RecipeController : ControllerBase, IRecipeController
+    public class OrderController : ControllerBase, IOrderController
     {
-        private IRecipeService recipeService;
+        private IOrderService orderService;
 
-        public RecipeController(IRecipeService recipeService)
+        public OrderController(IOrderService orderService)
         {
-            this.recipeService = recipeService;
+            this.orderService = orderService;
         }
         
         [HttpPost]
-        public async Task<ActionResult<Recipe>> AddRecipe(Recipe recipe)
+        public async Task<ActionResult<Order>> AddOrder(Order order)
         {
             try
             {
-                recipeService.AddRecipe(recipe);
-                return Ok(recipe);
+                orderService.AddOrder(order);
+                return Ok(order);
             }
             catch (Exception e)
             {
@@ -33,13 +33,13 @@ namespace API.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-    
-        [HttpGet("GetRecipe")]
-        public async Task<ActionResult<Recipe>> GetRecipe(int id)
+
+        [HttpGet("GetOrder")]
+        public async Task<ActionResult<Order>> GetOrder(int id)
         {
             try
             {
-                Recipe valid = recipeService.GetRecipe(id);
+                Order valid = orderService.GetOrder(id);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -49,12 +49,12 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("GetAllRecipes")]
-        public async Task<ActionResult<IList<Recipe>>> GetAllRecipes()
+        [HttpGet("GetUserOrders")]
+        public async Task<ActionResult<IList<Order>>> GetUserOrders(string email, string password)
         {
             try
             {
-                IList<Recipe> valid = recipeService.GetAllRecipes();
+                IList<Order> valid = orderService.GetUserOrders(email,password);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -65,11 +65,11 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Recipe>> UpdateRecipe(Recipe recipe)
+        public async Task<ActionResult<Order>> UpdateOrder(Order order)
         {
             try
             {
-                Recipe valid = recipeService.UpdateRecipe(recipe);
+                Order valid = orderService.UpdateOrder(order);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -80,11 +80,11 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Recipe>> RemoveRecipe(Recipe recipe)
+        public async Task<ActionResult<Order>> RemoveOrder(Order order)
         {
             try
             {
-                Recipe valid = recipeService.RemoveRecipe(recipe);
+                Order valid = orderService.RemoveOrder(order);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -94,5 +94,4 @@ namespace API.Controllers
             }
         }
     }
-
 }
