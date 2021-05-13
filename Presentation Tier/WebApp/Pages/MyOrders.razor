@@ -13,7 +13,7 @@
     Filter by Cost: <input type="text" @oninput="@(arg => FilterByCost(arg))" style="width: 150px"/>
 </p>
 <p> 
-    Filter by Delivered: <input type="text" @oninput="@(arg => FilterByDelivered(arg))" style="width: 150px"/>
+    Filter by Delivered: <input type="text" @oninput="@(arg => FilterByShipped(arg))" style="width: 150px"/>
 </p>
 
 @if (ordersToShow == null)
@@ -35,8 +35,7 @@
             <tr>
                 <th>Date</th>
                 <th>Cost</th>
-                <th>Delivered</th>
-                <th>Payed</th>
+                <th>Shipped</th>
                 <th>Amount of recipes</th>
                 <th>Remove</th>
                 <th>Edit</th>
@@ -46,21 +45,19 @@
             @foreach (var item in ordersToShow)
             {
                 <tr>
-                    <td>@item.order_date</td>
+                    <td>@item.OrderDate</td>
                     <td>@item.DeliveryPrice</td>
-                    <td>@item.</td>
-                    <td>@item.</td>
+                    <td>@item.IsShipped</td>
                     <td>@item.Recipes.Count</td>
-                    <td>@item.</td>
                     <td>
                         <AuthorizeView>
                             <NotAuthorized>
-                                <button @onclick="@(() => RemoveOrder(item.order_id))" disabled>
+                                <button @onclick="@(() => RemoveOrder(item.Id))" disabled>
                                     <i class="oi oi-trash" style="color: red"/>
                                 </button>
                             </NotAuthorized>
                             <Authorized>
-                                <button @onclick="@(() => RemoveOrder(item.order_id))">
+                                <button @onclick="@(() => RemoveOrder(item.Id))">
                                     <i class="oi oi-trash" style="color: red"/>
                                 </button>
                             </Authorized>
@@ -69,12 +66,12 @@
                     <td>
                         <AuthorizeView>
                             <NotAuthorized>
-                                <button @onclick="@(() => Edit(item.order_id))" disabled>
+                                <button @onclick="@(() => EditOrder(item.Id))" disabled>
                                     <i class="oi oi-pencil" style="color: #1b6ec2"/>
                                 </button>
                             </NotAuthorized>
                             <Authorized>
-                                <button @onclick="@(() => Edit(item.order_id))">
+                                <button @onclick="@(() => EditOrder(item.Id))">
                                     <i class="oi oi-pencil" style="color: #1b6ec2"/>
                                 </button>
                             </Authorized>
@@ -92,11 +89,11 @@
 
     private DateTime? filterByDate;
     private double? filterByCost;
-    private bool? filterByDelivered;
+    private bool? filterByShipped;
 
     protected override async Task OnInitializedAsync()
     {
-        allOrders = await OrderService.GetAllOrders();
+        allOrders = await OrderService.GetAllOrdersAsync();
         ordersToShow = allOrders;
     }
     
@@ -128,12 +125,12 @@
         ExecuteFilter();
     }
     
-    private void FilterByDelivered(ChangeEventArgs changeEventArgs)
+    private void FilterByShipped(ChangeEventArgs changeEventArgs)
     {
-        filterByDelivered = null;
+        filterByShipped = null;
         try
         {
-            filterByDelivered = Boolean.Parse(changeEventArgs.Value.ToString());
+            filterByShipped = Boolean.Parse(changeEventArgs.Value.ToString());
         }
         catch (Exception e)
         {
@@ -145,20 +142,22 @@
     private void ExecuteFilter()
     {
         ordersToShow = allOrders.Where(t => 
-            (filterByDate != null && t.order_date == filterByDate || filterByDate == null) &&
+            (filterByDate != null && t.OrderDate == filterByDate || filterByDate == null) &&
             (filterByCost != null && t.TotalPrice == filterByCost || filterByCost == null) && 
-            (filterByDelivered != null && t.IsDelivered == filterByDelivered || filterByDelivered == null)
+            (filterByShipped != null && t.IsShipped == filterByShipped || filterByShipped == null)
             ).ToList();
     }
 
-    private void Edit(int id)
+    private void EditOrder(int id)
     {
         NavigationManager.NavigateTo($"EditOrder/{id}");
     }
 
     private void RemoveOrder(int itemOrderId)
     {
-        throw new NotImplementedException();
+        Order orderToRemove = allOrders.First(t => t.Id == itemOrderId);
+        OrderService.RemoveOrderAsync(itemOrderId);
+        allOrders.Remove(orderToRemove);
+        ordersToShow.Remove(orderToRemove);
     }
-
 }

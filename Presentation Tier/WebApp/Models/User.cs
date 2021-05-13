@@ -2,14 +2,8 @@
 
 namespace WebApp.Models
 {
-    public class User
+    public class User : SuperUser
     {
-        public int UserId { get; set; }
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-        // [Required, Range(6, 255, ErrorMessage = "Password must be at least 6 characters (max. 255)")]
-        public string Password { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]

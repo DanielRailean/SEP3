@@ -6,8 +6,9 @@ namespace WebApp.Models
 {
     public class Order
     {
-        public int order_id { get; set; }
-        public DateTime order_date { get; set; }
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public DateTime OrderDate { get; set; }
         public IList<Recipe> Recipes { get; set; }
         [Required]
         public string InvoiceAddress { get; set; }
@@ -26,6 +27,6 @@ namespace WebApp.Models
         [Required]
         public string Currency { get; set; }
 
-        public bool? IsDelivered { get; set; }
+        public bool? IsShipped { get; set; }
     }
 }
