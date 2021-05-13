@@ -10,16 +10,20 @@ public class UserController {
     @Autowired
     private IUserService UserSerivce;
 
+    //User testUser = new User("satish", "gurung", "satish", "gurung",123456, "Horsens", 8700);
+
     @PostMapping("/RegisterUser")
     public User RegisterUser(@RequestBody User user){
        return UserSerivce.RegisterUser(user);
     }
 
     @GetMapping("/ValidateUser")
-    public User ValidateUser(@RequestParam String Email,String Password) {
-       return UserSerivce.ValidateUser(Email,Password);
-
+    public User ValidateUser(@RequestParam String Email,@RequestParam String Password) {
+       User returnUser = UserSerivce.ValidateUser(Email, Password);
+        System.out.println(returnUser);
+        return returnUser;
     }
+
     @DeleteMapping("/RemoveUser")
     public User RemoverUser(@RequestBody User user){
        return UserSerivce.RemoveUser(user);
@@ -27,7 +31,6 @@ public class UserController {
 
     @PutMapping("/UpdateUser")
     public User UpdateUser(@RequestBody User user,String Password){
-
         return UserSerivce.UpdateUser(user,Password);
     }
 }

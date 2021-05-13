@@ -23,16 +23,17 @@ public class UserService extends Connection implements IUserService{
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(
-                            "insert into Users(Email, Password,FirstName,LastName,Phone,Address,PostalCode) values(?,?)", Statement.RETURN_GENERATED_KEYS);
+                            "insert into Users(Email, Password,FirstName,LastName,Phone,Address,PostalCode) values(?,?,?,?,?,?,?)");
             preparedStatement.setString(1,user.getEmail());
             preparedStatement.setString(2,user.getPassword());
-            preparedStatement.setString(2,user.getFirstName());
-            preparedStatement.setString(2,user.getLastName());
-            preparedStatement.setInt(2,user.getPhone());
-            preparedStatement.setString(2,user.getAddress());
-            preparedStatement.setInt(2,user.getPostalCode());
+            preparedStatement.setString(3,user.getFirstName());
+            preparedStatement.setString(4,user.getLastName());
+            preparedStatement.setInt(5,user.getPhone());
+            preparedStatement.setString(6,user.getAddress());
+            preparedStatement.setInt(7,user.getPostalCode());
 
             preparedStatement.executeUpdate();
+            System.out.println("User is registered");
 
         }
         catch (SQLException throwables)
@@ -47,23 +48,25 @@ public class UserService extends Connection implements IUserService{
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("select * from Users where Email= ? & Password=?");
+                    connection.prepareStatement("select * from Users where Email=? and Password=?");
             preparedStatement.setString(1, Email);
-            preparedStatement.setString(1, Password);
+            preparedStatement.setString(2, Password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()){
-                int UserId = resultSet.getInt("UserId");
+
                 String email = resultSet.getString("Email");
                 String password=resultSet.getString("Password");
                 String FirstName=resultSet.getString("FirstName");
-                String LastName=resultSet.getString("SecondName");
+                String LastName=resultSet.getString("LastName");
                 int Phone=resultSet.getInt("Phone");
                 String Address=resultSet.getString("Address");
                 int PostalCode=resultSet.getInt("PostalCode");
 
-                User user=new User(UserId,email,password,FirstName,LastName,Phone,Address,PostalCode);
+                User user=new User(email,password,FirstName,LastName,Phone,Address,PostalCode);
+
+                System.out.println("User is logged in");
                 return user;
             }
 
@@ -84,6 +87,8 @@ public class UserService extends Connection implements IUserService{
                     connection.prepareStatement("delete from Users where Email = ?");
             preparedStatement.setString(1,user.getEmail());
             preparedStatement.executeUpdate();
+
+            System.out.println("User deleted.");
         }
         catch (SQLException e)
         {
@@ -98,11 +103,13 @@ public class UserService extends Connection implements IUserService{
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(
-                            "update Users set password value (?) where email = ?", Statement.RETURN_GENERATED_KEYS);
+                            "update Users set password = ? where email = ?", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1,user.getPassword());
             preparedStatement.setString(2,user.getEmail());
 
             preparedStatement.executeUpdate();
+
+            System.out.println("User updated.");
 
         }
         catch (SQLException throwables)

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class User {
-    int UserId;
+   int UserId;
     String Email;
     String Password;
     String FirstName;
@@ -95,8 +95,7 @@ public class User {
         PostalCode = postalCode;
     }
 
-    public User(int userId, String email, String password, String firstName, String lastName, int phone, String  address, int postalCode) {
-        UserId = userId;
+    public User(String email, String password, String firstName, String lastName, int phone, String  address, int postalCode) {
         Email = email;
         Password = password;
         FirstName = firstName;

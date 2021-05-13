@@ -19,7 +19,7 @@ public abstract class Connection {
     public java.sql.Connection getConnection() throws SQLException
     {
         return DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/postgres?currentSchema=sep3",
+                "jdbc:postgresql://localhost:5432/postgres?currentSchema=fooddb",
                 "postgres", "Superman5501");
     }
 }
