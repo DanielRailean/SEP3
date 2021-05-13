@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApp.Authentication;
 using WebApp.Data;
 
 namespace WebApp
@@ -31,7 +33,14 @@ namespace WebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<IUserService, UserService>();
-            services.AddControllers();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", a =>
+                    a.RequireAuthenticatedUser().RequireClaim("Admin"));
+                options.AddPolicy("Customer", a =>
+                    a.RequireAuthenticatedUser().RequireClaim("User"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

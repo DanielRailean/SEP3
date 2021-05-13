@@ -1,6 +1,69 @@
 ﻿@page "/Login"
-<h3>Login</h3>
+@using WebApp.Authentication
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+@namespace LoginComponent
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <NotAuthorized>
+            <div class="form-group">
+                <label>E-mail:</label>
+                <input type="text" placeholder="E-mail address" @bind-value="email"/>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" placeholder="Password" @bind-value="password">
+            </div>
+            <div style="color: red">@errorMessage</div>
+
+            <a href="" @onclick="PerformLogin">
+                Login
+            </a>
+        </NotAuthorized>
+        <Authorized>
+            <a href="" @onclick="PerformLogout">
+                Log out
+            </a>
+        </Authorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 
 @code {
-    
+    private string email;
+    private string password;
+    private string errorMessage;
+
+    public async Task PerformLogin()
+    {
+        errorMessage = "";
+        try
+        {
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(email, password);
+            email = "";
+            password = "";
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+    }
+
+    public async Task PerformLogout()
+    {
+        errorMessage = "";
+        email = "";
+        password = "";
+        try
+        {
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
 }

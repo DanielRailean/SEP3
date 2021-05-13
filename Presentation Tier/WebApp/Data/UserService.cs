@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -9,9 +10,8 @@ namespace WebApp.Data
 {
     public class UserService : IUserService
     {
-        private const string uri = "https://localhost:5001/User";
+        private const string uri = "https://localhost:5001/user";
         private readonly HttpClient client;
-        
         public UserService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -31,19 +31,38 @@ namespace WebApp.Data
             await client.PostAsync(uri, content);
         }
 
-        public Task<User> ValidateUserAsync(string email, string password)
+        public async Task<User> ValidateUserAsync(string email, string password)
         {
-            throw new System.NotImplementedException();
+            HttpResponseMessage response = await client.GetAsync(uri + $"?username={@email}&password={@password}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($@"Error: {response.ReasonPhrase}");
+            }
+            string result = await response.Content.ReadAsStringAsync();
+            User user = JsonSerializer.Deserialize<User>(result, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true
+            });
+            return user;
         }
 
-        public Task<User> UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(User user)
         {
-            throw new System.NotImplementedException();
+            var userAsJson = JsonSerializer.Serialize(user);
+            HttpContent content = new StringContent(userAsJson,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PatchAsync($"{uri}/{user.Id}", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
         }
 
-        public Task RemoveUserAsync(int userId)
+        public async Task RemoveUserAsync(int userId)
         {
-            throw new System.NotImplementedException();
+            await client.DeleteAsync($"{uri}/{userId}");
         }
     }
 }
