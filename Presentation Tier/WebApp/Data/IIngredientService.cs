@@ -7,9 +7,9 @@ namespace WebApp.Data
     public interface IIngredientService
     {
         Task<IList<Ingredient>> GetAllIngredientsAsync();
-        Task<Ingredient> GetIngredientAsync(int id);
+        Task<Ingredient> GetIngredientAsync(int ingredientId);
         Task CreateIngredientAsync(Ingredient ingredient);
-        Task RemoveIngredientAsync(int Id);
-        Task UpdateIngredientAsync(int Id);
+        Task RemoveIngredientAsync(int ingredientId);
+        Task UpdateIngredientAsync(Ingredient ingredient);
     }
 }

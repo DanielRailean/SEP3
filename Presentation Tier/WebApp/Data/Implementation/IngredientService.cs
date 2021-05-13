@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebApp.Models;
 
@@ -6,29 +10,67 @@ namespace WebApp.Data
 {
     public class IngredientService : IIngredientService
     {
-        public Task<IList<Ingredient>> GetAllIngredientsAsync()
+        private const string uri = "https://localhost:5001/ingredient";
+        private readonly HttpClient client;
+        public async Task<IList<Ingredient>> GetAllIngredientsAsync()
         {
-            throw new System.NotImplementedException();
+            HttpResponseMessage response = await client.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
+            
+            string result = await response.Content.ReadAsStringAsync();
+            List<Ingredient> ingredients = JsonSerializer.Deserialize<List<Ingredient>>(result, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return ingredients;
         }
 
-        public Task<Ingredient> GetIngredientAsync(int id)
+        public async Task<Ingredient> GetIngredientAsync(int ingredientId)
         {
-            throw new System.NotImplementedException();
+            var ingredientAsJson = await client.GetStringAsync($"{uri}/getingredient?id={ingredientId}");
+            var ingredient = JsonSerializer.Deserialize<Ingredient>(ingredientAsJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return ingredient;
         }
 
-        public Task CreateIngredientAsync(Ingredient ingredient)
+        public async Task CreateIngredientAsync(Ingredient ingredient)
         {
-            throw new System.NotImplementedException();
+            var ingredientAsJson = JsonSerializer.Serialize(ingredient);
+            HttpContent content = new StringContent(ingredientAsJson,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PostAsync(uri, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
         }
 
-        public Task RemoveIngredientAsync(int Id)
+        public async Task RemoveIngredientAsync(int ingredientId)
         {
-            throw new System.NotImplementedException();
+            // TODO
+            await client.DeleteAsync($"{uri}/{ingredientId}");
         }
 
-        public Task UpdateIngredientAsync(int Id)
+        public async Task UpdateIngredientAsync(Ingredient ingredient)
         {
-            throw new System.NotImplementedException();
+            // TODO
+            var ingredientAsJson = JsonSerializer.Serialize(ingredient);
+            HttpContent content = new StringContent(ingredientAsJson,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PutAsync($"{uri}/", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
         }
     }
 }

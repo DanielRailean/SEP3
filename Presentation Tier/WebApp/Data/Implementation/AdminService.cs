@@ -8,7 +8,7 @@ namespace WebApp.Data
 {
     public class AdminService : IAdminService
     {
-        private const string uri = "https://localhost:5001/admin";
+        private const string uri = "https://localhost:5001/administrator";
         private readonly HttpClient client;
         
         public async Task<Administrator> ValidateAdminAsync(string email, string password)

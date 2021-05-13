@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebApp.Models;
 
@@ -12,12 +14,29 @@ namespace WebApp.Data
         
         public async Task<IList<Order>> GetAllOrdersAsync()
         {
-            throw new System.NotImplementedException();
+            HttpResponseMessage response = await client.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
+            
+            string result = await response.Content.ReadAsStringAsync();
+            List<Order> orders = JsonSerializer.Deserialize<List<Order>>(result, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return orders;
         }
 
-        public async Task<Order> GetOrderAsync(int id)
+        public async Task<Order> GetOrderAsync(int orderId)
         {
-            throw new System.NotImplementedException();
+            var orderAsJson = await client.GetStringAsync($"{uri}/getorder?{orderId}");
+            Order order = JsonSerializer.Deserialize<Order>(orderAsJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            return order;
         }
 
         public async Task<IList<Order>> GetOrdersByUserAsync(User user)
