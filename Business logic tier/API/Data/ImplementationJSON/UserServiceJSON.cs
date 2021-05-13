@@ -9,7 +9,7 @@ namespace API.Data
 {
     public class UserServiceJSON : IUserService
     {
-         private string UsersFile = "users.json";
+        private string UsersFile = "users.json";
         private IList<User> AllUsers;
 
         public UserServiceJSON()
