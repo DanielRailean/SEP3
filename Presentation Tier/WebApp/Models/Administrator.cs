@@ -2,7 +2,7 @@
 
 namespace WebApp.Models
 {
-    public class SuperUser
+    public class Administrator
     {
         public int Id { get; set; }
         [Required]

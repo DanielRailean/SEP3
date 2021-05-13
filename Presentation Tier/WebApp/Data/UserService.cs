@@ -52,7 +52,7 @@ namespace WebApp.Data
             HttpContent content = new StringContent(userAsJson,
                 Encoding.UTF8,
                 "application/json");
-            HttpResponseMessage response = await client.PatchAsync($"{uri}/{user.Id}", content);
+            HttpResponseMessage response = await client.PatchAsync($"{uri}/{user.UserId}", content);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
