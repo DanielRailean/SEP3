@@ -6,7 +6,7 @@ namespace API.Data
     {
         Ingredient AddIngredient(Ingredient ingredient);
         Ingredient GetIngredient(int id);
-        Ingredient UpdateIngredient(Ingredient ingredient, string password);
+        Ingredient UpdateIngredient(Ingredient ingredient);
         Ingredient RemoveIngredient(Ingredient ingredient);
     }
 }
