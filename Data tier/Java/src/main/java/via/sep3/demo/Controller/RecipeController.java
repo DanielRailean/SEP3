@@ -1,5 +1,6 @@
 package via.sep3.demo.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import via.sep3.demo.Model.Order;
 import via.sep3.demo.Model.Recipe;
@@ -10,14 +11,16 @@ import java.util.List;
 
 @RestController
 public class RecipeController {
+    @Autowired
     private IRecipeService RecipeService;
 
     @GetMapping("/GetAllRecipes")
     public List<Recipe> GetAllRecipes(){
         return RecipeService.GetAllRecipes();
     }
+
     @GetMapping("/GetRecipe")
-    public Recipe GetOrder(@RequestParam String Name){
+    public Recipe GetRecipe(@RequestParam String Name){
         return RecipeService.GetRecipe(Name);
     }
 

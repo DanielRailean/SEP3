@@ -1,12 +1,11 @@
 package via.sep3.demo.Model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe {
     int Id;
     String Name;
-    ArrayList<Ingredient> Ingredient;
+    List<Ingredient> Ingredient;
     double Calories;
     String NutritionType;
     String FoodType;
@@ -15,10 +14,9 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(int id,String name, ArrayList ingredient, double calories, String nutritionType, String foodType, double price) {
+    public Recipe(int id,String name, double calories, String nutritionType, String foodType, double price) {
         Id=id;
         Name = name;
-        Ingredient = ingredient;
         Calories = calories;
         NutritionType = nutritionType;
         FoodType = foodType;
@@ -41,11 +39,11 @@ public class Recipe {
         Name = name;
     }
 
-    public ArrayList<Ingredient> getIngredient() {
+    public List<Ingredient> getIngredient() {
         return Ingredient;
     }
 
-    public void setIngredient(ArrayList ingredient) {
+    public void setIngredient(List ingredient) {
         Ingredient = ingredient;
     }
 
