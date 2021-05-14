@@ -19,5 +19,17 @@ namespace WebApp.Models
         public string Address { get; set; }
         [Required]
         public int PostalCode { get; set; }
+        
+        public void Update(User user)
+        {
+            UserId = user.UserId;
+            Email = user.Email;
+            Password = user.Password;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            Phone = user.Phone;
+            Address = user.Address;
+            PostalCode = user.PostalCode;
+        }
     }
 }

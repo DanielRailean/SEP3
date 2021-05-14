@@ -1,0 +1,65 @@
+﻿@page "/profile"
+@using WebApp.Data
+@using WebApp.Models
+@using Microsoft.AspNetCore.Components
+@using WebApp.Authentication
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IUserService UserService
+
+<h3>Edit your profile:</h3>
+
+<EditForm Model="@userToEdit" OnValidSubmit="@Save">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="form-group">
+        First name:<br/>
+        <InputText rows="4" @bind-Value="@userToEdit.FirstName"/>
+    </div>
+    <div class="form-group">
+        Last name:<br/>
+        <InputText rows="4" @bind-Value="@userToEdit.LastName"/>
+    </div>
+    <div class="form-group">
+        E-mail:<br/>
+        <InputText rows="4" @bind-Value="@userToEdit.Email"/>
+    </div>
+    <div class="form-group">
+        Password:<br/>
+        <InputText class="password" rows="4" @bind-Value="@userToEdit.Password"/>
+    </div>
+    <div class="form-group">
+        Address:<br/>
+        <InputText rows="4" @bind-Value="@userToEdit.Address"/>
+    </div>
+    <div class="form-group">
+        Postal Code:<br/>
+        <InputNumber rows="4" @bind-Value="@userToEdit.PostalCode"/>
+    </div>
+    <div class="form-group">
+        Phone:<br/>
+        <InputNumber rows="4" @bind-Value="@userToEdit.Phone"/>
+    </div>
+    <p class="actions">
+        <button class="btn btn-outline-dark" type="submit">Save</button>
+    </p>
+</EditForm>
+
+
+@code {
+    User userToEdit = new User();
+    private string email;
+    private string password;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userToEdit = await ((CustomerAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
+    }
+
+    private void Save()
+    {
+        UserService.UpdateUserAsync(userToEdit);
+        NavigationManager.NavigateTo("/");
+    }
+}

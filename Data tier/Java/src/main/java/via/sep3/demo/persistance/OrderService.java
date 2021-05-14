@@ -103,7 +103,7 @@ public class OrderService extends Connection implements IOrderService{
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(
-                            "insert into Orders( InvoiceAddress,DeliveryAddress,City,PostalCode,TotalPrice,ItemPrice,DeliveryPrice,Currency) values(?,?,?,?,?,?,?,?)");
+                            "insert into Orders( InvoiceAddress,DeliveryAddress,City,PostalCode,TotalPrice,ItemPrice,DeliveryPrice,Currency,userId) values(?,?,?,?,?,?,?,?,?)");
           preparedStatement.setString(1,order.getInvoiceAddress());
             preparedStatement.setString(2,order.getDeliveryAddress());
             preparedStatement.setString(3,order.getCity());
@@ -112,6 +112,7 @@ public class OrderService extends Connection implements IOrderService{
             preparedStatement.setDouble(6,order.getItemPrice());
             preparedStatement.setDouble(7,order.getDeliveryPrice());
             preparedStatement.setString(8,order.getCurrency());
+            preparedStatement.setInt(9,order.getUserId());
 
             preparedStatement.executeUpdate();
             System.out.println("Order is added");

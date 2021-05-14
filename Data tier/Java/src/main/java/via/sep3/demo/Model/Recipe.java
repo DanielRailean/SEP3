@@ -83,7 +83,6 @@ public class Recipe {
     public String toString() {
         return "Recipe{" +
                 "Name='" + Name + '\'' +
-                ", Ingredient=" + Ingredient +
                 ", Calories=" + Calories +
                 ", NutritionType='" + NutritionType + '\'' +
                 ", FoodType='" + FoodType + '\'' +

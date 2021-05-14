@@ -10,13 +10,13 @@ using WebApp.Models;
 
 namespace WebApp.Authentication
 {
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
+    public class CustomerAuthenticationStateProvider : AuthenticationStateProvider
     {
-private readonly IJSRuntime jsRuntime;
+        private readonly IJSRuntime jsRuntime;
         private IUserService userService;
         private User cachedUser;
 
-        public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService)
+        public CustomerAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService)
         {
             this.jsRuntime = jsRuntime;
             this.userService = userService;
@@ -43,6 +43,11 @@ private readonly IJSRuntime jsRuntime;
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
 
+        public async Task<User> GetUser()
+        {
+            return cachedUser;
+        }
+
         public async Task ValidateLogin(string email, string password)
         {
             Console.WriteLine("Validating log in");
@@ -53,7 +58,7 @@ private readonly IJSRuntime jsRuntime;
 
             try
             {
-                User user = Task.Run(()=> userService.ValidateUserAsync(email, password)).Result;
+                User user = Task.Run(() => userService.ValidateUserAsync(email, password)).Result;
                 identity = SetupClaimsForUser(user);
                 string serializedUser = JsonSerializer.Serialize(user);
                 jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serializedUser);
