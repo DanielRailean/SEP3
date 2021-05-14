@@ -74,7 +74,6 @@ public class RecipeService extends Connection implements IRecipeService{
     public Recipe GetRecipe(String name) {
         try(java.sql.Connection connection = getConnection())
         {
-            System.out.println(name);
             PreparedStatement preparedStatement =
                     connection.prepareStatement("select * from Recipes where Name=?");
             preparedStatement.setString(1,name);

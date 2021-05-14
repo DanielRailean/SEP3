@@ -2,11 +2,12 @@ package via.sep3.demo.Model;
 
 import org.apache.tomcat.jni.Time;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class Order {
-    int order_id;
-    Time order_date;
+    int orderid;
+    LocalDate order_date;
     List<Recipe> Recipes;
     String InvoiceAddress;
     String DeliveryAddress;
@@ -17,14 +18,38 @@ public class Order {
     double DeliveryPrice;
     String Currency;
     boolean IsDelivered;
+    int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public Order() {
     }
 
-    public Order(int order_id, Time order_date,List<Recipe> recipes, String invoiceAddress, String deliveryAddress, String city, int postalCode, double totalPrice, double itemPrice, double deliveryPrice, String currency, boolean isDelivered) {
-        this.order_id = order_id;
+    public int getOrder_id() {
+        return orderid;
+    }
+
+    public void setOrder_id(int order_id) {
+        this.orderid = order_id;
+    }
+
+    public LocalDate getOrder_date() {
+        return order_date;
+    }
+
+    public void setOrder_date(LocalDate order_date) {
+        this.order_date = order_date;
+    }
+
+    public Order(int orderid,LocalDate order_date, String invoiceAddress, String deliveryAddress, String city, int postalCode, double totalPrice, double itemPrice, double deliveryPrice, String currency, boolean isDelivered,int userId) {
+        this.orderid=orderid;
         this.order_date=order_date;
-        Recipes = recipes;
         InvoiceAddress = invoiceAddress;
         DeliveryAddress = deliveryAddress;
         City = city;
@@ -34,14 +59,14 @@ public class Order {
         DeliveryPrice = deliveryPrice;
         Currency = currency;
         IsDelivered = isDelivered;
+this.userId=userId;    }
+
+    public int getOrder() {
+        return orderid;
     }
 
-    public int getOrder_id() {
-        return order_id;
-    }
-
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrder(int order_id) {
+        this.orderid = orderid;
     }
 
     public List<Recipe> getRecipes() {
@@ -70,6 +95,14 @@ public class Order {
 
     public String getCity() {
         return City;
+    }
+
+    public int getOrderid() {
+        return orderid;
+    }
+
+    public void setOrderid(int orderid) {
+        this.orderid = orderid;
     }
 
     public void setCity(String city) {
@@ -127,7 +160,7 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "order_id=" + order_id +
+                "order_id=" + orderid +
                 ", Recipes=" + Recipes +
                 ", InvoiceAddress='" + InvoiceAddress + '\'' +
                 ", DeliveryAddress='" + DeliveryAddress + '\'' +

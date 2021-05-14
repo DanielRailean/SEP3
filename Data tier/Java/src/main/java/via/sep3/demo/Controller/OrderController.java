@@ -12,21 +12,22 @@ import java.util.List;
 @RestController
 public class OrderController {
 
-
+    @Autowired
     private IOrderService OrderService;
 
-    @GetMapping("/GetAllOrders")
-    public List<Order> GetAllOrders(){
-        return OrderService.GetAllOrders();
-    }
     @GetMapping("/GetOrder")
-    public Order GetOrder(@RequestParam int id){
-        return OrderService.GetOrder(id);
+    public Order GetOrder(@RequestParam int orderid){
+        return OrderService.GetOrder(orderid);
     }
 
-    @PostMapping("/CreateOrder")
-    public Order CreateOrder(@RequestBody Order order) {
-        return OrderService.CreateOrder(order);
+    @GetMapping("/GetUserOrders")
+    public Order GetUserOrders(@RequestParam int userId){
+        return OrderService.GetUserOrders(userId);
+    }
+
+    @PostMapping("/AddOrder")
+    public Order AddOrder(@RequestBody Order order) {
+        return OrderService.AddOrder(order);
 
     }
     @DeleteMapping("/RemoveOrder")
