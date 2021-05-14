@@ -1,4 +1,4 @@
-﻿@page "/Login"
+﻿@page "/login"
 @using WebApp.Authentication
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -18,15 +18,13 @@
             </div>
             <div style="color: red">@errorMessage</div>
 
-            <a href="" @onclick="PerformLogin">
+            <button href="" @onclick="PerformLogin">
                 Login
-            </a>
+            </button>
+            <button href="" @onclick="RedirectToAdminPage">
+                Administration
+            </button>
         </NotAuthorized>
-        <Authorized>
-            <a href="" @onclick="PerformLogout">
-                Log out
-            </a>
-        </Authorized>
     </AuthorizeView>
 </CascadingAuthenticationState>
 
@@ -35,7 +33,7 @@
     private string password;
     private string errorMessage;
 
-    public async Task PerformLogin()
+    private async Task PerformLogin()
     {
         errorMessage = "";
         try
@@ -51,19 +49,8 @@
         }
     }
 
-    public async Task PerformLogout()
+    private void RedirectToAdminPage()
     {
-        errorMessage = "";
-        email = "";
-        password = "";
-        try
-        {
-            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
-            NavigationManager.NavigateTo("/");
-        }
-        catch (Exception e)
-        {
-        }
+        NavigationManager.NavigateTo("/adminlogin");
     }
-
 }

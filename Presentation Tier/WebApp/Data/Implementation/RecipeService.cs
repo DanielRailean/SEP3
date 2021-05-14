@@ -9,27 +9,28 @@ namespace WebApp.Data
     {
         private const string uri = "https://localhost:5001/recipe";
         private readonly HttpClient client;
-        public Task<IList<Recipe>> GetAllRecipes()
+
+        public Task<IList<Recipe>> GetAllRecipesAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Recipe> GetRecipe(int id)
+        public Task<Recipe> GetRecipeAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task CreateRecipe(Order order)
+        public Task CreateRecipeAsync(Recipe recipe)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task RemoveRecipe(Order order)
+        public Task RemoveRecipeAsync(Recipe recipe)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task UpdateRecipe(Order order)
+        public Task UpdateRecipeAsync(Recipe recipe)
         {
             throw new System.NotImplementedException();
         }

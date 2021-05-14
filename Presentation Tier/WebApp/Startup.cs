@@ -33,11 +33,13 @@ namespace WebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Admin", a =>
-                    a.RequireAuthenticatedUser().RequireClaim("Admin"));
                 options.AddPolicy("Customer", a =>
                     a.RequireAuthenticatedUser().RequireClaim("User"));
             });
