@@ -1,0 +1,154 @@
+﻿@page "/ManageRecipes"
+@using WebApp.Models
+@using WebApp.Data
+
+@inject IRecipeService RecipeService
+@inject NavigationManager NavigationManager
+
+<h3>ManageRecipes</h3>
+<button @onclick="@(() => AddRecipe())">
+    <i class="oi oi-plus" style="color: green"/>
+</button>
+<p>
+    Filter by name: <input type="text" @oninput="@(arg => FilterByName(arg))" style="width: 150px"/>
+</p>
+<p>
+    Filter by calories: <input type="number" @oninput="@(arg => FilterByCalories(arg))" style="width: 100px"/>
+</p>
+
+@if (allRecipes == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (!allRecipes.Any())
+{
+    <p>
+        <em>No ingredient items exist. Please add some.</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Calorie(s)</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Remove</th>
+            <th>Edit</th>
+            <th>Add</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (Recipe item in recipesToShow)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Calories</td>
+                <td>@item.Type</td>
+                <td>@item.Price</td>
+                <td>
+                    <button @onclick="@(() => RemoveRecipe(item.Id))">
+                        <i class="oi oi-trash" style="color: red"/>
+                    </button>
+                </td>
+                <td>
+                    <button @onclick="@(() => EditRecipe(item.Id))">
+                        <i class="oi oi-pencil" style="color: #1b6ec2"/>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<Recipe> allRecipes = new List<Recipe>();
+    private IList<Recipe> recipesToShow = new List<Recipe>();
+
+    private string? filterByName = "";
+    private int? filterByCalories = 0;
+    private NutritionType? filterByType;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        allRecipes = await RecipeService.GetAllRecipesAsync();
+        ExecuteFilter();
+    }
+
+    private void RemoveRecipe(int Id)
+    {
+        Recipe recipeToRemove = allRecipes.First(t => t.Id == Id);
+        RecipeService.RemoveRecipeAsync(Id);
+        allRecipes.Remove(recipeToRemove);
+        recipesToShow.Remove(recipeToRemove);
+    }
+
+    private void FilterByName(ChangeEventArgs changeEventArgs)
+    {
+        filterByName = null;
+        try
+        {
+            filterByName = changeEventArgs.Value.ToString();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        ExecuteFilter();
+    }
+
+    private void FilterByCalories(ChangeEventArgs changeEventArgs)
+    {
+        filterByCalories = null;
+        try
+        {
+            filterByCalories = int.Parse(changeEventArgs.Value.ToString());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        ExecuteFilter();
+    }
+
+    // private void FilterByType(ChangeEventArgs changeEventArgs)
+    // {
+    //     filterByType = null;
+    //     try
+    //     {
+    //         filterByType = changeEventArgs.Value.ToString();
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //     }
+    //     ExecuteFilter();
+    // }
+
+    private void ExecuteFilter()
+    {
+        recipesToShow = allRecipes.Where(t =>
+            (!filterByName.Equals("") && t.Name.Contains(filterByName) || filterByName.Equals("")) &&
+            (filterByCalories != 0 && t.Calories == filterByCalories || filterByCalories == null)
+            ).ToList();
+    }
+
+    private void EditRecipe(int id)
+    {
+        NavigationManager.NavigateTo($"/{id}");
+    }
+
+    private void AddRecipe()
+    {
+        NavigationManager.NavigateTo("/addrecipe");
+    }
+
+}

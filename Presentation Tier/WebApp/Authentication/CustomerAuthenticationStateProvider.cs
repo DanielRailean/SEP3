@@ -43,6 +43,11 @@ namespace WebApp.Authentication
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
 
+        public async Task<User> GetUser()
+        {
+            return cachedUser;
+        }
+
         public async Task ValidateLogin(string email, string password)
         {
             Console.WriteLine("Validating log in");
@@ -53,7 +58,7 @@ namespace WebApp.Authentication
 
             try
             {
-                User user = Task.Run(()=> userService.ValidateUserAsync(email, password)).Result;
+                User user = Task.Run(() => userService.ValidateUserAsync(email, password)).Result;
                 identity = SetupClaimsForUser(user);
                 string serializedUser = JsonSerializer.Serialize(user);
                 jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serializedUser);

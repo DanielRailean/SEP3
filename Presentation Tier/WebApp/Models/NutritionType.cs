@@ -1,4 +1,6 @@
-﻿namespace WebApp.Models
+﻿using System;
+
+namespace WebApp.Models
 {
     public enum NutritionType
     {

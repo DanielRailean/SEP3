@@ -8,7 +8,7 @@ namespace API.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; } 
-        [Required, Range(6, 255, ErrorMessage = "Password must be at least 6 characters")]
+        [Required]
         public string Password { get; set; }
         [Required]
         public string FirstName { get; set; }

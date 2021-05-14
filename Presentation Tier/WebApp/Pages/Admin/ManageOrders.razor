@@ -1,0 +1,106 @@
+﻿@page "/orders"
+@using WebApp.Models
+@using WebApp.Data
+
+@inject IOrderService OrderService
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+
+<h3>Orders</h3>
+<p>
+    Filter by user ID: <input type="number" @oninput="@(arg => FilterByUserId(arg))" style="width: 100px"/>
+</p>
+<button @onclick="@(() => ExecuteFilter())">
+    <i class="oi oi-magnifying-glass" style="color: red"/>
+</button>
+@if (!orders.Any())
+{
+    <p>
+        <em>No order matches the search criteria.</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>User</th>
+            <th>Total</th>
+            <th>Is Shipped?</th>
+            <th>Remove</th>
+            <th>Edit</th>
+            <th>Add</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (Order item in orders)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.OrderDate</td>
+                <td>@user.FirstName, @user.LastName, @user.Email</td>
+                <td>@item.TotalPrice</td>
+                <td>@item.IsShipped</td>
+                <td>
+                    <button @onclick="@(() => RemoveOrder(item.Id))">
+                        <i class="oi oi-trash" style="color: red"/>
+                    </button>
+                </td>
+                <td>
+                    <button @onclick="@(() => EditOrder(item.Id))">
+                        <i class="oi oi-pencil" style="color: #1b6ec2"/>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<Order> orders = new List<Order>();
+    private IList<User> users = new List<User>();
+    private User user;
+
+    private int? filterByUserId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderService.GetOrdersByUserAsync(user);
+    }
+
+    private void RemoveOrder(int Id)
+    {
+        Order orderToRemove = orders.First(t => t.Id == Id);
+        OrderService.RemoveOrderAsync(orderToRemove);
+        orders.Remove(orderToRemove);
+    }
+
+    private void FilterByUserId(ChangeEventArgs changeEventArgs)
+    {
+        filterByUserId = null;
+        try
+        {
+            filterByUserId = int.Parse(changeEventArgs.Value.ToString());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    private void ExecuteFilter()
+    {
+        orders = orders.Where(t =>
+            (filterByUserId != 0 && t.UserId == filterByUserId || filterByUserId == null)
+            ).ToList();
+    }
+
+    private void EditOrder(int id)
+    {
+        NavigationManager.NavigateTo($"EditAdults/{id}");
+    }
+
+}

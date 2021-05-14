@@ -13,7 +13,7 @@
     Filter by Cost: <input type="text" @oninput="@(arg => FilterByCost(arg))" style="width: 150px"/>
 </p>
 <p> 
-    Filter by Delivered: <input type="text" @oninput="@(arg => FilterByShipped(arg))" style="width: 150px"/>
+    Filter by Shipped: <input type="text" @oninput="@(arg => FilterByShipped(arg))" style="width: 150px"/>
 </p>
 
 @if (ordersToShow == null)
@@ -52,12 +52,12 @@
                     <td>
                         <AuthorizeView>
                             <NotAuthorized>
-                                <button @onclick="@(() => RemoveOrder(item.Id))" disabled>
+                                <button @onclick="@(() => RemoveOrder(item))" disabled>
                                     <i class="oi oi-trash" style="color: red"/>
                                 </button>
                             </NotAuthorized>
                             <Authorized>
-                                <button @onclick="@(() => RemoveOrder(item.Id))">
+                                <button @onclick="@(() => RemoveOrder(item))">
                                     <i class="oi oi-trash" style="color: red"/>
                                 </button>
                             </Authorized>
@@ -153,10 +153,10 @@
         NavigationManager.NavigateTo($"EditOrder/{id}");
     }
 
-    private void RemoveOrder(int itemOrderId)
+    private void RemoveOrder(Order order)
     {
-        Order orderToRemove = allOrders.First(t => t.Id == itemOrderId);
-        OrderService.RemoveOrderAsync(itemOrderId);
+        Order orderToRemove = allOrders.First(t => t.Id == order.Id);
+        OrderService.RemoveOrderAsync(order);
         allOrders.Remove(orderToRemove);
         ordersToShow.Remove(orderToRemove);
     }

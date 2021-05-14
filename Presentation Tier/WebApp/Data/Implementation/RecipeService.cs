@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebApp.Models;
 
@@ -10,24 +13,50 @@ namespace WebApp.Data
         private const string uri = "https://localhost:5001/recipe";
         private readonly HttpClient client;
 
-        public Task<IList<Recipe>> GetAllRecipesAsync()
+        public async Task<IList<Recipe>> GetAllRecipesAsync()
         {
-            throw new System.NotImplementedException();
+            HttpResponseMessage response = await client.GetAsync(uri + "/getallrecipes");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
+            
+            string result = await response.Content.ReadAsStringAsync();
+            List<Recipe> recipes = JsonSerializer.Deserialize<List<Recipe>>(result, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return recipes;
         }
 
-        public Task<Recipe> GetRecipeAsync(int id)
+        public async Task<Recipe> GetRecipeAsync(int recipeId)
         {
-            throw new System.NotImplementedException();
+            var adultAsJson = await client.GetStringAsync($"{uri}/getrecipe?id={recipeId}");
+            var recipe = JsonSerializer.Deserialize<Recipe>(adultAsJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return recipe;
         }
 
-        public Task CreateRecipeAsync(Recipe recipe)
+        public async Task CreateRecipeAsync(Recipe recipe)
         {
-            throw new System.NotImplementedException();
+            var recipeAsJson = JsonSerializer.Serialize(recipe);
+            HttpContent content = new StringContent(recipeAsJson,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PostAsync(uri, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
         }
 
-        public Task RemoveRecipeAsync(Recipe recipe)
+        public async Task RemoveRecipeAsync(int recipeId)
         {
-            throw new System.NotImplementedException();
+            await client.DeleteAsync($"{uri}/{recipeId}");
         }
 
         public Task UpdateRecipeAsync(Recipe recipe)
