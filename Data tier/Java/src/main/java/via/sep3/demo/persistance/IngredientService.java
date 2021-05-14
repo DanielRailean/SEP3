@@ -1,5 +1,6 @@
 package via.sep3.demo.persistance;
 
+import org.springframework.stereotype.Service;
 import via.sep3.demo.Model.Ingredient;
 
 import java.sql.PreparedStatement;
@@ -9,14 +10,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class IngredientService extends Connection implements IIngredientService{
     public java.sql.Connection getConnection() throws SQLException
     {
         return super.getConnection();
     }
     @Override
-    public ArrayList<Ingredient> GetAllIngredients() {
-        ArrayList<Ingredient> ingredients=new ArrayList<>();
+    public List<Ingredient> GetAllIngredients() {
+        List<Ingredient> ingredients=new ArrayList<>();
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
@@ -36,8 +38,10 @@ public class IngredientService extends Connection implements IIngredientService{
         {
             e.printStackTrace();
         }
+        System.out.println("All ingredients are here.");
 
-        return ingredients;    }
+        return ingredients;
+    }
 
 
     @Override
@@ -45,7 +49,7 @@ public class IngredientService extends Connection implements IIngredientService{
         try(java.sql.Connection connection = getConnection())
         {
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("select * from Ingredients where Name=?");
+                    connection.prepareStatement("select * from Ingredients where name=?");
             preparedStatement.setString(1,name);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -55,6 +59,7 @@ public class IngredientService extends Connection implements IIngredientService{
                 String Name = resultSet.getString("Name");
                 int Calories = resultSet.getInt("Calories");
                 Ingredient ingredient= new Ingredient(id,Name,Calories);
+                System.out.println("Ingredient found.");
 
             return ingredient ;           }
         }
@@ -62,7 +67,6 @@ public class IngredientService extends Connection implements IIngredientService{
         {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -77,6 +81,7 @@ public class IngredientService extends Connection implements IIngredientService{
             preparedStatement.setDouble(2,ingredient.getCalories());
 
             preparedStatement.executeUpdate();
+            System.out.println("Ingredient added.");
 
         }
         catch (SQLException throwables)
@@ -94,6 +99,8 @@ public class IngredientService extends Connection implements IIngredientService{
                     connection.prepareStatement("delete from Ingredients where Name = ?");
             preparedStatement.setString(1,ingredient.getName());
             preparedStatement.executeUpdate();
+
+            System.out.println("Ingredient removed.");
         }
         catch (SQLException e)
         {
@@ -107,11 +114,13 @@ public class IngredientService extends Connection implements IIngredientService{
         {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(
-                            "update Ingredients set password value (?) where email = ?", Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1,ingredient.getName());
-            preparedStatement.setDouble(2,ingredient.getCalories());
+                            "update Ingredients set calories = ?  where name = ?", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setDouble(1,ingredient.getCalories());
+            preparedStatement.setString(2,ingredient.getName());
+
 
             preparedStatement.executeUpdate();
+            System.out.println("Ingredient updated.");
 
         }
         catch (SQLException throwables)

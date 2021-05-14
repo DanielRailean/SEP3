@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IIngredientService {
-    ArrayList<Ingredient> GetAllIngredients();
+    List<Ingredient> GetAllIngredients();
     Ingredient GetOneIngredient(String name);
     Ingredient AddIngredient(Ingredient ingredient);
     Ingredient RemoveIngredient(Ingredient ingredient);

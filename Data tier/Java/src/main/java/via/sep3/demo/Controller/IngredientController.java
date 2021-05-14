@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 public class IngredientController {
+    @Autowired
     private IIngredientService IngredientService;
 
 
@@ -17,7 +18,8 @@ public class IngredientController {
     public List<Ingredient> GetAllIngredients(){
         return IngredientService.GetAllIngredients();
     }
-    @GetMapping("/GetOneIngredients")
+
+    @GetMapping("/GetOneIngredient")
     public Ingredient GetOneIngredient(@RequestParam String name){
         return IngredientService.GetOneIngredient(name);
     }

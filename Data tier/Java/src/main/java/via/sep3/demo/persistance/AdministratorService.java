@@ -18,8 +18,6 @@ public class AdministratorService extends Connection implements IAdministratorSe
     }
 
 
-
-
     @Override
     public Administrator ValidateAdministrator(String Email, String Password) {
         try(java.sql.Connection connection = getConnection())
