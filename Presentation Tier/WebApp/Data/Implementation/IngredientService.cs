@@ -12,9 +12,20 @@ namespace WebApp.Data
     {
         private const string uri = "https://localhost:5001/ingredient";
         private readonly HttpClient client;
+        
+        public IngredientService()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            }; 
+            client = new HttpClient(clientHandler);
+        }
+        
         public async Task<IList<Ingredient>> GetAllIngredientsAsync()
         {
-            HttpResponseMessage response = await client.GetAsync(uri);
+            HttpResponseMessage response = await client.GetAsync(uri + "/getallingredients");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
@@ -23,8 +34,7 @@ namespace WebApp.Data
             string result = await response.Content.ReadAsStringAsync();
             List<Ingredient> ingredients = JsonSerializer.Deserialize<List<Ingredient>>(result, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                PropertyNameCaseInsensitive = true
             });
             return ingredients;
         }

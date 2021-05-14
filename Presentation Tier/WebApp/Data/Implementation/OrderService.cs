@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WebApp.Models;
@@ -31,10 +32,11 @@ namespace WebApp.Data
 
         public async Task<Order> GetOrderAsync(int orderId)
         {
-            var orderAsJson = await client.GetStringAsync($"{uri}/getorder?{orderId}");
+            var orderAsJson = await client.GetStringAsync($"{uri}/getorder?id={orderId}");
             Order order = JsonSerializer.Deserialize<Order>(orderAsJson, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
             return order;
         }
@@ -46,17 +48,33 @@ namespace WebApp.Data
 
         public async Task CreateOrderAsync(Order order)
         {
-            throw new System.NotImplementedException();
+            var orderAsJson = JsonSerializer.Serialize(order);
+            HttpContent content = new StringContent(orderAsJson,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PostAsync(uri, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
         }
 
-        public async Task RemoveOrderAsync(int orderId)
+        public async Task RemoveOrderAsync(Order order)
         {
-            throw new System.NotImplementedException();
+            await client.DeleteAsync(uri);
         }
 
-        public async Task UpdateOrderAsync(int orderId)
+        public async Task UpdateOrderAsync(Order order)
         {
-            throw new System.NotImplementedException();
+            var orderAsJson = JsonSerializer.Serialize(order);
+            HttpContent content = new StringContent(orderAsJson,
+                Encoding.UTF8,
+                "application/json");
+            HttpResponseMessage response = await client.PutAsync($"{uri}/{order.Id}", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
         }
     }
 }
