@@ -25,7 +25,7 @@ public class RecipeService extends Connection implements IRecipeService{
             preparedStatement.setDouble(2,recipe.getCalories());
             preparedStatement.setString(3,recipe.getNutritionType());
             preparedStatement.setString(4,recipe.getFoodType());
-            preparedStatement.setDouble(5,recipe.getCalories());
+            preparedStatement.setDouble(5,recipe.getPrice());
 
             preparedStatement.executeUpdate();
             System.out.println("Recipe is added.");
