@@ -10,13 +10,13 @@ using WebApp.Models;
 
 namespace WebApp.Authentication
 {
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
+    public class CustomerAuthenticationStateProvider : AuthenticationStateProvider
     {
-private readonly IJSRuntime jsRuntime;
+        private readonly IJSRuntime jsRuntime;
         private IUserService userService;
         private User cachedUser;
 
-        public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService)
+        public CustomerAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService)
         {
             this.jsRuntime = jsRuntime;
             this.userService = userService;

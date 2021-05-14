@@ -1,6 +1,49 @@
 ﻿@page "/adminlogin"
-<h3>Administration Interface</h3>
+@using WebApp.Authentication
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+@namespace LoginComponent
+
+<h3>Administration Interface</h3>
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <NotAuthorized>
+            <div class="form-group">
+                <label>E-mail:</label>
+                <input type="text" placeholder="E-mail address" @bind-value="email"/>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" placeholder="Password" @bind-value="password">
+            </div>
+            <div style="color: red">@errorMessage</div>
+
+            <button href="" @onclick="PerformLogin">
+                Login
+            </button>
+        </NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 @code {
-    
+    private string email;
+    private string password;
+    private string errorMessage;
+
+    private async Task PerformLogin()
+    {
+        errorMessage = "";
+        try
+        {
+            await ((AdminAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(email, password);
+            email = "";
+            password = "";
+            NavigationManager.NavigateTo("/administration");
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+    }
 }
