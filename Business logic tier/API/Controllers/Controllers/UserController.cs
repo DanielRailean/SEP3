@@ -37,7 +37,7 @@ namespace API.Controllers
         {
             try
             {
-                User valid = userService.ValidateUser(email, password);
+                User valid = await userService.ValidateUser(email, password);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -52,7 +52,7 @@ namespace API.Controllers
         {
             try
             {
-                User valid = userService.UpdateUser(user,password);
+                User valid = await userService.UpdateUser(user,password);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -67,7 +67,7 @@ namespace API.Controllers
         {
             try
             {
-                User valid = userService.RemoveUser(user);
+                User valid = await userService.RemoveUser(user);
                 return Ok(valid);
             }
             catch (Exception e)

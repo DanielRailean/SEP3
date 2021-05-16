@@ -39,7 +39,7 @@ namespace API.Controllers
         {
             try
             {
-                Ingredient valid = ingredientService.GetIngredient(id);
+                Ingredient valid = await ingredientService.GetIngredient(id);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -54,7 +54,7 @@ namespace API.Controllers
         {
             try
             {
-                IList<Ingredient> valid = ingredientService.GetAllIngredients();
+                IList<Ingredient> valid = await ingredientService.GetAllIngredients();
                 return Ok(valid);
             }
             catch (Exception e)
@@ -70,7 +70,7 @@ namespace API.Controllers
         {
             try
             {
-                Ingredient valid = ingredientService.UpdateIngredient(ingredient);
+                Ingredient valid = await ingredientService.UpdateIngredient(ingredient);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -85,7 +85,7 @@ namespace API.Controllers
         {
             try
             {
-                Ingredient valid = ingredientService.RemoveIngredient(ingredient);
+                Ingredient valid = await ingredientService.RemoveIngredient(ingredient);
                 return Ok(valid);
             }
             catch (Exception e)

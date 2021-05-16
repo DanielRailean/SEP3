@@ -39,7 +39,7 @@ namespace API.Controllers
         {
             try
             {
-                Order valid = orderService.GetOrder(id);
+                Order valid = await orderService.GetOrder(id);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -54,7 +54,7 @@ namespace API.Controllers
         {
             try
             {
-                IList<Order> valid = orderService.GetUserOrders(email,password);
+                IList<Order> valid = await orderService.GetUserOrders(email,password);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -69,7 +69,7 @@ namespace API.Controllers
         {
             try
             {
-                Order valid = orderService.UpdateOrder(order);
+                Order valid = await orderService.UpdateOrder(order);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -84,7 +84,7 @@ namespace API.Controllers
         {
             try
             {
-                Order valid = orderService.RemoveOrder(order);
+                Order valid = await orderService.RemoveOrder(order);
                 return Ok(valid);
             }
             catch (Exception e)
