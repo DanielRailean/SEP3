@@ -1,4 +1,5 @@
 ﻿@page "/manageorders"
+@attribute [Authorize(Policy = "Admin")]
 @using WebApp.Models
 @using WebApp.Data
 

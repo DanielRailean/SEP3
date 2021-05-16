@@ -1,4 +1,5 @@
 ﻿@page "/manageingredients"
+@attribute [Authorize(Policy = "Admin")]
 @using WebApp.Data
 @using WebApp.Models
 
@@ -38,7 +39,6 @@ else
             <th>Calorie(s)</th>
             <th>Remove</th>
             <th>Edit</th>
-            <th>Add</th>
         </tr>
         </thead>
         <tbody>
@@ -87,7 +87,7 @@ else
     private void RemoveIngredient(int Id)
     {
         Ingredient ingredientToRemove = allIngredients.First(t => t.Id == Id);
-        IngredientService.RemoveIngredientAsync(Id);
+        IngredientService.RemoveIngredientAsync(ingredientToRemove);
         allIngredients.Remove(ingredientToRemove);
         ingredientsToShow.Remove(ingredientToRemove);
     }
@@ -115,7 +115,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(e.StackTrace);
         }
         ExecuteFilter();
     }

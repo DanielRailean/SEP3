@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApp.Models;
 
 namespace WebApp.Data
@@ -8,6 +9,7 @@ namespace WebApp.Data
         Task RegisterUserAsync(User user);
         Task<User> ValidateUserAsync(string email, string password);
         Task UpdateUserAsync(User user);
-        Task RemoveUserAsync(int userId);
+        Task RemoveUserAsync(User user);
+        Task<IList<User>> GetAllUsersAsync();
     }
 }

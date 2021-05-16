@@ -9,4 +9,10 @@
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.5" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Components\AddEditIngredient.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Components\AddEditRecipe.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Components\EditUser.razor" />
+    </ItemGroup>
+
 </Project>
