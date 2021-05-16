@@ -38,11 +38,12 @@ namespace WebApp
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<AuthenticationStateProvider, CustomerAuthenticationStateProvider>();
-            // services.AddScoped<AuthenticationStateProvider, AdminAuthenticationStateProvider>();
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("Admin", a =>
+                    a.RequireAuthenticatedUser().RequireClaim("SecurityLevel", "2"));
                 options.AddPolicy("Customer", a =>
-                    a.RequireAuthenticatedUser().RequireClaim("User"));
+                    a.RequireAuthenticatedUser().RequireClaim("SecurityLevel", "1", "2"));
             });
         }
 

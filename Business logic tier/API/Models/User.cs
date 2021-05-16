@@ -20,5 +20,6 @@ namespace API.Models
         public string Address { get; set; }
         [Required]
         public int PostalCode { get; set; }
+        public int SecurityLevel { get; set; }
     }
 }

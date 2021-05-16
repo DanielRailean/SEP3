@@ -1,4 +1,4 @@
-﻿@page "/orders"
+﻿@page "/manageorders"
 @using WebApp.Models
 @using WebApp.Data
 
@@ -100,7 +100,7 @@ else
 
     private void EditOrder(int id)
     {
-        NavigationManager.NavigateTo($"EditAdults/{id}");
+        NavigationManager.NavigateTo($"EditOrder/{id}");
     }
 
 }

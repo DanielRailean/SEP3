@@ -19,7 +19,8 @@ namespace WebApp.Models
         public string Address { get; set; }
         [Required]
         public int PostalCode { get; set; }
-        
+        public int SecurityLevel { get; set; }
+
         public void Update(User user)
         {
             UserId = user.UserId;
@@ -30,6 +31,7 @@ namespace WebApp.Models
             Phone = user.Phone;
             Address = user.Address;
             PostalCode = user.PostalCode;
+            SecurityLevel = user.SecurityLevel;
         }
     }
 }

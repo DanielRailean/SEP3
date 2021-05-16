@@ -83,7 +83,7 @@ namespace WebApp.Authentication
         {
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, user.Email));
-            claims.Add(new Claim(ClaimTypes.Role, "User"));
+            claims.Add(new Claim("SecurityLevel", user.SecurityLevel.ToString()));
             ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth_type");
             return identity;
         }

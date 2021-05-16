@@ -1,1 +1,34 @@
-[{"Email":"dd","Password":"1234","FirstName":null,"LastName":null,"Address":null,"PostalCode":0,"Phone":0,"UserId":0},{"Email":"dd@gmail.com","Password":"12345","FirstName":"Daniel","LastName":"Railean","Address":"Strandgade 22","PostalCode":8700,"Phone":50370031,"UserId":2},{"Email":"mark@mark.com","Password":"123456","FirstName":"Mark","LastName":"Vin","Address":"Something","PostalCode":5400,"Phone":51651156,"UserId":3}]
+[
+  {
+    "UserId": 0,
+    "Email": "dd",
+    "Password": "1234",
+    "FirstName": null,
+    "LastName": null,
+    "Phone": 0,
+    "Address": null,
+    "PostalCode": 0
+  },
+  {
+    "UserId": 2,
+    "Email": "dd@gmail.com",
+    "Password": "12345",
+    "FirstName": "Daniel",
+    "LastName": "Railean",
+    "Phone": 50370031,
+    "Address": "Strandgade 22",
+    "PostalCode": 8700,
+    "SecurityLevel": 1
+  },
+  {
+    "UserId": 3,
+    "Email": "mark@mark.com",
+    "Password": "123456",
+    "FirstName": "Mark",
+    "LastName": "Vincze",
+    "Phone": 51651156,
+    "Address": "Something",
+    "PostalCode": 8700,
+    "SecurityLevel": 2
+  }
+]
