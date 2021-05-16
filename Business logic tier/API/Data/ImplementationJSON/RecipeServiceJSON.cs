@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using API.Models;
 
 namespace API.Data
@@ -50,19 +51,19 @@ namespace API.Data
             File.WriteAllText(RecipesFile, recipesInJson);
         }
 
-        public Recipe GetRecipe(int id)
+        public async Task<Recipe> GetRecipe(int id)
         {
             var returned = allRecipes.First(i => i.Id == id);
             if (returned == null) throw new Exception("Recipe do not exist");
             return returned;
         }
 
-        public IList<Recipe> GetAllRecipes()
+        public async Task<IList<Recipe>> GetAllRecipes()
         {
             return allRecipes;
         }
 
-        public Recipe AddRecipe(Recipe recipe)
+        public async Task<Recipe> AddRecipe(Recipe recipe)
         {
             Recipe first = null;
             try
@@ -86,7 +87,7 @@ namespace API.Data
         }
 
 
-        public Recipe UpdateRecipe(Recipe recipe)
+        public async Task<Recipe> UpdateRecipe(Recipe recipe)
         {
             Recipe toUpdate = allRecipes.First(i => i.Id == recipe.Id);
             if (toUpdate == null) throw new Exception("Recipe does not exist");
@@ -96,7 +97,7 @@ namespace API.Data
             return toUpdate;
         }
 
-        public Recipe RemoveRecipe(Recipe recipe)
+        public async Task<Recipe> RemoveRecipe(Recipe recipe)
         {
             Recipe toRemove = allRecipes.First(i => i.Id == recipe.Id);
             if (toRemove == null) throw new Exception("Recipe does not exist");

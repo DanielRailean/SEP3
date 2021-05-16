@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using API.Models;
 
 namespace API.Data
@@ -46,7 +47,7 @@ namespace API.Data
             File.WriteAllText(UsersFile, usersInJson);
         }
 
-        public User ValidateUser(string email, string password)
+        public async Task<User> ValidateUser(string email, string password)
         {
             var user = AllUsers.First(u => u.Email.Equals(email));
             if (user == null) throw new Exception("User do not exist");
@@ -54,7 +55,7 @@ namespace API.Data
             return user;
         }
 
-        public User RegisterUser(User user)
+        public async Task<User> RegisterUser(User user)
         {
             User? first = null;
             try
@@ -78,7 +79,7 @@ namespace API.Data
         }
 
 
-        public User UpdateUser(User user, string password)
+        public async Task<User> UpdateUser(User user, string password)
         {
             User toUpdate = AllUsers.First(u => u.UserId == user.UserId);
             if (toUpdate == null) throw new Exception("User does not exist");
@@ -93,7 +94,7 @@ namespace API.Data
             return toUpdate;
         }
 
-        public User RemoveUser(User user)
+        public async Task<User> RemoveUser(User user)
         {
             User toRemove = AllUsers.First(u => u.Email == user.Email);
             if (toRemove == null) throw new Exception("User does not exist");

@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using API.Models;
 
 namespace API.Data
 {
     public interface IOrderService
     {
-        Order AddOrder(Order order);
-        Order GetOrder(int id);
-        Order UpdateOrder(Order order);
-        Order RemoveOrder(Order order);
+        Task<Order> AddOrder(Order order);
+        Task<Order> GetOrder(int id);
+        Task<Order> UpdateOrder(Order order);
+        Task<Order> RemoveOrder(Order order);
 
-        IList<Order> GetUserOrders(string email, string password);
+        Task<IList<Order>> GetUserOrders(string email, string password);
     }
 }

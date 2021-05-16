@@ -39,7 +39,7 @@ namespace API.Controllers
         {
             try
             {
-                Recipe valid = recipeService.GetRecipe(id);
+                Recipe valid = await recipeService.GetRecipe(id);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -54,7 +54,7 @@ namespace API.Controllers
         {
             try
             {
-                IList<Recipe> valid = recipeService.GetAllRecipes();
+                IList<Recipe> valid = await recipeService.GetAllRecipes();
                 return Ok(valid);
             }
             catch (Exception e)
@@ -69,7 +69,7 @@ namespace API.Controllers
         {
             try
             {
-                Recipe valid = recipeService.UpdateRecipe(recipe);
+                Recipe valid = await recipeService.UpdateRecipe(recipe);
                 return Ok(valid);
             }
             catch (Exception e)
@@ -84,7 +84,7 @@ namespace API.Controllers
         {
             try
             {
-                Recipe valid = recipeService.RemoveRecipe(recipe);
+                Recipe valid = await recipeService.RemoveRecipe(recipe);
                 return Ok(valid);
             }
             catch (Exception e)

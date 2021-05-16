@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using API.Models;
 
 namespace API.Data
@@ -53,7 +54,7 @@ namespace API.Data
             return administrator;
         }
 
-        public Administrator RegisterAdministrator(Administrator administrator)
+        public async Task<Administrator> RegisterAdministrator(Administrator administrator)
         {
             Administrator? first = null;
             try
@@ -76,7 +77,7 @@ namespace API.Data
             return administrator;
         }
         
-        public Administrator RemoveAdministrator(Administrator administrator)
+        public async Task<Administrator> RemoveAdministrator(Administrator administrator)
         {
             Administrator toRemove = AllAdministrators.First(u => u.Email == administrator.Email);
             if (toRemove == null) throw new Exception("Administrator does not exist");

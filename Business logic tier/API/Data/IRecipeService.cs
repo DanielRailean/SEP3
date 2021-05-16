@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using API.Models;
 
 namespace API.Data
 {
     public interface IRecipeService
     {
-        Recipe AddRecipe(Recipe recipe);
-        Recipe GetRecipe(int id);
-        IList<Recipe> GetAllRecipes();
-        Recipe UpdateRecipe(Recipe recipe);
-        Recipe RemoveRecipe(Recipe recipe);
+        Task<Recipe> AddRecipe(Recipe recipe);
+        Task<Recipe> GetRecipe(int id);
+        Task<IList<Recipe>> GetAllRecipes();
+        Task<Recipe> UpdateRecipe(Recipe recipe);
+        Task<Recipe> RemoveRecipe(Recipe recipe);
        
     }
 }
