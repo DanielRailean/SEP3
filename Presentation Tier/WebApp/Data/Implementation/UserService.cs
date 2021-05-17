@@ -63,11 +63,6 @@ namespace WebApp.Data
 
         public async Task RemoveUserAsync(User user)
         {
-            // var userAsJson = JsonSerializer.Serialize(user);
-            // HttpContent content = new StringContent(userAsJson,
-            //     Encoding.UTF8,
-            //     "application/json");
-            // await client.DeleteAsync(uri);
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Delete,

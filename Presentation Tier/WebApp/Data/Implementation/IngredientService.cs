@@ -65,8 +65,6 @@ namespace WebApp.Data
 
         public async Task RemoveIngredientAsync(Ingredient ingredient)
         {
-            // TODO
-            // await client.DeleteAsync($"{uri}/{ingredientId}");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Delete,

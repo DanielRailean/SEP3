@@ -43,7 +43,15 @@ namespace WebApp.Data
 
         public async Task<IList<Order>> GetOrdersByUserAsync(User user)
         {
-            throw new System.NotImplementedException();
+            var orderAsJson = await client.GetStringAsync(
+                $"{uri}/getuserorders?email={user.Email}&password={user.Password}");
+            IList<Order> order = JsonSerializer.Deserialize<IList<Order>>(orderAsJson, 
+                new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return order;
         }
 
         public async Task CreateOrderAsync(Order order)
@@ -61,7 +69,13 @@ namespace WebApp.Data
 
         public async Task RemoveOrderAsync(Order order)
         {
-            await client.DeleteAsync(uri);
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(uri),
+                Content = new StringContent(JsonSerializer.Serialize(order), Encoding.UTF8, "application/json")
+            };
+            await client.SendAsync(request);
         }
 
         public async Task UpdateOrderAsync(Order order)

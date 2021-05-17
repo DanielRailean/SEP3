@@ -54,14 +54,26 @@ namespace WebApp.Data
             }
         }
 
-        public async Task RemoveRecipeAsync(int recipeId)
+        public async Task RemoveRecipeAsync(Recipe recipe)
         {
-            await client.DeleteAsync($"{uri}/{recipeId}");
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(uri),
+                Content = new StringContent(JsonSerializer.Serialize(recipe), Encoding.UTF8, "application/json")
+            };
+            await client.SendAsync(request);
         }
 
-        public Task UpdateRecipeAsync(Recipe recipe)
+        public async Task UpdateRecipeAsync(Recipe recipe)
         {
-            throw new System.NotImplementedException();
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Put,
+                RequestUri = new Uri(uri),
+                Content = new StringContent(JsonSerializer.Serialize(recipe), Encoding.UTF8, "application/json")
+            };
+            await client.SendAsync(request);
         }
     }
 }
