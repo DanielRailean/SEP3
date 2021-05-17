@@ -12,6 +12,18 @@ public class User {
     int Phone;
     String Address;
     int PostalCode;
+    int SecurityLevel;
+
+    public User( String email, String password, String firstName, String lastName, int phone, String address, int postalCode, int securityLevel) {
+    Email=email;
+    Password=password;
+    FirstName=firstName;
+    LastName=lastName;
+    Phone=phone;
+    Address=address;
+    PostalCode=postalCode;
+    SecurityLevel=securityLevel;
+    }
 
     @Override
     public String toString() {
@@ -22,12 +34,21 @@ public class User {
                 ", FirstName='" + FirstName + '\'' +
                 ", LastName='" + LastName + '\'' +
                 ", Phone=" + Phone +
-                ", Address=" + Address +
+                ", Address='" + Address + '\'' +
                 ", PostalCode=" + PostalCode +
+                ", SecurityLevel=" + SecurityLevel +
                 '}';
     }
 
     public User() {
+    }
+
+    public int getSecurityLevel() {
+        return SecurityLevel;
+    }
+
+    public void setSecurityLevel(int securityLevel) {
+        SecurityLevel = securityLevel;
     }
 
     public void setEmail(String email) {
@@ -95,13 +116,5 @@ public class User {
         PostalCode = postalCode;
     }
 
-    public User(String email, String password, String firstName, String lastName, int phone, String  address, int postalCode) {
-        Email = email;
-        Password = password;
-        FirstName = firstName;
-        LastName = lastName;
-        Phone = phone;
-        Address = address;
-        PostalCode = postalCode;
-    }
+
 }
