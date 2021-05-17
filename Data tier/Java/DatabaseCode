@@ -9,12 +9,13 @@ CREATE TABLE users(
 	LastName VARCHAR(30) ,
 	Phone int,
 	Address VARCHAR(30),
-	PostalCode int
+	PostalCode int,
+	SecurityLevel int
 );
 
 SELECT*FROM Users;
 INSERT INTO Users(Email,Password,FirstName,LastName,Phone,Address,PostalCode) VALUES('Satish','grg','satish','gurung',200,'horsens',3200);
-
+DELETE  FROM users;
 
 CREATE TABLE administrators(
 Id Serial PRIMARY KEY,
@@ -25,7 +26,7 @@ Insert into administrators(Email,Password) VALUES(
 								 'Satish','gurung');
 	DELETE From administrators ;
 	SELECT * FROM administrators;
-
+	
 
 CREATE TABLE ingredients(
 	Id SERIAL PRIMARY KEY,
@@ -49,7 +50,7 @@ CREATE TABLE orders(
 	DeliveryPrice int,
 	Currency VARCHAR(50),
 	IsDelivered boolean,
-	userId int
+	userId int 
 );
 
 SELECT* FROM orders;
