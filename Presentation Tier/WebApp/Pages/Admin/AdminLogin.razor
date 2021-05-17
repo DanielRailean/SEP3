@@ -19,10 +19,10 @@
                 <input type="password" placeholder="Password" @bind-value="password">
             </div>
             <div style="color: red">@errorMessage</div>
-
-            <button href="" @onclick="PerformLogin">
-                Login
-            </button>
+            @* *@
+            @* <button href="" @onclick="PerformLogin"> *@
+            @*     Login *@
+            @* </button> *@
         </NotAuthorized>
     </AuthorizeView>
 </CascadingAuthenticationState>
@@ -31,19 +31,19 @@
     private string password;
     private string errorMessage;
 
-    private async Task PerformLogin()
-    {
-        errorMessage = "";
-        try
-        {
-            await ((AdminAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(email, password);
-            email = "";
-            password = "";
-            NavigationManager.NavigateTo("/administration");
-        }
-        catch (Exception e)
-        {
-            errorMessage = e.Message;
-        }
-    }
+    // private async Task PerformLogin()
+    // {
+    //     errorMessage = "";
+    //     try
+    //     {
+    //         await ((AdminAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(email, password);
+    //         email = "";
+    //         password = "";
+    //         NavigationManager.NavigateTo("/administration");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         errorMessage = e.Message;
+    //     }
+    // }
 }

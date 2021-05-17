@@ -1,6 +1,108 @@
 ﻿@page "/Users"
+@attribute [Authorize(Policy = "Admin")]
+@using WebApp.Models
+@using WebApp.Data
+
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+
 <h3>Users</h3>
+<p>
+    Filter by name: <input type="text" @oninput="@(arg => FilterByName(arg))" style="width: 150px"/>
+</p>
+
+@if (allUsers == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (!allUsers.Any())
+{
+    <p>
+        <em>No user exists.</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>E-mail</th>
+            <th>Phone</th>
+            <th>Remove</th>
+            <th>Edit</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (User item in usersToShow)
+        {
+            <tr>
+                <td>@item.UserId</td>
+                <td>@item.FirstName, @item.LastName</td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+                <td>
+                    <button @onclick="@(() => RemoveUser(item.UserId))">
+                        <i class="oi oi-trash" style="color: red"/>
+                    </button>
+                </td>
+                <td>
+                    <button @onclick="@(() => EditUser(item.UserId))">
+                        <i class="oi oi-pencil" style="color: #1b6ec2"/>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
 
 @code {
+    private IList<User> allUsers = new List<User>();
+    private IList<User> usersToShow = new List<User>();
     
+    private string? filterByName = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        allUsers = await UserService.GetAllUsersAsync();
+    }
+    
+    private void RemoveUser(int Id)
+    {
+        User userToRemove = allUsers.First(t => t.UserId == Id);
+        UserService.RemoveUserAsync(userToRemove);
+        allUsers.Remove(userToRemove);
+        usersToShow.Remove(userToRemove);
+    }
+    
+    private void FilterByName(ChangeEventArgs changeEventArgs)
+    {
+        filterByName = null;
+        try
+        {
+            filterByName = changeEventArgs.Value.ToString();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        ExecuteFilter();
+    }
+    
+    private void ExecuteFilter()
+    {
+        usersToShow = allUsers.Where(t =>
+            (!filterByName.Equals("") && t.FirstName.Contains(filterByName) || filterByName.Equals("")) &&
+            (!filterByName.Equals("") && t.LastName.Contains(filterByName) || filterByName.Equals(""))
+            ).ToList();
+    }
+    
+    private void EditUser(int id)
+    {
+        NavigationManager.NavigateTo($"/{id}");
+    }
 }

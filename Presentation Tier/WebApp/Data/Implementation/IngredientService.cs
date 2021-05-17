@@ -63,10 +63,17 @@ namespace WebApp.Data
             }
         }
 
-        public async Task RemoveIngredientAsync(int ingredientId)
+        public async Task RemoveIngredientAsync(Ingredient ingredient)
         {
             // TODO
-            await client.DeleteAsync($"{uri}/{ingredientId}");
+            // await client.DeleteAsync($"{uri}/{ingredientId}");
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(uri),
+                Content = new StringContent(JsonSerializer.Serialize(ingredient), Encoding.UTF8, "application/json")
+            };
+            await client.SendAsync(request);
         }
 
         public async Task UpdateIngredientAsync(Ingredient ingredient)

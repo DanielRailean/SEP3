@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -11,6 +12,7 @@ namespace WebApp.Data
     {
         private const string uri = "https://localhost:5001/user";
         private readonly HttpClient client;
+        private User currentUser;
         public UserService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -59,9 +61,25 @@ namespace WebApp.Data
             }
         }
 
-        public async Task RemoveUserAsync(int userId)
+        public async Task RemoveUserAsync(User user)
         {
-            await client.DeleteAsync($"{uri}/{userId}");
+            // var userAsJson = JsonSerializer.Serialize(user);
+            // HttpContent content = new StringContent(userAsJson,
+            //     Encoding.UTF8,
+            //     "application/json");
+            // await client.DeleteAsync(uri);
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(uri),
+                Content = new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json")
+            };
+            await client.SendAsync(request);
+        }
+
+        public Task<IList<User>> GetAllUsersAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

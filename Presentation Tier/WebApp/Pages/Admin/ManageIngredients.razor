@@ -1,4 +1,5 @@
 ﻿@page "/manageingredients"
+@attribute [Authorize(Policy = "Admin")]
 @using WebApp.Data
 @using WebApp.Models
 
@@ -12,6 +13,9 @@
 <p>
     Filter by calories: <input type="number" @oninput="@(arg => FilterByCalories(arg))" style="width: 100px"/>
 </p>
+<button @onclick="@(() => AddIngredient())">
+    <i class="oi oi-plus" style="color: green"/>
+</button>
 
 @if (allIngredients == null)
 {
@@ -35,7 +39,6 @@ else
             <th>Calorie(s)</th>
             <th>Remove</th>
             <th>Edit</th>
-            <th>Add</th>
         </tr>
         </thead>
         <tbody>
@@ -53,11 +56,6 @@ else
                 <td>
                     <button @onclick="@(() => EditIngredient(item.Id))">
                         <i class="oi oi-pencil" style="color: #1b6ec2"/>
-                    </button>
-                </td>
-                <td>
-                    <button @onclick="@(() => EditIngredient(item.Id))">
-                        <i class="oi oi-plus" style="color: green"/>
                     </button>
                 </td>
             </tr>
@@ -79,7 +77,7 @@ else
         allIngredients = await IngredientService.GetAllIngredientsAsync();
         ExecuteFilter();
     }
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         allIngredients = await IngredientService.GetAllIngredientsAsync();
@@ -89,7 +87,7 @@ else
     private void RemoveIngredient(int Id)
     {
         Ingredient ingredientToRemove = allIngredients.First(t => t.Id == Id);
-        IngredientService.RemoveIngredientAsync(Id);
+        IngredientService.RemoveIngredientAsync(ingredientToRemove);
         allIngredients.Remove(ingredientToRemove);
         ingredientsToShow.Remove(ingredientToRemove);
     }
@@ -117,7 +115,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(e.StackTrace);
         }
         ExecuteFilter();
     }
@@ -134,4 +132,10 @@ else
     {
         NavigationManager.NavigateTo($"EditAdults/{id}");
     }
+
+    private void AddIngredient()
+    {
+        throw new NotImplementedException();
+    }
+
 }
