@@ -1,6 +1,7 @@
 package via.sep3.demo.persistance;
 
 import org.springframework.stereotype.Service;
+import via.sep3.demo.Model.Ingredient;
 import via.sep3.demo.Model.User;
 
 import java.sql.PreparedStatement;
@@ -63,8 +64,9 @@ public class UserService extends Connection implements IUserService{
                 int Phone=resultSet.getInt("Phone");
                 String Address=resultSet.getString("Address");
                 int PostalCode=resultSet.getInt("PostalCode");
+                int securityLevel=resultSet.getInt("SecurityLevel");
 
-                User user=new User(email,password,FirstName,LastName,Phone,Address,PostalCode);
+                User user=new User(email,password,FirstName,LastName,Phone,Address,PostalCode,securityLevel);
 
                 System.out.println("User is logged in");
                 return user;
@@ -118,4 +120,37 @@ public class UserService extends Connection implements IUserService{
         }
         return user;
     }
-}
+
+    @Override
+    public List<User> GetAllUsers() {
+        List<User> users=new ArrayList<>();
+        try(java.sql.Connection connection = getConnection())
+        {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("select * from Users");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                String email = resultSet.getString("Email");
+                String password = resultSet.getString("Password");
+                String firstName = resultSet.getString("FirstName");
+                String lastName = resultSet.getString("LastName");
+                int phone = resultSet.getInt("Phone");
+                String address = resultSet.getString("Address");
+                int postalCode = resultSet.getInt("PostalCode");
+                int securityLevel = resultSet.getInt("SecurityLevel");
+                User user= new User(email,password,firstName,lastName,phone,address,postalCode,securityLevel);
+
+                users.add(user);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        System.out.println("Showing all users.");
+
+        return users;
+    }
+    }
+

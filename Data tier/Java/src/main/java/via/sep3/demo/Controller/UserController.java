@@ -2,8 +2,11 @@ package via.sep3.demo.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import via.sep3.demo.Model.Ingredient;
 import via.sep3.demo.Model.User;
 import via.sep3.demo.persistance.IUserService;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -22,6 +25,10 @@ public class UserController {
        User returnUser = UserSerivce.ValidateUser(Email, Password);
         System.out.println(returnUser);
         return returnUser;
+    }
+    @GetMapping("/GetAllUsers")
+    public List<User> GetAllUsers(){
+        return UserSerivce.GetAllUsers();
     }
 
     @DeleteMapping("/RemoveUser")
