@@ -1,4 +1,5 @@
 ﻿@page "/profile"
+@attribute [Authorize(Policy = "Customer")]
 @using WebApp.Data
 @using WebApp.Models
 @using Microsoft.AspNetCore.Components

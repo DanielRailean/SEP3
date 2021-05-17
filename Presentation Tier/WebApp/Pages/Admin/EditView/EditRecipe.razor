@@ -1,5 +1,7 @@
 ﻿@page "/EditRecipe"
-<h3>EditRecipe</h3>
+@attribute [Authorize(Policy = "Admin")]
+
+<h3>Edit Recipe</h3>
 
 @code {
     

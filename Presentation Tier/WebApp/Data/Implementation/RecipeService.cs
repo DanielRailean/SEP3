@@ -13,6 +13,16 @@ namespace WebApp.Data
         private const string uri = "https://localhost:5001/recipe";
         private readonly HttpClient client;
 
+        public RecipeService()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            client = new HttpClient(clientHandler);
+        }
+
         public async Task<IList<Recipe>> GetAllRecipesAsync()
         {
             HttpResponseMessage response = await client.GetAsync(uri + "/getallrecipes");
@@ -20,7 +30,7 @@ namespace WebApp.Data
             {
                 throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
             }
-            
+
             string result = await response.Content.ReadAsStringAsync();
             List<Recipe> recipes = JsonSerializer.Deserialize<List<Recipe>>(result, new JsonSerializerOptions
             {

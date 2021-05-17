@@ -12,6 +12,16 @@ namespace WebApp.Data
     {
         private const string uri = "https://localhost:5001/order";
         private readonly HttpClient client;
+
+        public OrderService()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            }; 
+            client = new HttpClient(clientHandler);
+        }
         
         public async Task<IList<Order>> GetAllOrdersAsync()
         {

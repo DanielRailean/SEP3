@@ -76,5 +76,10 @@ namespace WebApp.Data
         {
             throw new NotImplementedException();
         }
+
+        public User GetCurrentUser()
+        {
+            return currentUser;
+        }
     }
 }
