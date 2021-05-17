@@ -1,5 +1,53 @@
 ﻿@page "/"
+@using WebApp.Models
+@using WebApp.Data
+
+@inject NavigationManager NavigationManager
+@inject IRecipeService RecipeService
 
 <h1>Welcome to GodEats!</h1>
 
-We are offering several variety of recipes from the best ingredient suppliers.
+<p> We are offering several variety of recipes from the best ingredient suppliers. </p>
+<p> Calories are counted for every 100 g of intake. </p>
+
+@if (recipes == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (!recipes.Any())
+{
+    <p>
+        <em>No recipes found.</em>
+    </p>
+}
+else
+{
+    <div class="grid-container">
+    @foreach (Recipe item in recipesToShow)
+    {
+        <div class="grid-item">
+            <tr>
+                <img src=@item.Image/>
+                <td>@item.Name</td>
+                <td>@item.Type</td>
+                <td>@item.Price</td>
+                <td>@item.Calories</td>
+            </tr>
+        </div>
+    }
+    </div>
+}
+
+
+@code {
+    private IList<Recipe> recipes = new List<Recipe>();
+    private IList<Recipe> recipesToShow = new List<Recipe>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipes = await RecipeService.GetAllRecipesAsync();
+    }
+
+}

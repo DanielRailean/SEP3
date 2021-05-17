@@ -34,7 +34,6 @@ namespace WebApp
             services.AddServerSideBlazor();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<AuthenticationStateProvider, CustomerAuthenticationStateProvider>();
