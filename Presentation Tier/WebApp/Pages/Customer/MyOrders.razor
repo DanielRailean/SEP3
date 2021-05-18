@@ -1,9 +1,12 @@
-﻿@page "/myorders/{user}"
+﻿@page "/myorders"
+@attribute [Authorize(Policy = "Customer")]
+
 @using WebApp.Models
 @using WebApp.Data
 
 @inject NavigationManager NavigationManager
 @inject IOrderService OrderService
+@inject IUserService UserService
 
 <h3>My Orders</h3>
 <p> 
@@ -86,6 +89,7 @@
 @code {
     private IList<Order> allOrders;
     private IList<Order> ordersToShow;
+    private User currentUser;
 
     private DateTime? filterByDate;
     private double? filterByCost;
@@ -93,7 +97,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        allOrders = await OrderService.GetAllOrdersAsync();
+        currentUser = UserService.GetCurrentUser();
+        allOrders = await OrderService.GetOrdersByUserAsync(currentUser);
         ordersToShow = allOrders;
     }
     

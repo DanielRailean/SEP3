@@ -1,4 +1,4 @@
-﻿@page "/Users"
+﻿@page "/manageusers"
 @attribute [Authorize(Policy = "Admin")]
 @using WebApp.Models
 @using WebApp.Data
@@ -6,7 +6,7 @@
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
 
-<h3>Users</h3>
+<h3>Manage Users</h3>
 <p>
     Filter by name: <input type="text" @oninput="@(arg => FilterByName(arg))" style="width: 150px"/>
 </p>

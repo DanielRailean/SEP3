@@ -1,6 +1,56 @@
-﻿@page "/EditOrder"
-<h3>EditOrder</h3>
+﻿@page "/editorder/{id:int}"
+@attribute [Authorize(Policy = "Admin")]
+@using WebApp.Data
+@using WebApp.Models
+@using Microsoft.AspNetCore.Components
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IOrderService OrderService
+
+<h3>Edit Order</h3>
+<EditForm Model="@orderToEdit" OnValidSubmit="@Save">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="form-group">
+        Delivery address:<br/>
+        <InputText rows="10" @bind-Value="@orderToEdit.DeliveryAddress"/>
+    </div>
+    <div class="form-group">
+        Invoice address:<br/>
+        <InputText rows="10" @bind-Value="@orderToEdit.InvoiceAddress"/>
+    </div>
+    <div class="form-group">
+        Postal code:<br/>
+        <InputNumber rows="4" @bind-Value="@orderToEdit.PostalCode"/>
+    </div>
+    <div class="form-group">
+        City:<br/>
+        <InputText rows="4" @bind-Value="@orderToEdit.City"/>
+    </div>
+    <div class="form-group">
+        Shipped?<br/>
+        <InputCheckbox rows="2" @bind-Value="@orderToEdit.IsShipped"/>
+    </div>
+    <div class="form-group">
+        Address:<br/>
+        <InputNumber rows="4" @bind-Value="@orderToEdit.TotalPrice"/>
+    </div>
+    <p class="actions">
+        <button class="btn btn-outline-dark" type="submit">Save</button>
+    </p>
+</EditForm>
 
 @code {
-    
+    [Parameter] 
+    public int id { get; set; }
+    Order orderToEdit = new Order();
+    private string email;
+    private string password;
+
+    private void Save()
+    {
+        OrderService.UpdateOrderAsync(orderToEdit);
+        NavigationManager.NavigateTo("/manageorders");
+    }
 }

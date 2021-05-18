@@ -7,15 +7,15 @@
 @inject IIngredientService IngredientService
 
 <h3>Manage Ingredients</h3>
+<button @onclick="@(() => AddIngredient())">
+    <i class="oi oi-plus" style="color: green"/>
+</button>
 <p>
     Filter by name: <input type="text" @oninput="@(arg => FilterByName(arg))" style="width: 150px"/>
 </p>
 <p>
     Filter by calories: <input type="number" @oninput="@(arg => FilterByCalories(arg))" style="width: 100px"/>
 </p>
-<button @onclick="@(() => AddIngredient())">
-    <i class="oi oi-plus" style="color: green"/>
-</button>
 
 @if (allIngredients == null)
 {
@@ -135,7 +135,6 @@ else
 
     private void AddIngredient()
     {
-        throw new NotImplementedException();
+        NavigationManager.NavigateTo("/addingredient");
     }
-
 }

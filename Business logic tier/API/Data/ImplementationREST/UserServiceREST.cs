@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -53,6 +54,11 @@ namespace API.Data.ImplementationREST
         public Task<User> RemoveUser(User user)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<IList<User>> GetAllUsers()
+        {
+            throw new NotImplementedException();
         }
     }
 }

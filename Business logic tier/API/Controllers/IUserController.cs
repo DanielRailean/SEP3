@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,5 +11,6 @@ namespace API.Controllers
         Task<ActionResult<User>> ValidateUser([FromQuery] string? email, [FromQuery] string? password);
         Task<ActionResult<User>> UpdateUser([FromBody]User user,[FromQuery] string password);
         Task<ActionResult<User>> RemoveUser([FromBody] User user);
+        Task<ActionResult<IList<User>>> GetAllUsers();
     }
 }

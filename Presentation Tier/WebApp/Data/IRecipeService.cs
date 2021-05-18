@@ -9,7 +9,7 @@ namespace WebApp.Data
         Task<IList<Recipe>> GetAllRecipesAsync();
         Task<Recipe> GetRecipeAsync(int recipeId);
         Task CreateRecipeAsync(Recipe recipe);
-        Task RemoveRecipeAsync(int recipeId);
+        Task RemoveRecipeAsync(Recipe recipe);
         Task UpdateRecipeAsync(Recipe recipe);
     }
 }

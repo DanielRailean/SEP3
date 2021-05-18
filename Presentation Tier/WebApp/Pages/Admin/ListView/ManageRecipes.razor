@@ -6,7 +6,7 @@
 @inject IRecipeService RecipeService
 @inject NavigationManager NavigationManager
 
-<h3>ManageRecipes</h3>
+<h3>Manage Recipes</h3>
 <button @onclick="@(() => AddRecipe())">
     <i class="oi oi-plus" style="color: green"/>
 </button>
@@ -38,6 +38,7 @@ else
             <th>Name</th>
             <th>Calorie(s)</th>
             <th>Type</th>
+            <th>Minutes to make</th>
             <th>Price</th>
             <th>Remove</th>
             <th>Edit</th>
@@ -52,6 +53,7 @@ else
                 <td>@item.Name</td>
                 <td>@item.Calories</td>
                 <td>@item.Type</td>
+                <td>@item.MinutesToMake</td>
                 <td>@item.Price</td>
                 <td>
                     <button @onclick="@(() => RemoveRecipe(item.Id))">
@@ -87,7 +89,7 @@ else
     private void RemoveRecipe(int Id)
     {
         Recipe recipeToRemove = allRecipes.First(t => t.Id == Id);
-        RecipeService.RemoveRecipeAsync(Id);
+        RecipeService.RemoveRecipeAsync(recipeToRemove);
         allRecipes.Remove(recipeToRemove);
         recipesToShow.Remove(recipeToRemove);
     }
