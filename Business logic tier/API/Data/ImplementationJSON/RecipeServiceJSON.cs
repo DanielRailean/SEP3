@@ -39,7 +39,7 @@ namespace API.Data
                     Name = "Risotto",
                     Price = 199.9,
                     Ingredient = ingredients.ToList(),
-                    NutritionType = "Vegan"
+                    Type = NutritionType.Vegan
                 }
             };
             allRecipes = recipes.ToList();

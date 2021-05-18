@@ -32,7 +32,6 @@ else
             <th>Is Shipped?</th>
             <th>Remove</th>
             <th>Edit</th>
-            <th>Add</th>
         </tr>
         </thead>
         <tbody>
@@ -44,6 +43,9 @@ else
                 <td>@user.FirstName, @user.LastName, @user.Email</td>
                 <td>@item.TotalPrice</td>
                 <td>@item.IsShipped</td>
+                <td>
+                    <input type="checkbox" checked=@item.IsShipped @onchange="@((arg) => CompletedChange(arg, item))"/>
+                </td>
                 <td>
                     <button @onclick="@(() => RemoveOrder(item.Id))">
                         <i class="oi oi-trash" style="color: red"/>
@@ -101,7 +103,11 @@ else
 
     private void EditOrder(int id)
     {
-        NavigationManager.NavigateTo($"EditOrder/{id}");
+        NavigationManager.NavigateTo($"/editorder/{id}");
     }
 
+    private async Task CompletedChange(ChangeEventArgs evt, Order order) {
+        order.IsShipped = (bool) evt.Value;
+        await OrderService.UpdateOrderAsync(order);
+    }
 }

@@ -1,4 +1,4 @@
-﻿@page "/ManageRecipes"
+﻿@page "/managerecipes"
 @attribute [Authorize(Policy = "Admin")]
 @using WebApp.Models
 @using WebApp.Data
@@ -146,7 +146,7 @@ else
 
     private void EditRecipe(int id)
     {
-        NavigationManager.NavigateTo($"/{id}");
+        NavigationManager.NavigateTo($"/editrecipe/{id}");
     }
 
     private void AddRecipe()

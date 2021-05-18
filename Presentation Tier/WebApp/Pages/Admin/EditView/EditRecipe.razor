@@ -1,8 +1,59 @@
-﻿@page "/EditRecipe"
+﻿@page "/editrecipe/{id:int}"
+@using WebApp.Data
+@using WebApp.Models
+@using Microsoft.AspNetCore.Components
 @attribute [Authorize(Policy = "Admin")]
 
+@inject NavigationManager NavigationManager
+@inject IRecipeService RecipeService
+
 <h3>Edit Recipe</h3>
+<EditForm Model="@recipeToEdit" OnValidSubmit="@Save">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="form-group">
+        Name:<br/>
+        <InputText rows="10" @bind-Value="@recipeToEdit.Name"/>
+    </div>
+    <div class="form-group">
+        Picture (URL):<br/>
+        <InputText rows="10" @bind-Value="@recipeToEdit.Image"/>
+    </div>
+    <div class="form-group">
+        Price:<br/>
+        <InputNumber rows="4" @bind-Value="@recipeToEdit.Price"/>
+    </div>
+    <div class="form-group"> Type:<br/>
+        <InputSelect @bind-Value="recipeToEdit.Type">
+            @foreach (var type in Enum.GetValues(typeof(NutritionType)))
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        Minutes to make:<br/>
+        <InputNumber rows="2" @bind-Value="@recipeToEdit.MinutesToMake"/>
+    </div>
+    <p class="actions">
+        <button class="btn btn-outline-dark" type="submit">Save</button>
+    </p>
+</EditForm>
 
 @code {
-    
+    [Parameter] 
+    public int id { get; set; }
+    Recipe recipeToEdit = new Recipe();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allRecipes = await RecipeService.GetAllRecipesAsync();
+        recipeToEdit = allRecipes.First(r => r.Id == id);
+    }
+
+    private void Save()
+    {
+        RecipeService.UpdateRecipeAsync(recipeToEdit);
+        NavigationManager.NavigateTo("/managerecipes");
+    }
 }

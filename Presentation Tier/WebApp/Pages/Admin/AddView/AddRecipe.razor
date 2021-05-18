@@ -1,8 +1,95 @@
-﻿@page "/AddRecipe"
+﻿@page "/addrecipe"
+@using Microsoft.AspNetCore.Components
+@using WebApp.Models
+@using WebApp.Data
 @attribute [Authorize(Policy = "Admin")]
 
+@inject NavigationManager NavigationManager
+@inject IRecipeService RecipeService
+
 <h3>Add Recipe</h3>
+<EditForm Model="@newRecipe" OnValidSubmit="@AddNewRecipe">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="form-group"> Name:<br/>
+        <InputText @bind-Value="newRecipe.Name"/>
+    </div>
+    <div class="form-group"> Picture (URL):<br/>
+        <InputText @bind-Value="newRecipe.Image"/>
+    </div>
+    <div class="form-group"> Description:<br/>
+        <InputArea @bind-Value="newRecipe.Description"/>
+    </div>
+    <div class="form-group"> Minutes to make:<br/>
+        <InputNumber @bind-Value="newRecipe.MinutesToMake"/>
+    </div>
+    <EditForm Model="@ingredient" OnValidSubmit="@AddIngredientToRecipe">
+        <div class="form-group"> Ingredients:<br/>
+            <InputSelect @bind-Value="newRecipe.Ingredient">
+                @foreach (var ingredient in ingredients)
+                {
+                    <option value="@ingredient">@ingredient.Name</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-group"> Quantity:<br/>
+            <InputNumber @bind-Value="ingredient.Quantity"/>
+        </div>
+        <p class="actions">
+            <button class="btn btn-outline-dark" type="submit">Add</button>
+        </p>
+    </EditForm>
+    <div class="form-group"> Type:<br/>
+        <InputSelect @bind-Value="newRecipe.Type">
+            @foreach (var type in Enum.GetValues(typeof(NutritionType)))
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group"> Price:<br/>
+        <InputNumber @bind-Value="newRecipe.Price"/>
+    </div>
+    <p class="actions">
+        <button class="btn btn-outline-dark" type="submit">Register</button>
+    </p>
+</EditForm>
 
 @code {
+    private Recipe newRecipe;
+    private Ingredient ingredient;
+    private IList<Ingredient> ingredients { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        SetupNewRecipe();
+        return base.OnInitializedAsync();
+    }
     
+    private async Task SetupNewRecipe()
+    {
+        newRecipe = new Recipe();
+        newRecipe.Id = 0;
+        newRecipe.Name = "";
+        newRecipe.Image = "";
+        foreach (var t in ingredients)
+        {
+            newRecipe.Calories += t.Calories;
+        }
+        newRecipe.Description = "";
+        newRecipe.Price = 0;
+        newRecipe.MinutesToMake = 0;
+        newRecipe.Ingredient = new List<Ingredient>();
+    }
+
+    private void AddNewRecipe()
+    {
+        RecipeService.CreateRecipeAsync(newRecipe);
+        NavigationManager.NavigateTo("/managerecipes");
+    }
+
+    private void AddIngredientToRecipe()
+    {
+        ingredients.Add(ingredient);
+    }
 }

@@ -8,8 +8,10 @@ namespace API.Models
         public string Name { get; set; }
         public IList<Ingredient> Ingredient { get; set; }
         public double Calories { get; set; }
-        public string NutritionType { get; set; }
-        public string FoodType { get; set; }
+        public int MinutesToMake { get; set; }
+        public NutritionType Type { get; set; }
         public double Price { get; set; }
+        public string Description { get; set; }
+        public string Image { get; set; }
     }
 }

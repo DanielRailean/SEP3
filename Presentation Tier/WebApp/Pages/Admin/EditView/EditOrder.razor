@@ -30,7 +30,7 @@
     </div>
     <div class="form-group">
         Shipped?<br/>
-        <InputCheckbox rows="2" @bind-Value="@orderToEdit.IsShipped"/>
+        @* <InputCheckbox rows="2" @bind-Value="@orderToEdit.IsShipped"/> *@
     </div>
     <div class="form-group">
         Address:<br/>
@@ -45,8 +45,6 @@
     [Parameter] 
     public int id { get; set; }
     Order orderToEdit = new Order();
-    private string email;
-    private string password;
 
     private void Save()
     {

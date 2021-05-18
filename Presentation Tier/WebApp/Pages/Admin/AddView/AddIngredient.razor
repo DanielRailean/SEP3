@@ -1,8 +1,51 @@
-﻿@page "/AddIngredient"
+﻿@page "/addingredient"
+@using Microsoft.AspNetCore.Components
+@using WebApp.Data
+@using WebApp.Models
 @attribute [Authorize(Policy = "Admin")]
 
+@inject NavigationManager NavigationManager
+@inject IIngredientService IngredientService
+
 <h3>Add Ingredient</h3>
+<EditForm Model="@newIngredient" OnValidSubmit="@AddNewIngredient">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="form-group"> Name:<br/>
+        <InputText @bind-Value="newIngredient.Name"/>
+    </div>
+    <div class="form-group"> Unit of measure:<br/>
+        <InputText @bind-Value="newIngredient.UnitOfMeasure"/>
+    </div>
+    <div class="form-group"> Calories/100 g:<br/>
+        <InputNumber @bind-Value="newIngredient.Calories"/>
+    </div>
+    <p class="actions">
+        <button class="btn btn-outline-dark"type="submit">Register</button>
+    </p>
+</EditForm>
 
 @code {
+    private Ingredient newIngredient;
+
+    protected override Task OnInitializedAsync()
+    {
+        SetupNewIngredient();
+        return base.OnInitializedAsync();
+    }
     
+    private async Task SetupNewIngredient()
+    {
+        newIngredient = new Ingredient(0);
+        newIngredient.Id = 0;
+        newIngredient.Name = "";
+        newIngredient.UnitOfMeasure = "";
+        newIngredient.Calories = 0;
+    }
+
+    private void AddNewIngredient()
+    {
+        IngredientService.CreateIngredientAsync(newIngredient);
+        NavigationManager.NavigateTo("/manageingredients");
+    }
 }
