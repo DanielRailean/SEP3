@@ -6,64 +6,97 @@
 
 @inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
+@inject IIngredientService IngredientService
 
-<h3>Add Recipe</h3>
-<EditForm Model="@newRecipe" OnValidSubmit="@AddNewRecipe">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
-    <div class="form-group"> Name:<br/>
-        <InputText @bind-Value="newRecipe.Name"/>
-    </div>
-    <div class="form-group"> Picture (URL):<br/>
-        <InputText @bind-Value="newRecipe.Image"/>
-    </div>
-    <div class="form-group"> Description:<br/>
-        <InputArea @bind-Value="newRecipe.Description"/>
-    </div>
-    <div class="form-group"> Minutes to make:<br/>
-        <InputNumber @bind-Value="newRecipe.MinutesToMake"/>
-    </div>
-    <EditForm Model="@ingredient" OnValidSubmit="@AddIngredientToRecipe">
-        <div class="form-group"> Ingredients:<br/>
-            <InputSelect @bind-Value="newRecipe.Ingredient">
-                @foreach (var ingredient in ingredients)
+<div id="container">
+<div id="leftblock">
+    <h3>Add Recipe</h3>
+    <EditForm Model="@newRecipe" OnValidSubmit="@AddNewRecipe">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div class="form-group"> Name:<br/>
+            <InputText @bind-Value="newRecipe.Name"/>
+        </div>
+        <div class="form-group"> Picture (URL):<br/>
+            <InputText @bind-Value="newRecipe.Image"/>
+        </div>
+        <div class="form-group"> Description:<br/>
+            <InputTextArea @bind-Value="newRecipe.Description"/>
+        </div>
+        <div class="form-group"> Minutes to make:<br/>
+            <InputNumber @bind-Value="newRecipe.MinutesToMake"/>
+        </div>
+        <div class="form-group"> Type:<br/>
+            <InputSelect @bind-Value="newRecipe.Type">
+                @foreach (var type in Enum.GetValues(typeof(NutritionType)))
                 {
-                    <option value="@ingredient">@ingredient.Name</option>
+                    <option value="@type">@type</option>
                 }
             </InputSelect>
         </div>
-        <div class="form-group"> Quantity:<br/>
-            <InputNumber @bind-Value="ingredient.Quantity"/>
+        <div class="form-group"> Price:<br/>
+            <InputNumber @bind-Value="newRecipe.Price"/>
         </div>
         <p class="actions">
-            <button class="btn btn-outline-dark" type="submit">Add</button>
+            <button class="btn btn-outline-dark" type="submit">Add recipe</button>
         </p>
     </EditForm>
-    <div class="form-group"> Type:<br/>
-        <InputSelect @bind-Value="newRecipe.Type">
-            @foreach (var type in Enum.GetValues(typeof(NutritionType)))
+</div>
+    <div id="rightblock">
+        <h4>Add Ingredients</h4>
+        <b>Added:</b>
+        @if (recipeIngredients == null)
+        {
+            <p>
+                <em>Loading...</em>
+            </p>
+        }
+        else if (!recipeIngredients.Any())
+        {
+            <p>
+                <em>No ingredients added yet.</em>
+            </p>
+        }
+        else
+        {
+            @foreach (Ingredient item in recipeIngredients)
             {
-                <option value="@type">@type</option>
+                <ul>
+                    <li> @item.Quantity @item.UnitOfMeasure @item.Name</li>
+                </ul>
             }
-        </InputSelect>
+        }
+        <EditForm Model="@ingredient" OnValidSubmit="@AddIngredientToRecipe">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+            <div class="form-group"> Ingredients: <br/>
+                <InputSelect @bind-Value="ingredient.Name">
+                    @foreach (Ingredient item in ingredients)
+                    {
+                        <option value="@item">@item.Name</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-group"> Quantity:<br/>
+                <InputNumber @bind-Value="ingredient.Quantity"/>
+            </div>
+            <p class="actions">
+                <button class="btn btn-outline-dark" type="submit">Add</button>
+            </p>
+        </EditForm>
     </div>
-    <div class="form-group"> Price:<br/>
-        <InputNumber @bind-Value="newRecipe.Price"/>
-    </div>
-    <p class="actions">
-        <button class="btn btn-outline-dark" type="submit">Register</button>
-    </p>
-</EditForm>
-
+</div>
 @code {
     private Recipe newRecipe;
     private Ingredient ingredient;
-    private IList<Ingredient> ingredients { get; set; }
+    private IList<Ingredient> ingredients = new List<Ingredient>();
+    private List<Ingredient> recipeIngredients = new List<Ingredient>();
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         SetupNewRecipe();
-        return base.OnInitializedAsync();
+        ingredients = await IngredientService.GetAllIngredientsAsync();
+        await base.OnInitializedAsync();
     }
     
     private async Task SetupNewRecipe()
@@ -72,14 +105,19 @@
         newRecipe.Id = 0;
         newRecipe.Name = "";
         newRecipe.Image = "";
+        newRecipe.Description = "";
         foreach (var t in ingredients)
         {
             newRecipe.Calories += t.Calories;
         }
-        newRecipe.Description = "";
         newRecipe.Price = 0;
         newRecipe.MinutesToMake = 0;
-        newRecipe.Ingredient = new List<Ingredient>();
+        ingredient = new Ingredient(0)
+        {
+            Calories = 0,
+            Name = "",
+            UnitOfMeasure = ""
+        };
     }
 
     private void AddNewRecipe()
@@ -90,6 +128,6 @@
 
     private void AddIngredientToRecipe()
     {
-        ingredients.Add(ingredient);
+        recipeIngredients.Add(ingredient);
     }
 }

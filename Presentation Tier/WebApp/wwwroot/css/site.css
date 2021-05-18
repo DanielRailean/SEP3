@@ -52,3 +52,12 @@ a, .btn-link {
 .grid-container {
     display: grid;
 }
+
+#container
+{
+    text-align: left;
+}
+#leftblock, #rightblock
+{
+    display: inline-table;
+}
