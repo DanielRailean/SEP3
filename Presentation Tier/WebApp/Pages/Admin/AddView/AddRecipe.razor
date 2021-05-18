@@ -23,14 +23,22 @@
     <div class="form-group"> Minutes to make:<br/>
         <InputNumber @bind-Value="newRecipe.MinutesToMake"/>
     </div>
-    <div class="form-group"> Ingredients:<br/>
-        <InputSelect @bind-Value="newRecipe.Ingredient">
-            @foreach (var ingredient in ingredients)
-            {
-                <option value="@ingredient">@ingredient</option>
-            }
-        </InputSelect>
-    </div>
+    <EditForm Model="@ingredient" OnValidSubmit="@AddIngredientToRecipe">
+        <div class="form-group"> Ingredients:<br/>
+            <InputSelect @bind-Value="newRecipe.Ingredient">
+                @foreach (var ingredient in ingredients)
+                {
+                    <option value="@ingredient">@ingredient.Name</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-group"> Quantity:<br/>
+            <InputNumber @bind-Value="ingredient.Quantity"/>
+        </div>
+        <p class="actions">
+            <button class="btn btn-outline-dark" type="submit">Add</button>
+        </p>
+    </EditForm>
     <div class="form-group"> Type:<br/>
         <InputSelect @bind-Value="newRecipe.Type">
             @foreach (var type in Enum.GetValues(typeof(NutritionType)))
@@ -43,12 +51,13 @@
         <InputNumber @bind-Value="newRecipe.Price"/>
     </div>
     <p class="actions">
-        <button class="btn btn-outline-dark"type="submit">Register</button>
+        <button class="btn btn-outline-dark" type="submit">Register</button>
     </p>
 </EditForm>
 
 @code {
     private Recipe newRecipe;
+    private Ingredient ingredient;
     private IList<Ingredient> ingredients { get; set; }
 
     protected override Task OnInitializedAsync()
@@ -79,7 +88,7 @@
         NavigationManager.NavigateTo("/managerecipes");
     }
 
-    public void AddIngredientToRecipe(Ingredient ingredient)
+    private void AddIngredientToRecipe()
     {
         ingredients.Add(ingredient);
     }
