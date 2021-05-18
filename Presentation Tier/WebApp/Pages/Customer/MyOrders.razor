@@ -10,13 +10,18 @@
 
 <h3>My Orders</h3>
 <p> 
-    Filter by Date: <input type="number" @oninput="@(arg => FilterByDate(arg))" style="width: 50px"/>
+    Filter by Date: <input type="date" @oninput="@(arg => FilterByDate(arg))" style="width: 50px"/>
 </p>
 <p> 
     Filter by Cost: <input type="text" @oninput="@(arg => FilterByCost(arg))" style="width: 150px"/>
 </p>
-<p> 
-    Filter by Shipped: <input type="text" @oninput="@(arg => FilterByShipped(arg))" style="width: 150px"/>
+<p>
+    Filter by shipped:
+    <select class="form-control selectpicker" @onchange="@((arg) => FilterByShipped(arg))" style="width:100px">
+        <option>Both</option>
+        <option>False</option>
+        <option>True</option>
+    </select>
 </p>
 
 @if (ordersToShow == null)

@@ -29,11 +29,10 @@ else
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Full name</th>
             <th>E-mail</th>
             <th>Phone</th>
             <th>Remove</th>
-            <th>Edit</th>
         </tr>
         </thead>
         <tbody>
@@ -47,11 +46,6 @@ else
                 <td>
                     <button @onclick="@(() => RemoveUser(item.UserId))">
                         <i class="oi oi-trash" style="color: red"/>
-                    </button>
-                </td>
-                <td>
-                    <button @onclick="@(() => EditUser(item.UserId))">
-                        <i class="oi oi-pencil" style="color: #1b6ec2"/>
                     </button>
                 </td>
             </tr>
@@ -69,6 +63,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         allUsers = await UserService.GetAllUsersAsync();
+        usersToShow = allUsers;
     }
     
     private void RemoveUser(int Id)
@@ -96,13 +91,8 @@ else
     private void ExecuteFilter()
     {
         usersToShow = allUsers.Where(t =>
-            (!filterByName.Equals("") && t.FirstName.Contains(filterByName) || filterByName.Equals("")) &&
-            (!filterByName.Equals("") && t.LastName.Contains(filterByName) || filterByName.Equals(""))
+            (!filterByName.Equals("") && t.FirstName.Contains(filterByName) && 
+             t.LastName.Contains(filterByName) || filterByName.Equals(""))
             ).ToList();
-    }
-    
-    private void EditUser(int id)
-    {
-        NavigationManager.NavigateTo($"/{id}");
     }
 }

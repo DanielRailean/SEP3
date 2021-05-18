@@ -21,9 +21,6 @@
             <button href="" @onclick="PerformLogin">
                 Login
             </button>
-            <button href="" @onclick="RedirectToAdminPage">
-                Administration
-            </button>
         </NotAuthorized>
     </AuthorizeView>
 </CascadingAuthenticationState>
@@ -47,10 +44,5 @@
         {
             errorMessage = e.Message;
         }
-    }
-
-    private void RedirectToAdminPage()
-    {
-        NavigationManager.NavigateTo("/adminlogin");
     }
 }

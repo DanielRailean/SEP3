@@ -36,7 +36,7 @@ else
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Calorie(s)</th>
+            <th>Calories/100 g</th>
             <th>Remove</th>
             <th>Edit</th>
         </tr>
@@ -130,7 +130,7 @@ else
 
     private void EditIngredient(int id)
     {
-        NavigationManager.NavigateTo($"EditAdults/{id}");
+        NavigationManager.NavigateTo($"/editadults/{id}");
     }
 
     private void AddIngredient()

@@ -34,7 +34,7 @@ namespace WebApp.Data
 
         public async Task<User> ValidateUserAsync(string email, string password)
         {
-            HttpResponseMessage response = await client.GetAsync(uri + $"?email={@email}&password={@password}");
+            HttpResponseMessage response = await client.GetAsync(uri + $"/getuser?email={@email}&password={@password}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($@"Error: {response.ReasonPhrase}");
@@ -72,9 +72,20 @@ namespace WebApp.Data
             await client.SendAsync(request);
         }
 
-        public Task<IList<User>> GetAllUsersAsync()
+        public async Task<IList<User>> GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            HttpResponseMessage response = await client.GetAsync(uri + "/getallusers");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
+            
+            string result = await response.Content.ReadAsStringAsync();
+            List<User> users = JsonSerializer.Deserialize<List<User>>(result, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            return users;
         }
 
         public User GetCurrentUser()
