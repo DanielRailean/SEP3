@@ -1,16 +1,16 @@
-package via.sep3.demo.persistance;
+package via.sep3.food.Service.ServiceImpl;
 
 import org.springframework.stereotype.Service;
-import via.sep3.demo.Model.Administrator;
-import via.sep3.demo.Model.User;
+import via.sep3.food.Model.Administrator;
+import via.sep3.food.Service.Connection;
+import via.sep3.food.Service.IAdministratorService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 @Service
-public class AdministratorService extends Connection implements IAdministratorService{
+public class AdministratorService extends Connection implements IAdministratorService {
 
     public java.sql.Connection getConnection() throws SQLException
     {

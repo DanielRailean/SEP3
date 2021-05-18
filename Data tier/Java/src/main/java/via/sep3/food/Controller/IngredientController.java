@@ -1,10 +1,9 @@
-package via.sep3.demo.Controller;
+package via.sep3.food.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import via.sep3.demo.Model.Ingredient;
-import via.sep3.demo.Model.User;
-import via.sep3.demo.persistance.IIngredientService;
+import via.sep3.food.Model.Ingredient;
+import via.sep3.food.Service.IIngredientService;
 
 import java.util.List;
 

@@ -1,12 +1,10 @@
-package via.sep3.demo.persistance;
+package via.sep3.food.Service;
 
-import org.springframework.stereotype.Component;
-import via.sep3.demo.Model.User;
+import via.sep3.food.Model.User;
 
 import java.util.List;
 
-
-public interface IUserService {
+public interface IUserService{
     User RegisterUser(User user);
     User ValidateUser(String Email,String Password);
     User RemoveUser(User user);

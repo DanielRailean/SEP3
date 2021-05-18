@@ -1,6 +1,6 @@
-package via.sep3.demo.persistance;
+package via.sep3.food.Service;
 
-import via.sep3.demo.Model.Recipe;
+import via.sep3.food.Model.Recipe;
 
 import java.util.List;
 

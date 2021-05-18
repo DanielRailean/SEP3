@@ -1,17 +1,18 @@
-package via.sep3.demo.persistance;
+package via.sep3.food.Service.ServiceImpl;
 
 import org.springframework.stereotype.Service;
-import via.sep3.demo.Model.Order;
-import via.sep3.demo.Model.User;
+import via.sep3.food.Model.Order;
+import via.sep3.food.Service.Connection;
+import via.sep3.food.Service.IOrderService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.ArrayList;
+
 @Service
-public class OrderService extends Connection implements IOrderService{
+public class OrderService extends Connection implements IOrderService {
 
     public java.sql.Connection getConnection() throws SQLException
     {

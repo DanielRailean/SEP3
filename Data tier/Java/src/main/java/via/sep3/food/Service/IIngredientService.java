@@ -1,10 +1,7 @@
-package via.sep3.demo.persistance;
+package via.sep3.food.Service;
 
-import via.sep3.demo.Model.Administrator;
-import via.sep3.demo.Model.Ingredient;
-import via.sep3.demo.Model.Order;
+import via.sep3.food.Model.Ingredient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IIngredientService {
