@@ -55,7 +55,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        userToEdit = await ((CustomerAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
+        userToEdit = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
     }
 
     private void Save()

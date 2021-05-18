@@ -1,4 +1,4 @@
-﻿@page "/editorder"
+﻿@page "/editorder/{id:int}"
 @attribute [Authorize(Policy = "Admin")]
 @using WebApp.Data
 @using WebApp.Models
@@ -42,6 +42,8 @@
 </EditForm>
 
 @code {
+    [Parameter] 
+    public int id { get; set; }
     Order orderToEdit = new Order();
     private string email;
     private string password;
@@ -49,6 +51,6 @@
     private void Save()
     {
         OrderService.UpdateOrderAsync(orderToEdit);
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/manageorders");
     }
 }

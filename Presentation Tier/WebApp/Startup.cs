@@ -36,7 +36,7 @@ namespace WebApp
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IIngredientService, IngredientService>();
-            services.AddScoped<AuthenticationStateProvider, CustomerAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", a =>
