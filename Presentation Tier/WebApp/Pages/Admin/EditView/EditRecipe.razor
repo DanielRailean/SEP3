@@ -23,13 +23,17 @@
         Price:<br/>
         <InputNumber rows="4" @bind-Value="@recipeToEdit.Price"/>
     </div>
-    <div class="form-group">
-        Type:<br/>
-        @* <InputText rows="4" @bind-Value="@recipeToEdit.Type"/> *@
+    <div class="form-group"> Type:<br/>
+        <InputSelect @bind-Value="recipeToEdit.Type">
+            @foreach (var type in Enum.GetValues(typeof(NutritionType)))
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect>
     </div>
     <div class="form-group">
         Minutes to make:<br/>
-        @* <InputCheckbox rows="2" @bind-Value="@recipeToEdit.MinutesToMake"/> *@
+        <InputNumber rows="2" @bind-Value="@recipeToEdit.MinutesToMake"/>
     </div>
     <p class="actions">
         <button class="btn btn-outline-dark" type="submit">Save</button>
