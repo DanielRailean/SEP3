@@ -4,7 +4,7 @@
 @using WebApp.Authentication
 
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">GodEats</a>
+    <a class="navbar-brand" href="">God Eats</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,17 +12,12 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/index" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/chat" Match="NavLinkMatch.All">
-                <span class="oi oi-chat" aria-hidden="true"></span> Chat
-            </NavLink>
-        </li>
         <AuthorizeView Policy="Admin">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/index" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                </NavLink>
+            </li>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="/manageusers" Match="NavLinkMatch.All">
                     <span class="oi oi-person" aria-hidden="true"></span> Manage users
@@ -43,6 +38,11 @@
                     <span class="oi oi-crop" aria-hidden="true"></span> Manage ingredients
                 </NavLink>
             </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/adminchat" Match="NavLinkMatch.All">
+                    <span class="oi oi-chat" aria-hidden="true"></span> Admin Chat
+                </NavLink>
+            </li>
         </AuthorizeView>
         <AuthorizeView Policy="Customer">
             <NotAuthorized>
@@ -58,6 +58,11 @@
                 </li>
             </NotAuthorized>
             <Authorized>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="/chat" Match="NavLinkMatch.All">
+                        <span class="oi oi-chat" aria-hidden="true"></span> Chat
+                    </NavLink>
+                </li>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="/myorders" Match="NavLinkMatch.All">
                         <span class="oi oi-book" aria-hidden="true"></span> My Orders
@@ -92,7 +97,7 @@
     {
         try
         {
-            ((CustomerAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
             NavigationManager.NavigateTo("/");
         }
         catch (Exception e)

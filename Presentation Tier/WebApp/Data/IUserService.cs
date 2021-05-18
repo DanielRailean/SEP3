@@ -11,5 +11,6 @@ namespace WebApp.Data
         Task UpdateUserAsync(User user);
         Task RemoveUserAsync(User user);
         Task<IList<User>> GetAllUsersAsync();
+        User GetCurrentUser();
     }
 }

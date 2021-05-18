@@ -12,6 +12,16 @@ namespace WebApp.Data
     {
         private const string uri = "https://localhost:5001/order";
         private readonly HttpClient client;
+
+        public OrderService()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            }; 
+            client = new HttpClient(clientHandler);
+        }
         
         public async Task<IList<Order>> GetAllOrdersAsync()
         {
@@ -43,7 +53,15 @@ namespace WebApp.Data
 
         public async Task<IList<Order>> GetOrdersByUserAsync(User user)
         {
-            throw new System.NotImplementedException();
+            var orderAsJson = await client.GetStringAsync(
+                $"{uri}/getuserorders?email={user.Email}&password={user.Password}");
+            IList<Order> order = JsonSerializer.Deserialize<IList<Order>>(orderAsJson, 
+                new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            return order;
         }
 
         public async Task CreateOrderAsync(Order order)
@@ -61,7 +79,13 @@ namespace WebApp.Data
 
         public async Task RemoveOrderAsync(Order order)
         {
-            await client.DeleteAsync(uri);
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(uri),
+                Content = new StringContent(JsonSerializer.Serialize(order), Encoding.UTF8, "application/json")
+            };
+            await client.SendAsync(request);
         }
 
         public async Task UpdateOrderAsync(Order order)
