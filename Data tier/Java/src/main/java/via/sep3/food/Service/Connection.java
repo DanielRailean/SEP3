@@ -1,10 +1,10 @@
-package via.sep3.demo.persistance;
+package via.sep3.food.Service;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public abstract class Connection {
-    public Connection()
+   public Connection()
     {
         try
         {

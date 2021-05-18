@@ -103,6 +103,10 @@ namespace API.Data
             Save();
             return toRemove;
         }
-        
+
+        public async Task<IList<User>> GetAllUsers()
+        {
+            return AllUsers;
+        }
     }
 }

@@ -1,8 +1,7 @@
-package via.sep3.demo;
+package via.sep3.food;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import via.sep3.demo.Model.User;
 
 @SpringBootApplication
 public class DatabaseTierApplication {

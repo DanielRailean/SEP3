@@ -1,8 +1,6 @@
-package via.sep3.demo.Model;
+package via.sep3.food.Model;
 
-import org.springframework.stereotype.Component;
 
-@Component
 public class User {
    int UserId;
     String Email;

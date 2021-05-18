@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using API.Models;
 
 namespace API.Data
@@ -9,5 +10,6 @@ namespace API.Data
         Task<User> ValidateUser(string email, string password);
         Task<User> UpdateUser(User user, string password);
         Task<User> RemoveUser(User user);
+        Task<IList<User>> GetAllUsers();
     }
 }

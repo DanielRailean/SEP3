@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Data;
 using API.Models;
@@ -32,12 +33,27 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("GetUser")]
         public async Task<ActionResult<User>> ValidateUser([FromQuery] string email, [FromQuery] string password)
         {
             try
             {
                 User valid = await userService.ValidateUser(email, password);
+                return Ok(valid);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500, e.Message);
+            }
+        }
+        
+        [HttpGet("GetAllUsers")]
+        public async Task<ActionResult<IList<User>>> GetAllUsers()
+        {
+            try
+            {
+                IList<User> valid = await userService.GetAllUsers();
                 return Ok(valid);
             }
             catch (Exception e)
@@ -76,5 +92,6 @@ namespace API.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
     }
 }

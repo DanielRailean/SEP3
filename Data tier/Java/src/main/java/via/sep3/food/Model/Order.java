@@ -1,6 +1,4 @@
-package via.sep3.demo.Model;
-
-import org.apache.tomcat.jni.Time;
+package via.sep3.food.Model;
 
 import java.time.LocalDate;
 import java.util.List;

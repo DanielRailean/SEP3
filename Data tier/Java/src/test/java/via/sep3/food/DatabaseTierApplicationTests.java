@@ -1,4 +1,4 @@
-package via.sep3.demo;
+package via.sep3.food;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

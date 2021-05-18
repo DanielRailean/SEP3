@@ -1,4 +1,4 @@
-package via.sep3.demo.Model;
+package via.sep3.food.Model;
 
 public class Administrator {
     int Id;

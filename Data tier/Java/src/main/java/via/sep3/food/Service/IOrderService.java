@@ -1,10 +1,6 @@
-package via.sep3.demo.persistance;
+package via.sep3.food.Service;
 
-import via.sep3.demo.Model.Order;
-import via.sep3.demo.Model.User;
-
-import java.util.ArrayList;
-import java.util.List;
+import via.sep3.food.Model.Order;
 
 public interface IOrderService {
     Order GetOrder(int orderid);
