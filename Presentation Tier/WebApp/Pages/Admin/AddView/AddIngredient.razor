@@ -36,11 +36,7 @@
     
     private async Task SetupNewIngredient()
     {
-        newIngredient = new Ingredient(0);
-        newIngredient.Id = 0;
-        newIngredient.Name = "";
-        newIngredient.UnitOfMeasure = "";
-        newIngredient.Calories = 0;
+        newIngredient = new Ingredient("", "", 0);
     }
 
     private void AddNewIngredient()

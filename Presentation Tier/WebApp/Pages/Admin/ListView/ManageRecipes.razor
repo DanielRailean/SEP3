@@ -82,6 +82,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         allRecipes = await RecipeService.GetAllRecipesAsync();
+        recipesToShow = allRecipes;
         ExecuteFilter();
     }
 

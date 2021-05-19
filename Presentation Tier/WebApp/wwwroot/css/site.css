@@ -60,4 +60,6 @@ a, .btn-link {
 #leftblock, #rightblock
 {
     display: inline-table;
+    border: 1px solid;
+    margin: auto;
 }

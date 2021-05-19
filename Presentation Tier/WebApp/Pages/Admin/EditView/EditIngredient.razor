@@ -16,7 +16,7 @@
         <InputText rows="10" @bind-Value="@ingredientToEdit.Name"/>
     </div>
     <div class="form-group">
-        Calorie(s):<br/>
+        Calories:<br/>
         <InputNumber rows="10" @bind-Value="@ingredientToEdit.Calories"/>
     </div>
     <div class="form-group">
@@ -35,7 +35,8 @@
 @code {
     [Parameter] 
     public int id { get; set; }
-    Ingredient ingredientToEdit = new Ingredient(0);
+
+    private Ingredient ingredientToEdit;
 
     private void Save()
     {
