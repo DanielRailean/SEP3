@@ -1,17 +1,20 @@
-﻿@page "/adminchat"
+﻿@page "/userchat"
+@attribute [Authorize(Policy = "Customer")]
 @using Microsoft.AspNetCore.SignalR.Client
 @using WebApp.Data.Hub
 
 @inject NavigationManager navigationManager
 
-<h3>Admin Chat</h3>
+<h3>Chat</h3>
+<hr />
+
 @if (!isChatting)
 {
     <p>
         Enter your name to start chatting:
     </p>
 
-    <input type="text" maxlength="32" @bind="@username"/>
+    <input type="text" maxlength="32" @bind="@username" />
     <button type="button" @onclick="@Chat"><span class="oi oi-chat" aria-hidden="true"></span> Chat!</button>
 
     // Error messages
@@ -45,7 +48,7 @@ else
                 </div>
             }
         }
-        <hr/>
+        <hr />
         <textarea class="input-lg" placeholder="enter your comment" @bind="@newMessage"></textarea>
         <button class="btn btn-default" @onclick="@(() => SendAsync(newMessage))">Send</button>
     </div>
@@ -72,24 +75,23 @@ else
 
     public async Task Chat()
     {
-    // check username is valid
+        // check username is valid
         if (string.IsNullOrWhiteSpace(username))
         {
             message = "Please enter a name";
             return;
-        }
-        ;
+        };
 
         try
         {
-    // Start chatting and force refresh UI.
+            // Start chatting and force refresh UI.
             isChatting = true;
             await Task.Delay(1);
 
-    // remove old messages if any
+            // remove old messages if any
             messages.Clear();
 
-    // Create the chat client
+            // Create the chat client
             string baseUrl = navigationManager.BaseUri;
 
             hubUrl = baseUrl.TrimEnd('/') + ChatHub.HubUrl;
@@ -117,7 +119,7 @@ else
 
         messages.Add(new Message(name, message, isMine));
 
-    // Inform blazor the UI needs updating
+        // Inform blazor the UI needs updating
         StateHasChanged();
     }
 
@@ -162,5 +164,4 @@ else
 
         public string CSS => Mine ? "sent" : "received";
     }
-
 }

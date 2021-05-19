@@ -70,7 +70,7 @@
             <DataAnnotationsValidator/>
             <ValidationSummary/>
             <div class="form-group"> Ingredients: <br/>
-                <InputSelect @bind-Value="temp">
+                <InputSelect @bind-Value="ingredientName">
                     @foreach (Ingredient item in ingredients)
                     {
                         <option value="@item">@item.Name - (@item.UnitOfMeasure)</option>
@@ -90,8 +90,7 @@
     private Recipe newRecipe;
     private Ingredient ingredient;
     private int ingredientQuantity;
-    //private string ingredientName;
-    private string temp;
+    private string ingredientName;
     private IList<Ingredient> ingredients = new List<Ingredient>();
     private List<Ingredient> recipeIngredients = new List<Ingredient>();
 
@@ -110,10 +109,6 @@
         newRecipe.Name = "";
         newRecipe.Image = "";
         newRecipe.Description = "";
-        foreach (var t in ingredients)
-        {
-            newRecipe.Calories += t.Calories;
-        }
         newRecipe.Price = 0;
         newRecipe.MinutesToMake = 0;
     }
@@ -132,7 +127,7 @@
 
     private void AddIngredientToRecipe()
     {
-        ingredient = ingredients.Single(i => i.Name.Equals(temp));
+        ingredient = ingredients.Single(i => i.Name.Equals(ingredientName));
         ingredient.Quantity = ingredientQuantity;
         recipeIngredients.Add(ingredient);
     }
