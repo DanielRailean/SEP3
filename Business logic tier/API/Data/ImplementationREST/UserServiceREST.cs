@@ -10,7 +10,7 @@ namespace API.Data.ImplementationREST
 {
     public class UserServiceREST : IUserService
     {
-        private string uri = "https://localhost:8080/User";
+        private string uri = "https://192.168.1.117:8080";
         private User logged;
         private HttpClient client;
 
@@ -30,7 +30,7 @@ namespace API.Data.ImplementationREST
                 UserAsJson,
                 Encoding.UTF8,
                 "application/json");
-            HttpResponseMessage response =  await client.PostAsync(uri, content);
+            HttpResponseMessage response =  await client.PostAsync(uri+"/RegisterUser", content);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($@"Error: {response.ReasonPhrase}");
@@ -44,7 +44,7 @@ namespace API.Data.ImplementationREST
         public async Task<User> ValidateUser(string email, string password)
         {
             HttpResponseMessage response =
-                await client.GetAsync(uri + $"?email={@email}&password={@password}");
+                await client.GetAsync(uri +"/ValidateUser"+ $"?Email={@email}&Password={@password}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($@"Error: {response.ReasonPhrase}");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.Data.ImplementationREST;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,7 +30,7 @@ namespace API
         {
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"}); });
-            services.AddScoped<IUserService,UserServiceJSON>();
+            services.AddScoped<IUserService,UserServiceREST>();
             services.AddScoped<IIngredientService,IngredientServiceJSON>();
             services.AddScoped<IRecipeService,RecipeServiceJSON>();
             services.AddScoped<IOrderService,OrderServiceJSON>();
