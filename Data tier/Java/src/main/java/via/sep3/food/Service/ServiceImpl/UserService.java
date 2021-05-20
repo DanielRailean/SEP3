@@ -30,17 +30,17 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User RemoveUser(User user) {
-        return null;
+    public User RemoveUser( User user) {
+        return userRepository.deleteUser(user);
     }
 
     @Override
     public User UpdateUser(User user, String Password) {
-        return null;
+        return userRepository.save(user);
     }
 
     @Override
     public List<User> GetAllUsers() {
-        return null;
+        return userRepository.findAllUsers();
     }
 }
