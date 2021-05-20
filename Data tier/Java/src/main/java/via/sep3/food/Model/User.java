@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Entity;
 
+
 @Entity
 public class User {
 
@@ -13,7 +14,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    String Email;
+    String email;
     String Password;
     String FirstName;
     String LastName;
@@ -26,7 +27,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "UserId=" + id +
-                ", Email='" + Email + '\'' +
+                ", Email='" + email + '\'' +
                 ", Password='" + Password + '\'' +
                 ", FirstName='" + FirstName + '\'' +
                 ", LastName='" + LastName + '\'' +
@@ -49,7 +50,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -58,7 +59,7 @@ public class User {
 
     public String getEmail() {
 
-        return Email;
+        return email;
     }
 
     public String getPassword() {

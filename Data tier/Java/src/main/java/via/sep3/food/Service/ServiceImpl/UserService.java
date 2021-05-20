@@ -18,14 +18,13 @@ public class UserService implements IUserService {
     @Override
     public User RegisterUser(@Validated User user) {
         return userRepository.save(user);
+
     }
 
     @Override
     public User ValidateUser(String Email, String Password) throws Exception {
-        User toFind = new User();
-        toFind.setEmail(Email);
-        toFind.setPassword(Password);
         User user = userRepository.findByEmail(Email).get(0);
+        if(user==null){throw new Exception("User do not exist"); }
         if(user.getPassword().equals(Password)) return user;
         throw new Exception("Password incorrect");
     }

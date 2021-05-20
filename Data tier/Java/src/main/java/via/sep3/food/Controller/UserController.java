@@ -1,7 +1,9 @@
 package via.sep3.food.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import via.sep3.food.Model.User;
 import via.sep3.food.Service.IUserService;
 
@@ -12,11 +14,10 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    //User testUser = new User("satish", "gurung", "satish", "gurung",123456, "Horsens", 8700);
-
     @PostMapping("/RegisterUser")
     public User RegisterUser(@RequestBody User user){
-       return userService.RegisterUser(user);
+        System.out.println(user);
+        return userService.RegisterUser(user);
     }
 
     @GetMapping("/ValidateUser")
@@ -26,9 +27,9 @@ public class UserController {
             System.out.println(returnUser);
             return returnUser;
         }catch (Exception e){
-
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Error", e);
         }
-        return null;
     }
     @GetMapping("/GetAllUsers")
     public List<User> GetAllUsers(){
