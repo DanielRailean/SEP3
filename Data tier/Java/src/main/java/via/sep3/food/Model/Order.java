@@ -10,7 +10,7 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int orderid;
+    int Id;
     LocalDate order_date;
     List<Recipe> Recipes;
     String InvoiceAddress;
@@ -35,12 +35,12 @@ public class Order {
     public Order() {
     }
 
-    public int getOrder_id() {
-        return orderid;
+    public int getId() {
+        return Id;
     }
 
-    public void setOrder_id(int order_id) {
-        this.orderid = order_id;
+    public void setId(int Id) {
+        this.Id = Id;
     }
 
     public LocalDate getOrder_date() {
@@ -51,8 +51,8 @@ public class Order {
         this.order_date = order_date;
     }
 
-    public Order(int orderid,LocalDate order_date, String invoiceAddress, String deliveryAddress, String city, int postalCode, double totalPrice, double itemPrice, double deliveryPrice, String currency, boolean isDelivered,int userId) {
-        this.orderid=orderid;
+    public Order(int Id,LocalDate order_date, String invoiceAddress, String deliveryAddress, String city, int postalCode, double totalPrice, double itemPrice, double deliveryPrice, String currency, boolean isDelivered,int userId) {
+        this.Id=Id;
         this.order_date=order_date;
         InvoiceAddress = invoiceAddress;
         DeliveryAddress = deliveryAddress;
@@ -66,11 +66,11 @@ public class Order {
 this.userId=userId;    }
 
     public int getOrder() {
-        return orderid;
+        return Id;
     }
 
-    public void setOrder(int order_id) {
-        this.orderid = orderid;
+    public void setOrder(int Id) {
+        this.Id = Id;
     }
 
     public List<Recipe> getRecipes() {
@@ -101,13 +101,7 @@ this.userId=userId;    }
         return City;
     }
 
-    public int getOrderid() {
-        return orderid;
-    }
 
-    public void setOrderid(int orderid) {
-        this.orderid = orderid;
-    }
 
     public void setCity(String city) {
         City = city;
@@ -164,7 +158,7 @@ this.userId=userId;    }
     @Override
     public String toString() {
         return "Order{" +
-                "orderid=" + orderid +
+                "Id=" + Id +
                 ", Recipes=" + Recipes +
                 ", InvoiceAddress='" + InvoiceAddress + '\'' +
                 ", DeliveryAddress='" + DeliveryAddress + '\'' +

@@ -6,4 +6,7 @@ import via.sep3.food.Model.Order;
 import via.sep3.food.Model.User;
 
 public interface OrderRepository extends CrudRepository<Order, Integer> {
+    Order findByOrderId(int id);
+
+    Order deleterOrder(Order order);
 }
