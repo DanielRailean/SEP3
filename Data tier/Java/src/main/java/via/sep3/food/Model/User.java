@@ -1,8 +1,18 @@
 package via.sep3.food.Model;
 
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Entity;
+
+@Entity
 public class User {
-   int UserId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     String Email;
     String Password;
     String FirstName;
@@ -12,21 +22,10 @@ public class User {
     int PostalCode;
     int SecurityLevel;
 
-    public User( String email, String password, String firstName, String lastName, int phone, String address, int postalCode, int securityLevel) {
-    Email=email;
-    Password=password;
-    FirstName=firstName;
-    LastName=lastName;
-    Phone=phone;
-    Address=address;
-    PostalCode=postalCode;
-    SecurityLevel=securityLevel;
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "UserId=" + UserId +
+                "UserId=" + id +
                 ", Email='" + Email + '\'' +
                 ", Password='" + Password + '\'' +
                 ", FirstName='" + FirstName + '\'' +
@@ -64,14 +63,6 @@ public class User {
 
     public String getPassword() {
         return Password;
-    }
-
-    public int getUserId() {
-        return UserId;
-    }
-
-    public void setUserId(int userId) {
-        UserId = userId;
     }
 
     public String getFirstName() {
@@ -114,5 +105,11 @@ public class User {
         PostalCode = postalCode;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

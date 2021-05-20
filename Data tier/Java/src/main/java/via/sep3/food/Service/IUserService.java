@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IUserService{
     User RegisterUser(User user);
-    User ValidateUser(String Email,String Password);
+    User ValidateUser(String Email,String Password) throws Exception;
     User RemoveUser(User user);
     User UpdateUser(User user,String Password);
     List<User> GetAllUsers();
