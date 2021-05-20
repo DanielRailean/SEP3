@@ -94,9 +94,5 @@ namespace API.Controllers
             }
         }
 
-        public Task<ActionResult<IList<User>>> GetAllUsers()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
