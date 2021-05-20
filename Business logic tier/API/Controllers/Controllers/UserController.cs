@@ -49,20 +49,20 @@ namespace API.Controllers
             }
         }
         
-        [HttpGet("GetAllUsers")]
-        public async Task<ActionResult<IList<User>>> GetAllUsers()
-        {
-            try
-            {
-                IList<User> valid = await userService.GetAllUsers();
-                return Ok(valid);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return StatusCode(500, e.Message);
-            }
-        }
+        // [HttpGet("GetAllUsers")]
+        // public async Task<ActionResult<IList<User>>> GetAllUsers()
+        // {
+        //     try
+        //     {
+        //         IList<User> valid = await userService.GetAllUsers();
+        //         return Ok(valid);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         Console.WriteLine(e.Message);
+        //         return StatusCode(500, e.Message);
+        //     }
+        // }
 
         [HttpPut]
         public async Task<ActionResult<User>> UpdateUser([FromBody]User user,[FromQuery] string password)
@@ -94,5 +94,9 @@ namespace API.Controllers
             }
         }
 
+        public Task<ActionResult<IList<User>>> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

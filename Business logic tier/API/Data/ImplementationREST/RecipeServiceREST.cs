@@ -55,11 +55,6 @@ namespace API.Data.ImplementationREST
             return gotRecipe;
         }
 
-        public async Task<IList<Recipe>> GetAllRecipes()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public async Task<Recipe> UpdateRecipe(Recipe recipe)
         {
             string recipeAsJson = JsonSerializer.Serialize(recipe);
@@ -93,6 +88,11 @@ namespace API.Data.ImplementationREST
             Recipe removedRecipe = JsonSerializer.Deserialize<Recipe>(result,
                 new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
             return removedRecipe;
+        }
+        
+        public async Task<IList<Recipe>> GetAllRecipes()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

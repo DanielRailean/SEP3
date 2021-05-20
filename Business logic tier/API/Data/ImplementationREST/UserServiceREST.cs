@@ -56,19 +56,25 @@ namespace API.Data.ImplementationREST
             return user;
         }
 
+        public async Task<User> RemoveUser(User user)
+        {
+            HttpResponseMessage response =
+                await client.DeleteAsync(uri + $"?order={@user}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($@"Error: {response.ReasonPhrase}");
+            }
+
+            string result = await response.Content.ReadAsStringAsync();
+            User removedUser = JsonSerializer.Deserialize<User>(result,
+                new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            return removedUser;
+        }
+        
         public async Task<User> UpdateUser(User user, string password)
         {
             throw new System.NotImplementedException();
         }
-
-        public async Task<User> RemoveUser(User user)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<IList<User>> GetAllUsers()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

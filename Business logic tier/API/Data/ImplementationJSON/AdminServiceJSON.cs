@@ -46,7 +46,7 @@ namespace API.Data
             File.WriteAllText(AdministratorsFile, administratorsInJson);
         }
 
-        public Administrator ValidateAdministrator(string email, string password)
+        public async Task<Administrator> ValidateAdministrator(string email, string password)
         {
             var administrator = AllAdministrators.First(u => u.Email.Equals(email));
             if (administrator == null) throw new Exception("Administrator do not exist");
