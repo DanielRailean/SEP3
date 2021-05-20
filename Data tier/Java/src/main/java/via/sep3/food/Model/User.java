@@ -1,9 +1,20 @@
 package via.sep3.food.Model;
 
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Entity;
+
+
+@Entity
 public class User {
-   int UserId;
-    String Email;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    String email;
     String Password;
     String FirstName;
     String LastName;
@@ -12,22 +23,11 @@ public class User {
     int PostalCode;
     int SecurityLevel;
 
-    public User( String email, String password, String firstName, String lastName, int phone, String address, int postalCode, int securityLevel) {
-    Email=email;
-    Password=password;
-    FirstName=firstName;
-    LastName=lastName;
-    Phone=phone;
-    Address=address;
-    PostalCode=postalCode;
-    SecurityLevel=securityLevel;
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "UserId=" + UserId +
-                ", Email='" + Email + '\'' +
+                "UserId=" + id +
+                ", Email='" + email + '\'' +
                 ", Password='" + Password + '\'' +
                 ", FirstName='" + FirstName + '\'' +
                 ", LastName='" + LastName + '\'' +
@@ -50,7 +50,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -59,19 +59,11 @@ public class User {
 
     public String getEmail() {
 
-        return Email;
+        return email;
     }
 
     public String getPassword() {
         return Password;
-    }
-
-    public int getUserId() {
-        return UserId;
-    }
-
-    public void setUserId(int userId) {
-        UserId = userId;
     }
 
     public String getFirstName() {
@@ -114,5 +106,11 @@ public class User {
         PostalCode = postalCode;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
