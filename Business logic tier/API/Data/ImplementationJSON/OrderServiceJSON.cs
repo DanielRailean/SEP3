@@ -88,7 +88,7 @@ namespace API.Data
                 IList<Order> userOrders = new List<Order>();
                 foreach (var order in allOrders)
                 {
-                    if (order.UserId == user.UserId)
+                    if (order.UserId == user.id)
                     {
                         userOrders.Add(order);
                     }

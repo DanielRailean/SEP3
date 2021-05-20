@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using API.Models;
 
@@ -9,6 +11,7 @@ namespace API.Data.ImplementationREST
     {
         private string uri = "https://localhost:8080/Administrator";
         private HttpClient client;
+        private Administrator loggedAdministrator;
 
         public AdminServiceREST()
         {
@@ -19,9 +22,18 @@ namespace API.Data.ImplementationREST
             };
             client = new HttpClient(clientHandler);
         }
-        public Administrator ValidateAdministrator(string email, string password)
+        public async Task<Administrator> ValidateAdministrator(string email, string password)
         {
-            throw new System.NotImplementedException();
+            HttpResponseMessage response =
+                await client.GetAsync(uri +"/ValidateUser"+$"?Email={@email}&Password={@password}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($@"Error: {response.ReasonPhrase}");
+            }
+            string result = await response.Content.ReadAsStringAsync();
+            Administrator administrator = JsonSerializer.Deserialize<Administrator>(result, new JsonSerializerOptions{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            loggedAdministrator = administrator;
+            return administrator;
         }
     }
 }

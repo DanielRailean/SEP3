@@ -23,7 +23,7 @@ namespace API.Controllers
         {
             try
             {
-                Administrator valid = adminService.ValidateAdministrator(email,password);
+                Administrator valid = await adminService.ValidateAdministrator(email,password);
                 return Ok(valid);
             }
             catch (Exception e)

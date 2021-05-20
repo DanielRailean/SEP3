@@ -1,9 +1,10 @@
-﻿using API.Models;
+﻿using System.Threading.Tasks;
+using API.Models;
 
 namespace API.Data
 {
     public interface IAdminService
     {
-        public Administrator ValidateAdministrator(string email, string password);
+        public Task<Administrator> ValidateAdministrator(string email, string password);
     }
 }
