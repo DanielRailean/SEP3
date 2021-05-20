@@ -15,12 +15,12 @@ public class IngredientService implements IIngredientService {
     public IngredientRepository ingredientRepository;
     @Override
     public List<Ingredient> GetAllIngredients() {
-        return null;
+        return ingredientRepository.findAllIngredients();
     }
 
     @Override
     public Ingredient GetOneIngredient(String name) {
-        return null;
+        return ingredientRepository.findIngredientByName(name);
     }
 
     @Override
@@ -30,11 +30,11 @@ public class IngredientService implements IIngredientService {
 
     @Override
     public Ingredient RemoveIngredient(Ingredient ingredient) {
-        return null;
+        return ingredientRepository.deleteIngredient(ingredient);
     }
 
     @Override
     public Ingredient UpdateIngredient(Ingredient ingredient) {
-        return null;
+        return ingredientRepository.save(ingredient);
     }
 }

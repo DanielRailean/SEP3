@@ -9,8 +9,10 @@ import via.sep3.food.Service.IAdministratorService;
 
 @Service
 public class AdministratorService implements IAdministratorService {
+
     @Autowired
     private AdministratorRepository administratorRepository;
+
     @Override
     public Administrator ValidateAdministrator(String Email, String Password) throws Exception {
         Administrator administrator = administratorRepository.findByEmail(Email).get(0);
