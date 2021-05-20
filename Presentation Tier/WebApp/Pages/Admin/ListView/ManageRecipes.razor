@@ -42,7 +42,6 @@ else
             <th>Price</th>
             <th>Remove</th>
             <th>Edit</th>
-            <th>Add</th>
         </tr>
         </thead>
         <tbody>
@@ -83,6 +82,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         allRecipes = await RecipeService.GetAllRecipesAsync();
+        recipesToShow = allRecipes;
         ExecuteFilter();
     }
 

@@ -68,13 +68,14 @@ else
     private IList<Ingredient> allIngredients = new List<Ingredient>();
     private IList<Ingredient> ingredientsToShow = new List<Ingredient>();
 
-    private string? filterByName = "";
-    private int? filterByCalories = 0;
+    private string? filterByName;
+    private int? filterByCalories;
 
 
     protected override async Task OnInitializedAsync()
     {
         allIngredients = await IngredientService.GetAllIngredientsAsync();
+        ingredientsToShow = allIngredients;
         ExecuteFilter();
     }
 
@@ -130,7 +131,7 @@ else
 
     private void EditIngredient(int id)
     {
-        NavigationManager.NavigateTo($"/editadults/{id}");
+        NavigationManager.NavigateTo($"/editingredients/{id}");
     }
 
     private void AddIngredient()

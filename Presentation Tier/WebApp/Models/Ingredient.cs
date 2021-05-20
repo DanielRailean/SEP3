@@ -8,9 +8,18 @@
         public int Quantity { get; set; }
         public double Calories { get; set; }
 
-        public Ingredient(int quantity)
+        public Ingredient(string name, string unitOfMeasure, double calories)
         {
-            Quantity = quantity;
+            Quantity = 0;
+            Name = name;
+            UnitOfMeasure = unitOfMeasure;
+            Calories = calories;
+        }
+
+        public override string ToString()
+        {
+            string s = this.Name;
+            return s;
         }
     }
 }

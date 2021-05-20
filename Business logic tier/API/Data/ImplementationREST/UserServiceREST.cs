@@ -10,7 +10,7 @@ namespace API.Data.ImplementationREST
 {
     public class UserServiceREST : IUserService
     {
-        private string uri = "https://localhost:8080/User";
+        private string uri = "https://192.168.1.117:8080";
         private User logged;
         private HttpClient client;
 
@@ -30,7 +30,7 @@ namespace API.Data.ImplementationREST
                 UserAsJson,
                 Encoding.UTF8,
                 "application/json");
-            HttpResponseMessage response =  await client.PostAsync(uri, content);
+            HttpResponseMessage response =  await client.PostAsync(uri+"/RegisterUser", content);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($@"Error: {response.ReasonPhrase}");
@@ -41,22 +41,31 @@ namespace API.Data.ImplementationREST
             return userReceived;
         }
 
-        public Task<User> ValidateUser(string email, string password)
+        public async Task<User> ValidateUser(string email, string password)
+        {
+            HttpResponseMessage response =
+                await client.GetAsync(uri +"/ValidateUser"+ $"?Email={@email}&Password={@password}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($@"Error: {response.ReasonPhrase}");
+            }
+            string result = await response.Content.ReadAsStringAsync();
+            User user = JsonSerializer.Deserialize<User>(result, new JsonSerializerOptions{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            logged = user;
+            return user;
+        }
+
+        public async Task<User> UpdateUser(User user, string password)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<User> UpdateUser(User user, string password)
+        public async Task<User> RemoveUser(User user)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<User> RemoveUser(User user)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IList<User>> GetAllUsers()
+        public async Task<IList<User>> GetAllUsers()
         {
             throw new NotImplementedException();
         }

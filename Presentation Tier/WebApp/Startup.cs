@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApp.Authentication;
 using WebApp.Data;
+using WebApp.Data.Hub;
 
 namespace WebApp
 {
@@ -69,6 +70,7 @@ namespace WebApp
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHub<ChatHub>(ChatHub.HubUrl);
             });
         }
     }
