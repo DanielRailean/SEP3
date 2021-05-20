@@ -38,6 +38,7 @@ namespace API.Controllers
         {
             try
             {
+                Console.Write(email+password);
                 User valid = await userService.ValidateUser(email, password);
                 return Ok(valid);
             }

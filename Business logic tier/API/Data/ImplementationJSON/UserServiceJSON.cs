@@ -34,7 +34,7 @@ namespace API.Data
                 new User
                 {
                     Password = "1234",
-                    UserId = 0,
+                    id = 0,
                     Email = "dd"
                 }
             };
@@ -71,8 +71,8 @@ namespace API.Data
                 throw new Exception("This Email is already registered");
             }
 
-            int max = AllUsers.Max(u => u.UserId);
-            user.UserId = (++max);
+            long max = AllUsers.Max(u => u.id);
+            user.id = (++max);
             AllUsers.Add(user);
             Save();
             return user;
@@ -81,7 +81,7 @@ namespace API.Data
 
         public async Task<User> UpdateUser(User user, string password)
         {
-            User toUpdate = AllUsers.First(u => u.UserId == user.UserId);
+            User toUpdate = AllUsers.First(u => u.id == user.id);
             if (toUpdate == null) throw new Exception("User does not exist");
             if (!toUpdate.Password.Equals(password)) throw new Exception("Password incorrect");
             toUpdate.Password = user.Password;
