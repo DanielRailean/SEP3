@@ -83,7 +83,6 @@ else
     {
         allRecipes = await RecipeService.GetAllRecipesAsync();
         recipesToShow = allRecipes;
-        ExecuteFilter();
     }
 
     private void RemoveRecipe(int Id)

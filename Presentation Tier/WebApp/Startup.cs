@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MudBlazor.Services;
 using WebApp.Authentication;
 using WebApp.Data;
 using WebApp.Data.Hub;
@@ -33,6 +34,7 @@ namespace WebApp
             services.AddSignalR();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMudServices();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IRecipeService, RecipeService>();

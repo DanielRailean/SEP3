@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using WebApp.Models
 @using WebApp.Data
+@using MudBlazor
 
 @inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
@@ -25,20 +26,39 @@ else if (!recipes.Any())
 else
 {
     <div class="grid-container">
-    @foreach (Recipe item in recipesToShow)
-    {
-        <div class="grid-item">
-            <tr>
-                <img src=@item.Image/>
-                <td>@item.Name</td>
-                <td>@item.Type</td>
-                <td>@item.MinutesToMake</td>
-                <td>@item.Price</td>
-                <td>@item.Calories</td>
-            </tr>
-        </div>
-    }
+        @* @foreach (Recipe item in recipesToShow) *@
+        @* { *@
+        @*     <div class="grid-item"> *@
+        @*         <tr> *@
+        @*             <img src=@item.Image/> *@
+        @*             <td>@item.Name</td> *@
+        @*             <td>@item.Type</td> *@
+        @*             <td>@item.MinutesToMake</td> *@
+        @*             <td>@item.Price</td> *@
+        @*             <td>@item.Calories</td> *@
+        @*         </tr> *@
+        @*     </div> *@
+        @* } *@
     </div>
+    <MudGrid>
+        @foreach (Recipe item in recipesToShow)
+        {
+            <MudItem xs="20">
+                <MudGrid Justify="Justify.SpaceBetween">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudCardMedia Image="@item.Image"/>
+                            <MudText>@item.Name</MudText>
+                            <MudText>@item.Price</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Variant="Variant.Text" Color="Color.Primary">Add to basket</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudGrid>
+            </MudItem>
+        }
+    </MudGrid>
 }
 
 
@@ -49,5 +69,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         recipes = await RecipeService.GetAllRecipesAsync();
+        recipesToShow = recipes;
     }
+
 }

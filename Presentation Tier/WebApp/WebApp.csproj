@@ -7,16 +7,13 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.7" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.5" />
+      <PackageReference Include="MudBlazor" Version="5.0.9" />
     </ItemGroup>
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Pages\Components\AddEditIngredient.razor" />
       <_ContentIncludedByDefault Remove="Pages\Components\AddEditRecipe.razor" />
       <_ContentIncludedByDefault Remove="Pages\Components\EditUser.razor" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Pages\Image" />
     </ItemGroup>
 
 </Project>

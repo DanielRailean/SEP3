@@ -6,7 +6,7 @@ namespace WebApp.Data
 {
     public interface IOrderService
     {
-        Task<IList<Order>> GetAllOrdersAsync();
+        // Task<IList<Order>> GetAllOrdersAsync();
         Task<Order> GetOrderAsync(int orderId);
         Task<IList<Order>> GetOrdersByUserAsync(User user);
         Task CreateOrderAsync(Order order);
