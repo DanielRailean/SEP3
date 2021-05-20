@@ -1,6 +1,15 @@
 package via.sep3.food.Model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Administrator {
+
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
      String Email;
      String Password;
