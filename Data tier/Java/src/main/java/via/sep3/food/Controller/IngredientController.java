@@ -25,6 +25,7 @@ public class IngredientController {
 
     @PostMapping("/AddIngredient")
     public Ingredient AddIngredient(@RequestBody Ingredient ingredient) {
+        System.out.println("ingredient");
         return IngredientService.AddIngredient(ingredient);
 
     }

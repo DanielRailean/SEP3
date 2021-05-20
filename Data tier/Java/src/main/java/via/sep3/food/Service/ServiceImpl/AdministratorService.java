@@ -1,11 +1,13 @@
 package via.sep3.food.Service.ServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import via.sep3.food.Model.Administrator;
 import via.sep3.food.Model.User;
 import via.sep3.food.Repository.AdministratorRepository;
 import via.sep3.food.Service.IAdministratorService;
 
+@Service
 public class AdministratorService implements IAdministratorService {
     @Autowired
     private AdministratorRepository administratorRepository;
