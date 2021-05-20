@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class Administrator {
 
-    @javax.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
      String Email;

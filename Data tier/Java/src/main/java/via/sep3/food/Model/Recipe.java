@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 public class Recipe {
-    @javax.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
     String Name;
@@ -50,7 +50,7 @@ public class Recipe {
         return Ingredient;
     }
 
-    public void setIngredient(List ingredient) {
+    public void setIngredient(List<Ingredient> ingredient) {
         Ingredient = ingredient;
     }
 
