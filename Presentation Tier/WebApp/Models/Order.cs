@@ -26,7 +26,6 @@ namespace WebApp.Models
         public double DeliveryPrice { get; set; }
         [Required]
         public string Currency { get; set; }
-
         public bool? IsShipped { get; set; }
     }
 }
