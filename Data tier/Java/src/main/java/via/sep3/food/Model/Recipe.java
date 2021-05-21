@@ -14,20 +14,23 @@ public class Recipe {
     String Name;
     List<Ingredient> Ingredient;
     double Calories;
-    String NutritionType;
-    String FoodType;
-    double Price;
+    public int MinutesToMake;
+    NutritionType Type;
+    String Description;
+    String Image;
 
     public Recipe() {
     }
 
-    public Recipe(int id,String name, double calories, String nutritionType, String foodType, double price) {
-        Id=id;
+    public Recipe( String name, List<Ingredient> ingredient, double calories, int minutesToMake, NutritionType type, String description, String image) {
+
         Name = name;
+        Ingredient = ingredient;
         Calories = calories;
-        NutritionType = nutritionType;
-        FoodType = foodType;
-        Price = price;
+        MinutesToMake = minutesToMake;
+        Type = type;
+        Description = description;
+        Image = image;
     }
 
     public int getId() {
@@ -62,38 +65,48 @@ public class Recipe {
         Calories = calories;
     }
 
-    public String getNutritionType() {
-        return NutritionType;
+    public int getMinutesToMake() {
+        return MinutesToMake;
     }
 
-    public void setNutritionType(String nutritionType) {
-        NutritionType = nutritionType;
+    public void setMinutesToMake(int minutesToMake) {
+        MinutesToMake = minutesToMake;
     }
 
-    public String getFoodType() {
-        return FoodType;
+    public NutritionType getType() {
+        return Type;
     }
 
-    public void setFoodType(String foodType) {
-        FoodType = foodType;
+    public void setType(NutritionType type) {
+        Type = type;
     }
 
-    public double getPrice() {
-        return Price;
+    public String getDescription() {
+        return Description;
     }
 
-    public void setPrice(double price) {
-        Price = price;
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
     }
 
     @Override
     public String toString() {
         return "Recipe{" +
                 "Name='" + Name + '\'' +
+                ", Ingredient=" + Ingredient +
                 ", Calories=" + Calories +
-                ", NutritionType='" + NutritionType + '\'' +
-                ", FoodType='" + FoodType + '\'' +
-                ", Price=" + Price +
+                ", MinutesToMake=" + MinutesToMake +
+                ", Type=" + Type +
+                ", Description='" + Description + '\'' +
+                ", Image='" + Image + '\'' +
                 '}';
     }
 }

@@ -11,7 +11,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
-    LocalDate order_date;
+    int UserId;
+    LocalDate orderdate;
     List<Recipe> Recipes;
     String InvoiceAddress;
     String DeliveryAddress;
@@ -22,38 +23,15 @@ public class Order {
     double DeliveryPrice;
     String Currency;
     boolean IsDelivered;
-    int userId;
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    String Status;
 
     public Order() {
     }
 
-    public int getId() {
-        return Id;
-    }
-
-    public void setId(int Id) {
-        this.Id = Id;
-    }
-
-    public LocalDate getOrder_date() {
-        return order_date;
-    }
-
-    public void setOrder_date(LocalDate order_date) {
-        this.order_date = order_date;
-    }
-
-    public Order(int Id,LocalDate order_date, String invoiceAddress, String deliveryAddress, String city, int postalCode, double totalPrice, double itemPrice, double deliveryPrice, String currency, boolean isDelivered,int userId) {
-        this.Id=Id;
-        this.order_date=order_date;
+    public Order(int userId, LocalDate orderdate, List<Recipe> recipes, String invoiceAddress, String deliveryAddress, String city, int postalCode, double totalPrice, double itemPrice, double deliveryPrice, String currency, boolean isDelivered, String status) {
+        UserId = userId;
+        this.orderdate = orderdate;
+        Recipes = recipes;
         InvoiceAddress = invoiceAddress;
         DeliveryAddress = deliveryAddress;
         City = city;
@@ -63,14 +41,31 @@ public class Order {
         DeliveryPrice = deliveryPrice;
         Currency = currency;
         IsDelivered = isDelivered;
-this.userId=userId;    }
+        Status = status;
+    }
 
-    public int getOrder() {
+    public int getId() {
         return Id;
     }
 
-    public void setOrder(int Id) {
-        this.Id = Id;
+    public void setId(int id) {
+        Id = id;
+    }
+
+    public int getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(int userId) {
+        UserId = userId;
+    }
+
+    public LocalDate getOrderdate() {
+        return orderdate;
+    }
+
+    public void setOrderdate(LocalDate orderdate) {
+        this.orderdate = orderdate;
     }
 
     public List<Recipe> getRecipes() {
@@ -100,8 +95,6 @@ this.userId=userId;    }
     public String getCity() {
         return City;
     }
-
-
 
     public void setCity(String city) {
         City = city;
@@ -155,10 +148,19 @@ this.userId=userId;    }
         IsDelivered = delivered;
     }
 
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
-                "Id=" + Id +
+                "UserId=" + UserId +
+                ", orderdate=" + orderdate +
                 ", Recipes=" + Recipes +
                 ", InvoiceAddress='" + InvoiceAddress + '\'' +
                 ", DeliveryAddress='" + DeliveryAddress + '\'' +
@@ -169,6 +171,7 @@ this.userId=userId;    }
                 ", DeliveryPrice=" + DeliveryPrice +
                 ", Currency='" + Currency + '\'' +
                 ", IsDelivered=" + IsDelivered +
+                ", Status='" + Status + '\'' +
                 '}';
     }
 }
