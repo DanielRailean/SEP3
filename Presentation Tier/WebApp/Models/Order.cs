@@ -9,7 +9,7 @@ namespace WebApp.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public DateTime OrderDate { get; set; }
-        public IList<int> Recipes { get; set; }
+        public IList<BasketItem> Recipes { get; set; }
         [Required]
         public string InvoiceAddress { get; set; }
         [Required]

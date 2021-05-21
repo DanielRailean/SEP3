@@ -2,9 +2,11 @@
 @using WebApp.Models
 @using WebApp.Data
 @using MudBlazor
+@using System.ComponentModel.DataAnnotations
 
 @inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
+@inject IBasketService BasketService
 
 <h1>Welcome to GodEats!</h1>
 
@@ -25,7 +27,7 @@ else if (!recipes.Any())
 }
 else
 {
-    <div class="grid-container">
+@*     <div class="grid-container"> *@
         @* @foreach (Recipe item in recipesToShow) *@
         @* { *@
         @*     <div class="grid-item"> *@
@@ -39,20 +41,21 @@ else
         @*         </tr> *@
         @*     </div> *@
         @* } *@
-    </div>
+    // </div>
     <MudGrid>
         @foreach (Recipe item in recipesToShow)
         {
             <MudItem xs="20">
                 <MudGrid Justify="Justify.SpaceBetween">
                     <MudCard>
-                        <MudCardContent>
+                        <MudCardContent @bind-Value="recipe">
                             <MudCardMedia Image="@item.Image"/>
                             <MudText>@item.Name</MudText>
                             <MudText>@item.Price</MudText>
                         </MudCardContent>
                         <MudCardActions>
-                            <MudButton Variant="Variant.Text" Color="Color.Primary">Add to basket</MudButton>
+                            <MudNumericField @bind-Value="amount" Label="Amount" Color="Color.Primary"/>
+                            <MudButton @onclick="AddToBasket" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
                         </MudCardActions>
                     </MudCard>
                 </MudGrid>
@@ -65,6 +68,11 @@ else
 @code {
     private IList<Recipe> recipes = new List<Recipe>();
     private IList<Recipe> recipesToShow = new List<Recipe>();
+    private Recipe recipe;
+    [Required, Range(1, 10)]
+    private int amount;
+
+    private BasketItem basketItem;
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,4 +80,11 @@ else
         recipesToShow = recipes;
     }
 
+    private void AddToBasket()
+    {
+        basketItem = new BasketItem();
+        basketItem.Amount = amount;
+        basketItem.RecipeId = recipe.Id;
+        BasketService.AddRecipe(basketItem);
+    }
 }

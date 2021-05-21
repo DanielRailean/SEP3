@@ -1,6 +1,44 @@
-﻿@page "/Basket"
-<h3>Basket</h3>
+﻿@page "/basket"
+@using WebApp.Data
+@using WebApp.Models
 
+@inject IBasketService BasketService
+@inject NavigationManager NavigationManager
+
+<h3>Basket</h3>
+@if (recipesInBasket == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else if (!recipesInBasket.Any())
+{
+    <p>
+        <em>Nothing in basket.</em>
+    </p>
+}
+else
+{
+    <MudTable Items="@recipesInBasket" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>Amount</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        @foreach (var item in recipesInBasket)
+        {
+            <RowTemplate>
+                <MudTd DataLabel="Amount">@recipesInBasket.Count</MudTd>
+                <MudTd DataLabel="Name">@item.Amount</MudTd>
+                @* <MudTd DataLabel="Price">@item.Price</MudTd> *@
+            </RowTemplate>
+        }
+    </MudTable>
+}
 @code {
-    
+    private IList<BasketItem> recipesInBasket = new List<BasketItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipesInBasket = await BasketService.GetAllRecipesByOrder();
+    }
 }

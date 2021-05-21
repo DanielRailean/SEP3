@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using MudBlazor.Extensions;
 using WebApp.Models;
 
 namespace WebApp.Data
@@ -11,26 +12,27 @@ namespace WebApp.Data
     public class BasketService : IBasketService
     {
         private IJSRuntime jsRuntime;
-        private IList<Recipe> recipes;
+        private IList<BasketItem> basketItems;
 
         public BasketService(IJSRuntime jsRuntime)
         {
             this.jsRuntime = jsRuntime;
-            recipes = new List<Recipe>();
+            basketItems = new List<BasketItem>();
         }
 
-        public async Task<IList<Recipe>> GetAllRecipesByOrder()
+        public async Task<IList<BasketItem>> GetAllRecipesByOrder()
         {
             try
             {
-                var recipesAsString = await jsRuntime.InvokeAsync<IList<string>>("sessionStorage.getItem", "recipe");
-                foreach (var recipe in recipesAsString)
+                var recipeCount = await jsRuntime.InvokeAsync<int>("localStorageService.sizeOfLocalStorage");
+                for (int i = 0; i < recipeCount; i++)
                 {
-                    var recipeAsJson = JsonSerializer.Deserialize<Recipe>(recipe);
-                    recipes.Add(recipeAsJson);
+                    var recipesAsString = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "recipe");
+                    var recipeAsJson = JsonSerializer.Deserialize<BasketItem>(recipesAsString);
+                    basketItems.Add(recipeAsJson);
                 }
 
-                return recipes;
+                return basketItems;
             }
             catch (Exception e)
             {
@@ -38,13 +40,14 @@ namespace WebApp.Data
             }
         }
 
-        public async Task AddRecipe(Recipe recipe)
+        public async Task AddRecipe(BasketItem basketItem)
         {
             try
             {
-                string serializedRecipe = JsonSerializer.Serialize(recipe);
-                recipes.Add(recipe);
-                await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "recipe", serializedRecipe);
+                // string serializedRecipe = JsonSerializer.Serialize(recipe);
+                // string[] arr = {amount.ToString(), serializedRecipe};
+                // basketItems.Add(recipe);
+                // await jsRuntime.InvokeVoidAsync("localStorage.setItem", $"{amount}x{recipe.Name}", serializedRecipe);
             }
             catch (Exception e)
             {
@@ -52,13 +55,14 @@ namespace WebApp.Data
             }
         }
 
-        public async Task RemoveRecipe(Recipe recipe)
+        public async Task RemoveRecipe(BasketItem basketItem)
         {
             try
             {
-                string serializedRecipe = JsonSerializer.Serialize(recipe);
-                recipes.Remove(recipe);
-                await jsRuntime.InvokeVoidAsync("sessionStorage.removeItem", "recipe", serializedRecipe);
+                // string serializedRecipe = JsonSerializer.Serialize(recipe);
+                // string[] arr = {amount.ToString(), serializedRecipe};
+                // basketItems.Remove(recipe);
+                // await jsRuntime.InvokeVoidAsync("localStorage.removeItem", recipe.Id, arr);
             }
             catch (Exception e)
             {
