@@ -18,8 +18,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order GetUserOrders(int userId) {
-        return orderRepository.findByOrderId(userId);
+    public Order GetUserOrders(int UserId) {
+        return orderRepository.findByOrderId(UserId);
     }
 
     @Override
