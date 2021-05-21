@@ -12,15 +12,35 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
     String Name;
+    String UnitOfMeasure;
+    int Quantity;
     double Calories;
+
 
     public Ingredient() {
     }
 
-    public Ingredient(int id,String name, double calories) {
-        Id=id;
+    public Ingredient( String name, String unitOfMeasure, int quantity, double calories) {
         Name = name;
+        UnitOfMeasure = unitOfMeasure;
+        Quantity = quantity;
         Calories = calories;
+    }
+
+    public String getUnitOfMeasure() {
+        return UnitOfMeasure;
+    }
+
+    public void setUnitOfMeasure(String unitOfMeasure) {
+        UnitOfMeasure = unitOfMeasure;
+    }
+
+    public int getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        Quantity = quantity;
     }
 
     public int getId() {
