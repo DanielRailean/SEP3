@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IngredientRepository extends CrudRepository<Ingredient, Integer> {
     @Transactional
-    Ingredient deleteById(int id);
+    void deleteById(int id);
     List<Ingredient> findById(int id);
     List<Ingredient> findByName(String name);
 }
