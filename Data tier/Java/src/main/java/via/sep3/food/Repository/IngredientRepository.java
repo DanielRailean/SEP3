@@ -5,12 +5,12 @@ import org.springframework.stereotype.Repository;
 import via.sep3.food.Model.Ingredient;
 import via.sep3.food.Model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface IngredientRepository extends CrudRepository<Ingredient, Integer> {
-    List<Ingredient> findAllIngredients();
-
-    Ingredient deleteIngredient(Ingredient ingredient);
-
-    Ingredient findIngredientByName(String name);
+    @Transactional
+    Ingredient deleteById(int id);
+    List<Ingredient> findById(int id);
+    List<Ingredient> findByName(String name);
 }
