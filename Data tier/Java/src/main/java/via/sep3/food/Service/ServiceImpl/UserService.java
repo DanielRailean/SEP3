@@ -8,7 +8,7 @@ import via.sep3.food.Repository.UserRepository;
 import via.sep3.food.Service.IUserService;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class UserService implements IUserService {
@@ -23,24 +23,42 @@ public class UserService implements IUserService {
 
     @Override
     public User ValidateUser(String Email, String Password) throws Exception {
-        User user = userRepository.findByEmail(Email).get(0);
-        if(user==null){throw new Exception("User do not exist"); }
+        User user;
+        try {
+            List<User> users = userRepository.findByEmail(Email);
+            user = users.get(0);
+        } catch (Exception e) {
+            throw new Exception("User do not exist");
+        }
         if(user.getPassword().equals(Password)) return user;
         throw new Exception("Password incorrect");
+
     }
 
     @Override
     public User RemoveUser( User user) {
-        return userRepository.deleteUser(user);
+        User returned = userRepository.findByEmail(user.getEmail()).get(0);
+        userRepository.deleteByEmail(user.getEmail());
+        return returned;
     }
 
     @Override
-    public User UpdateUser(User user, String Password) {
-        return userRepository.save(user);
+    public User UpdateUser(User user) throws Exception {
+        User returned;
+        try {
+            User updated = ValidateUser(user.getEmail(), user.getPassword());
+            updated.setPassword(user.getPassword());
+            updated.setAddress(user.getAddress());
+            updated.setFirstName(user.getFirstName());
+            updated.setLastName(user.getLastName());
+            updated.setPhone(user.getPhone());
+            updated.setPostalCode(user.getPostalCode());
+            userRepository.save(updated);
+            returned = ValidateUser(updated.getEmail(),updated.getPassword());
+        } catch (Exception e) {
+            throw new Exception("User does not exist");
+        }
+        return returned;
     }
 
-    @Override
-    public List<User> GetAllUsers() {
-        return userRepository.findAllUsers();
-    }
 }

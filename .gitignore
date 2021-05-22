@@ -15,3 +15,5 @@
 Business logic tier/API/bin/
 Business logic tier/API/obj/
 *.json
+Data tier/food.db
+*.db

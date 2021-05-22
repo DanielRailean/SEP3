@@ -31,10 +31,6 @@ public class UserController {
                     HttpStatus.NOT_FOUND, "Error", e);
         }
     }
-    @GetMapping("/GetAllUsers")
-    public List<User> GetAllUsers(){
-        return userService.GetAllUsers();
-    }
 
     @DeleteMapping("/RemoveUser")
     public User RemoverUser(@RequestBody User user){
@@ -42,7 +38,14 @@ public class UserController {
     }
 
     @PutMapping("/UpdateUser")
-    public User UpdateUser(@RequestBody User user,String Password){
-        return userService.UpdateUser(user,Password);
+    public User UpdateUser(@RequestBody User user){
+        try {
+            User updated = userService.UpdateUser(user);
+            System.out.println(updated);
+            return updated;
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Error", e);
+        }
     }
 }
