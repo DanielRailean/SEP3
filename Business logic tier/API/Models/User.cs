@@ -5,6 +5,7 @@ namespace API.Models
 {
     public class User
     {
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public long id { get; set; }
         [Required]
         [EmailAddress]
@@ -20,12 +21,19 @@ namespace API.Models
         [JsonPropertyName("lastName")]
         public string LastName { get; set; }
         [Required]
+        [JsonPropertyName("phone")]
+
         public int Phone { get; set; }
         [Required]
         [JsonPropertyName("address")]
         public string Address { get; set; }
         [Required]
+        [JsonPropertyName("postalCode")]
+
         public int PostalCode { get; set; }
+        [Required]
+        [JsonPropertyName("securityLevel")]
+
         public int SecurityLevel { get; set; }
     }
 }

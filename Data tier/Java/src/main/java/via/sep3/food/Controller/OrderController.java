@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import via.sep3.food.Exceptions.NoUserOrder;
+import via.sep3.food.Exceptions.OrderNotExists;
 import via.sep3.food.Model.UserOrder;
 import via.sep3.food.Service.IOrderService;
 
@@ -22,8 +24,7 @@ public class OrderController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new OrderNotExists();
         }
     }
 
@@ -34,8 +35,7 @@ public class OrderController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new NoUserOrder();
         }
     }
 
@@ -47,7 +47,7 @@ public class OrderController {
             return returned;
         }catch (Exception e){
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+                    HttpStatus.FORBIDDEN, "Error", e);
         }
 
     }
@@ -58,8 +58,7 @@ public class OrderController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new OrderNotExists();
         }
     }
 
@@ -70,8 +69,7 @@ public class OrderController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new OrderNotExists();
         }
     }
 }
