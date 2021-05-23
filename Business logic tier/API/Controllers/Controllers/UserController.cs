@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using API.Data;
 using API.Models;
@@ -23,17 +24,16 @@ namespace API.Controllers
         {
             try
             {
-                userService.RegisterUser(user);
-                return Ok(user);
+                User returned = await userService.RegisterUser(user);
+                return Ok(returned);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
                 return StatusCode(500, e.Message);
             }
         }
 
-        [HttpGet("GetUser")]
+        [HttpGet]
         public async Task<ActionResult<User>> ValidateUser([FromQuery] string email, [FromQuery] string password)
         {
             try
@@ -48,22 +48,6 @@ namespace API.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-        
-        // [HttpGet("GetAllUsers")]
-        // public async Task<ActionResult<IList<User>>> GetAllUsers()
-        // {
-        //     try
-        //     {
-        //         IList<User> valid = await userService.GetAllUsers();
-        //         return Ok(valid);
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         Console.WriteLine(e.Message);
-        //         return StatusCode(500, e.Message);
-        //     }
-        // }
-
         [HttpPut]
         public async Task<ActionResult<User>> UpdateUser([FromBody]User user,[FromQuery] string password)
         {
