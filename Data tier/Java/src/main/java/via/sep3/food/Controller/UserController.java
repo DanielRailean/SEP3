@@ -45,9 +45,9 @@ public class UserController {
     }
 
     @DeleteMapping("/RemoveUser")
-    public User RemoverUser(@RequestBody User user){
+    public User RemoverUser(@RequestParam String email){
         try {
-            User returnUser = userService.RemoveUser(user);
+            User returnUser = userService.RemoveUser(email);
             System.out.println(returnUser);
             return returnUser;
         }catch (Exception e){

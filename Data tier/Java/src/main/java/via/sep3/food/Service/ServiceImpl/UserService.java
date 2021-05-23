@@ -39,10 +39,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User RemoveUser( User user) throws Exception {
+    public User RemoveUser(String email) throws Exception {
         try {
-            User returned = userRepository.findByEmail(user.getEmail()).get(0);
-            userRepository.deleteByEmail(user.getEmail());
+            User returned = userRepository.findByEmail(email).get(0);
+            userRepository.deleteByEmail(email);
             return returned;
         }catch (Exception e){
             throw new Exception("User does not exist");
