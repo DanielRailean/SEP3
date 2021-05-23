@@ -16,9 +16,10 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
 
     @Override
-    public User RegisterUser(@Validated User user) {
+    public User RegisterUser(@Validated User user) throws Exception {
+        List<User> users = userRepository.findByEmail(user.getEmail());
+        if(users.size()>0){throw new Exception("User with this email already exists");}
         return userRepository.save(user);
-
     }
 
     @Override
@@ -36,17 +37,21 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User RemoveUser( User user) {
-        User returned = userRepository.findByEmail(user.getEmail()).get(0);
-        userRepository.deleteByEmail(user.getEmail());
-        return returned;
+    public User RemoveUser( User user) throws Exception {
+        try {
+            User returned = userRepository.findByEmail(user.getEmail()).get(0);
+            userRepository.deleteByEmail(user.getEmail());
+            return returned;
+        }catch (Exception e){
+            throw new Exception("User does not exist");
+        }
     }
 
     @Override
     public User UpdateUser(User user) throws Exception {
         User returned;
         try {
-            User updated = ValidateUser(user.getEmail(), user.getPassword());
+            User updated = userRepository.findByEmail(user.getEmail()).get(0);
             updated.setPassword(user.getPassword());
             updated.setAddress(user.getAddress());
             updated.setFirstName(user.getFirstName());
