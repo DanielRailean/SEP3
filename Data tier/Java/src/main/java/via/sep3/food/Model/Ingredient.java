@@ -11,19 +11,17 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
-    String Name;
+    String name;
     String UnitOfMeasure;
-    int Quantity;
     double Calories;
 
 
     public Ingredient() {
     }
 
-    public Ingredient( String name, String unitOfMeasure, int quantity, double calories) {
-        Name = name;
+    public Ingredient( String name, String unitOfMeasure, double calories) {
+        this.name = name;
         UnitOfMeasure = unitOfMeasure;
-        Quantity = quantity;
         Calories = calories;
     }
 
@@ -35,14 +33,6 @@ public class Ingredient {
         UnitOfMeasure = unitOfMeasure;
     }
 
-    public int getQuantity() {
-        return Quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        Quantity = quantity;
-    }
-
     public int getId() {
         return Id;
     }
@@ -52,11 +42,11 @@ public class Ingredient {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public double getCalories() {
@@ -71,7 +61,7 @@ public class Ingredient {
     public String toString() {
         return "Ingredient{" +
                 "Id=" + Id +
-                ", Name='" + Name + '\'' +
+                ", Name='" + name + '\'' +
                 ", Calories=" + Calories +
                 '}';
     }

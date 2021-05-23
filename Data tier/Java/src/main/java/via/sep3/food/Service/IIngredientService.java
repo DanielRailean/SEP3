@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IIngredientService {
     List<Ingredient> GetAllIngredients();
-    Ingredient GetOneIngredient(String name);
-    Ingredient AddIngredient(Ingredient ingredient);
-    Ingredient RemoveIngredient(Ingredient ingredient);
-    Ingredient UpdateIngredient(Ingredient ingredient);
+    Ingredient GetIngredient(int id) throws Exception;
+    Ingredient AddIngredient(Ingredient ingredient) throws Exception;
+    Ingredient RemoveIngredient(int id) throws Exception;
+    Ingredient UpdateIngredient(Ingredient ingredient) throws Exception;
 }

@@ -4,57 +4,38 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.List;
 
 @Entity
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int Id;
-    String Name;
-    List<Ingredient> Ingredient;
+    int id;
+    String name;
+    String IngredientIdList;
+    String IngredientQuantityList;
     double Calories;
     public int MinutesToMake;
-    NutritionType Type;
+    String NutritionType;
     String Description;
     String Image;
 
     public Recipe() {
     }
 
-    public Recipe( String name, List<Ingredient> ingredient, double calories, int minutesToMake, NutritionType type, String description, String image) {
-
-        Name = name;
-        Ingredient = ingredient;
-        Calories = calories;
-        MinutesToMake = minutesToMake;
-        Type = type;
-        Description = description;
-        Image = image;
-    }
-
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
-    }
-
-    public List<Ingredient> getIngredient() {
-        return Ingredient;
-    }
-
-    public void setIngredient(List<Ingredient> ingredient) {
-        Ingredient = ingredient;
+        this.name = name;
     }
 
     public double getCalories() {
@@ -73,14 +54,6 @@ public class Recipe {
         MinutesToMake = minutesToMake;
     }
 
-    public NutritionType getType() {
-        return Type;
-    }
-
-    public void setType(NutritionType type) {
-        Type = type;
-    }
-
     public String getDescription() {
         return Description;
     }
@@ -97,14 +70,37 @@ public class Recipe {
         Image = image;
     }
 
+    public String getIngredientIdList() {
+        return IngredientIdList;
+    }
+
+    public void setIngredientIdList(String ingredientIdList) {
+        IngredientIdList = ingredientIdList;
+    }
+
+    public String getIngredientQuantityList() {
+        return IngredientQuantityList;
+    }
+
+    public void setIngredientQuantityList(String ingredientQuantityList) {
+        IngredientQuantityList = ingredientQuantityList;
+    }
+
+    public String getNutritionType() {
+        return NutritionType;
+    }
+
+    public void setNutritionType(String nutritionType) {
+        NutritionType = nutritionType;
+    }
+
     @Override
     public String toString() {
         return "Recipe{" +
-                "Name='" + Name + '\'' +
-                ", Ingredient=" + Ingredient +
+                "Name='" + name + '\'' +
                 ", Calories=" + Calories +
                 ", MinutesToMake=" + MinutesToMake +
-                ", Type=" + Type +
+                ", Type=" + NutritionType +
                 ", Description='" + Description + '\'' +
                 ", Image='" + Image + '\'' +
                 '}';

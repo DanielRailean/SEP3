@@ -17,26 +17,51 @@ public class RecipeService implements IRecipeService {
 
     @Override
     public List<Recipe> GetAllRecipes() {
-        return recipeRepository.findAllRecipes();
+        return (List<Recipe>) recipeRepository.findAll();
     }
 
     @Override
-    public Recipe GetRecipe(String Name) {
-        return recipeRepository.findRecipeByName(Name);
+    public Recipe GetRecipe(int id) throws Exception {
+        try {
+            return recipeRepository.findById(id).get(0);
+        } catch (Exception e) {
+            throw new Exception("Recipe does not exist");
+        }
     }
 
     @Override
-    public Recipe AddRecipe(Recipe recipe) {
+    public Recipe AddRecipe(Recipe recipe) throws Exception {
+        List<Recipe> found = null;
+        try {
+            found  = recipeRepository.findByName(recipe.getName());
+        } catch (Exception e) {
+        }
+        if(found.size()>0){
+            throw  new Exception("Recipe with this name already exists");
+        }
         return recipeRepository.save(recipe);
+
     }
 
     @Override
-    public Recipe RemoveRecipe(Recipe recipe) {
-        return recipeRepository.deleteRecipe(recipe);
+    public Recipe RemoveRecipe(int id) throws Exception {
+        Recipe deleted = GetRecipe(id);
+        recipeRepository.deleteById(id);
+        return deleted;
     }
 
     @Override
-    public Recipe UpdateRecipe(Recipe recipe) {
-        return recipeRepository.save(recipe);
+    public Recipe UpdateRecipe(Recipe recipe) throws Exception {
+        Recipe updated = GetRecipe(recipe.getId());
+        updated.setCalories(recipe.getCalories());
+        updated.setName(recipe.getName());
+        updated.setIngredientIdList(recipe.getIngredientIdList());
+        updated.setIngredientQuantityList(recipe.getIngredientQuantityList());
+        updated.setNutritionType(recipe.getNutritionType());
+        updated.setDescription(recipe.getDescription());
+        updated.setMinutesToMake(recipe.getMinutesToMake());
+        updated.setImage(recipe.getImage());
+        recipeRepository.save(updated);
+        return GetRecipe(recipe.getId());
     }
 }

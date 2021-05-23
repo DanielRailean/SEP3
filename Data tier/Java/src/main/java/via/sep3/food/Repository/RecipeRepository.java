@@ -7,10 +7,7 @@ import via.sep3.food.Model.User;
 import java.util.List;
 
 public interface RecipeRepository extends CrudRepository<Recipe, Integer> {
-
-    List<Recipe> findAllRecipes();
-
-    Recipe findRecipeByName(String name);
-
-    Recipe deleteRecipe(Recipe recipe);
+    List<Recipe> findById(int id);
+    List<Recipe> findByName(String name);
+    void deleteById(Recipe recipe);
 }

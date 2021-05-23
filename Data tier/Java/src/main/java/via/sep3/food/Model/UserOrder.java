@@ -5,15 +5,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
-import java.util.List;
+
+
 @Entity
-public class Order {
+public class UserOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int Id;
-    int UserId;
-    LocalDate orderdate;
-    List<Recipe> Recipes;
+    int id;
+    int userId;
+    LocalDate orderDate;
+    String recipesIdList;
+    String recipesQuantityList;
     String InvoiceAddress;
     String DeliveryAddress;
     String City;
@@ -23,57 +25,33 @@ public class Order {
     double DeliveryPrice;
     String Currency;
     boolean IsDelivered;
-    String Status;
+    String orderStatus;
 
-    public Order() {
-    }
-
-    public Order(int userId, LocalDate orderdate, List<Recipe> recipes, String invoiceAddress, String deliveryAddress, String city, int postalCode, double totalPrice, double itemPrice, double deliveryPrice, String currency, boolean isDelivered, String status) {
-        UserId = userId;
-        this.orderdate = orderdate;
-        Recipes = recipes;
-        InvoiceAddress = invoiceAddress;
-        DeliveryAddress = deliveryAddress;
-        City = city;
-        PostalCode = postalCode;
-        TotalPrice = totalPrice;
-        ItemPrice = itemPrice;
-        DeliveryPrice = deliveryPrice;
-        Currency = currency;
-        IsDelivered = isDelivered;
-        Status = status;
+    public UserOrder(){
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public int getUserId() {
-        return UserId;
+        return userId;
     }
 
     public void setUserId(int userId) {
-        UserId = userId;
+        this.userId = userId;
     }
 
-    public LocalDate getOrderdate() {
-        return orderdate;
+    public LocalDate getOrderDate() {
+        return orderDate;
     }
 
-    public void setOrderdate(LocalDate orderdate) {
-        this.orderdate = orderdate;
-    }
-
-    public List<Recipe> getRecipes() {
-        return Recipes;
-    }
-
-    public void setRecipes(List<Recipe> recipes) {
-        Recipes = recipes;
+    public void setOrderDate(LocalDate orderdate) {
+        this.orderDate = orderdate;
     }
 
     public String getInvoiceAddress() {
@@ -148,20 +126,36 @@ public class Order {
         IsDelivered = delivered;
     }
 
-    public String getStatus() {
-        return Status;
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setStatus(String status) {
-        Status = status;
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+
+    public String getRecipesIdList() {
+        return recipesIdList;
+    }
+
+    public void setRecipesIdList(String recipesIdList) {
+        this.recipesIdList = recipesIdList;
+    }
+
+    public String getRecipesQuantityList() {
+        return recipesQuantityList;
+    }
+
+    public void setRecipesQuantityList(String recipesQuantityList) {
+        this.recipesQuantityList = recipesQuantityList;
     }
 
     @Override
     public String toString() {
         return "Order{" +
-                "UserId=" + UserId +
-                ", orderdate=" + orderdate +
-                ", Recipes=" + Recipes +
+                "UserId=" + userId +
+                ", orderdate=" + orderDate +
                 ", InvoiceAddress='" + InvoiceAddress + '\'' +
                 ", DeliveryAddress='" + DeliveryAddress + '\'' +
                 ", City='" + City + '\'' +
@@ -171,7 +165,7 @@ public class Order {
                 ", DeliveryPrice=" + DeliveryPrice +
                 ", Currency='" + Currency + '\'' +
                 ", IsDelivered=" + IsDelivered +
-                ", Status='" + Status + '\'' +
+                ", Status='" + orderStatus + '\'' +
                 '}';
     }
 }
