@@ -16,8 +16,14 @@ public class UserController {
 
     @PostMapping("/RegisterUser")
     public User RegisterUser(@RequestBody User user){
-        System.out.println(user);
-        return userService.RegisterUser(user);
+        try {
+            User returnUser = userService.RegisterUser(user);
+            System.out.println(returnUser);
+            return returnUser;
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Error", e);
+        }
     }
 
     @GetMapping("/ValidateUser")
@@ -34,7 +40,14 @@ public class UserController {
 
     @DeleteMapping("/RemoveUser")
     public User RemoverUser(@RequestBody User user){
-       return userService.RemoveUser(user);
+        try {
+            User returnUser = userService.RemoveUser(user);
+            System.out.println(returnUser);
+            return returnUser;
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Error", e);
+        }
     }
 
     @PutMapping("/UpdateUser")
