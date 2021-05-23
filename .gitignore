@@ -12,10 +12,10 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-Business logic tier/API/bin/
-Business logic tier/API/obj/
-/bin/
-/obj/
+# .net local compilation files
+bin/
+obj/
+
+# any json / db file (sqlite)
 *.json
-Data tier/food.db
 *.db
