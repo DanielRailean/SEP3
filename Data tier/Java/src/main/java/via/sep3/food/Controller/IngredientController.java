@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import via.sep3.food.Exceptions.IngredientExists;
+import via.sep3.food.Exceptions.IngredientNotExists;
 import via.sep3.food.Model.Ingredient;
 import via.sep3.food.Model.User;
 import via.sep3.food.Service.IIngredientService;
@@ -29,8 +31,7 @@ public class IngredientController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new IngredientNotExists();
         }
     }
 
@@ -41,8 +42,7 @@ public class IngredientController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new IngredientExists();
         }
 
     }
@@ -53,8 +53,7 @@ public class IngredientController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new IngredientNotExists();
         }
     }
 
@@ -66,8 +65,7 @@ public class IngredientController {
             System.out.println(returned);
             return returned;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new IngredientNotExists();
         }
     }
 }

@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import via.sep3.food.Exceptions.PasswordIncorrect;
+import via.sep3.food.Exceptions.UserExistsException;
+import via.sep3.food.Exceptions.UserNotExists;
 import via.sep3.food.Model.User;
 import via.sep3.food.Service.IUserService;
 
@@ -21,8 +24,7 @@ public class UserController {
             System.out.println(returnUser);
             return returnUser;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new UserExistsException();
         }
     }
 
@@ -32,7 +34,11 @@ public class UserController {
             User returnUser = userService.ValidateUser(Email, Password);
             System.out.println(returnUser);
             return returnUser;
-        }catch (Exception e){
+        } catch (UserNotExists e) {
+            throw new UserNotExists();
+        } catch (PasswordIncorrect e) {
+            throw new PasswordIncorrect();
+        } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Error", e);
         }
@@ -45,8 +51,7 @@ public class UserController {
             System.out.println(returnUser);
             return returnUser;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new UserNotExists();
         }
     }
 
@@ -57,8 +62,7 @@ public class UserController {
             System.out.println(updated);
             return updated;
         }catch (Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Error", e);
+            throw new UserNotExists();
         }
     }
 }

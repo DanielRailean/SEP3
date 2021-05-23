@@ -3,6 +3,8 @@ package via.sep3.food.Service.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import via.sep3.food.Exceptions.PasswordIncorrect;
+import via.sep3.food.Exceptions.UserNotExists;
 import via.sep3.food.Model.User;
 import via.sep3.food.Repository.UserRepository;
 import via.sep3.food.Service.IUserService;
@@ -29,10 +31,10 @@ public class UserService implements IUserService {
             List<User> users = userRepository.findByEmail(Email);
             user = users.get(0);
         } catch (Exception e) {
-            throw new Exception("User do not exist");
+            throw new UserNotExists();
         }
         if(user.getPassword().equals(Password)) return user;
-        throw new Exception("Password incorrect");
+        throw new PasswordIncorrect();
 
     }
 
