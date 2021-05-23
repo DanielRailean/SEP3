@@ -1,12 +1,12 @@
 package via.sep3.food.Repository;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.data.repository.CrudRepository;
-import via.sep3.food.Model.Order;
-import via.sep3.food.Model.User;
+import via.sep3.food.Model.UserOrder;
 
-public interface OrderRepository extends CrudRepository<Order, Integer> {
-    Order findByOrderId(int id);
+import java.util.List;
 
-    Order deleterOrder(Order order);
+public interface OrderRepository extends CrudRepository<UserOrder, Integer> {
+    List<UserOrder> findById(int id);
+    List<UserOrder> findByUserId(int id);
+    void deleteById(int id);
 }
