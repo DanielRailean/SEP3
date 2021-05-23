@@ -6,7 +6,7 @@ This repository contains Source Code for *GodEats* , a project developed by **Di
 - Always update the project before starting the work
 - Commits should have a clear commit message, *"small fixes","small update", "update" and similar* are not viable commit messages.
 - Work is done on a separate branch
-- Merging a branch to **master** requires two reviews.
+- Merging a branch to **master** requires one review.
 
 
 ## Useful git commands
