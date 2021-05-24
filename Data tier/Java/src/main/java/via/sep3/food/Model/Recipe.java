@@ -18,6 +18,15 @@ public class Recipe {
     String NutritionType;
     String Description;
     String Image;
+    double Price;
+
+    public double getPrice() {
+        return Price;
+    }
+
+    public void setPrice(double price) {
+        Price = price;
+    }
 
     public Recipe() {
     }
