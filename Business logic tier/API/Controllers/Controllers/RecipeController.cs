@@ -20,12 +20,12 @@ namespace API.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<Recipe>> AddRecipe(Recipe recipe)
+        public async Task<ActionResult<Recipe>> AddRecipe([FromBody]Recipe recipe)
         {
             try
             {
-                recipeService.AddRecipe(recipe);
-                return Ok(recipe);
+               Recipe returned= await recipeService.AddRecipe(recipe);
+                return Ok(returned);
             }
             catch (Exception e)
             {
@@ -35,7 +35,7 @@ namespace API.Controllers
         }
     
         [HttpGet("GetRecipe")]
-        public async Task<ActionResult<Recipe>> GetRecipe(int id)
+        public async Task<ActionResult<Recipe>> GetRecipe([FromQuery]int id)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Recipe>> UpdateRecipe(Recipe recipe)
+        public async Task<ActionResult<Recipe>> UpdateRecipe([FromBody]Recipe recipe)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Recipe>> RemoveRecipe(Recipe recipe)
+        public async Task<ActionResult<Recipe>> RemoveRecipe([FromBody]Recipe recipe)
         {
             try
             {

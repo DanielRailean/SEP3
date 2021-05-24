@@ -29,7 +29,7 @@ namespace API.Data
 
         private void Seed()
         {
-            Ingredient[] ingredients = {new Ingredient() {Calories = 200, Name = "Rice"}};
+            RecipeItem[] ingredients = {new RecipeItem() {Amount = 200, IngredientId = 5}};
             Recipe[] recipes =
             {
                 new Recipe()
@@ -39,7 +39,7 @@ namespace API.Data
                     Name = "Risotto",
                     Price = 199.9,
                     Ingredient = ingredients.ToList(),
-                    Type = NutritionType.Vegan
+                    NutritionType = "NutritionType.Vegan"
                 }
             };
             allRecipes = recipes.ToList();
@@ -104,6 +104,16 @@ namespace API.Data
             allRecipes.Remove(toRemove);
             Save();
             return toRemove;
+        }
+
+        public Recipe DataToBusiness(DataRecipe dataRecipe)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataRecipe BusinessToData(Recipe recipe)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace API.Data
         Task<IList<Recipe>> GetAllRecipes();
         Task<Recipe> UpdateRecipe(Recipe recipe);
         Task<Recipe> RemoveRecipe(Recipe recipe);
-       
+        Recipe DataToBusiness(DataRecipe dataRecipe);
+        DataRecipe BusinessToData(Recipe recipe);
+
     }
 }
