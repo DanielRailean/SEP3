@@ -24,8 +24,8 @@ namespace API.Controllers
         {
             try
             {
-                ingredientService.AddIngredient(ingredient);
-                return Ok(ingredient);
+                Ingredient returned = await ingredientService.AddIngredient(ingredient);
+                return Ok(returned);
             }
             catch (Exception e)
             {

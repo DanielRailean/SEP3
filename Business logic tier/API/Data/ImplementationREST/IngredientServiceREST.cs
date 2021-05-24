@@ -10,9 +10,13 @@ namespace API.Data.ImplementationREST
 {
     public class IngredientServiceREST : IIngredientService
     {
-        private string uri = "https://localhost:8080/Ingredient";
+        private string uri = "http://localhost:8080";
         private HttpClient client;
-
+        JsonSerializerOptions serializeOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        };
         public IngredientServiceREST()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -24,15 +28,17 @@ namespace API.Data.ImplementationREST
         }
         public async Task<Ingredient> AddIngredient(Ingredient ingredient)
         {
-            string ingredientAsJson = JsonSerializer.Serialize(ingredient);
+            
+            string ingredientAsJson = JsonSerializer.Serialize(ingredient, serializeOptions);
             HttpContent content = new StringContent(
                 ingredientAsJson,
                 Encoding.UTF8,
                 "application/json");
-            HttpResponseMessage response = await client.PostAsync(uri, content);
+            HttpResponseMessage response = await client.PostAsync(uri+"/AddIngredient", content);
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($@"Error: {response.ReasonPhrase}");
+                APIError apiError = JsonSerializer.Deserialize<APIError>(await response.Content.ReadAsStringAsync());
+                throw new Exception($@"Error: {apiError.message}");
             }
 
             string result = await response.Content.ReadAsStringAsync();
@@ -43,13 +49,14 @@ namespace API.Data.ImplementationREST
 
         public async Task<Ingredient> GetIngredient(int id)
         {
-            HttpResponseMessage responseMessage = await client.GetAsync(uri + $"?id={@id}");
-            if (!responseMessage.IsSuccessStatusCode)
+            HttpResponseMessage httpResponseMessage = await client.GetAsync(uri + $"/GetIngredient?id={@id}");
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception($@"Error: {responseMessage.ReasonPhrase}");
+                APIError apiError = JsonSerializer.Deserialize<APIError>(await httpResponseMessage.Content.ReadAsStringAsync());
+                throw new Exception($@"Error: {apiError.message}");
             }
 
-            string result = await responseMessage.Content.ReadAsStringAsync();
+            string result = await httpResponseMessage.Content.ReadAsStringAsync();
             Ingredient gotIngredient = JsonSerializer.Deserialize<Ingredient>(result,
                 new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
             return gotIngredient;
@@ -57,30 +64,32 @@ namespace API.Data.ImplementationREST
 
         public async Task<Ingredient> UpdateIngredient(Ingredient ingredient)
         {
-            string ingredientAsJson = JsonSerializer.Serialize(ingredient);
-            Console.WriteLine(ingredientAsJson);
-            HttpContent content = new StringContent(
-                ingredientAsJson,
-                Encoding.UTF8,
-                "application/json");
-            HttpResponseMessage response = await client.PutAsync(uri, content);
-            if (!response.IsSuccessStatusCode)
+        string ingredientAsJson = JsonSerializer.Serialize(ingredient, serializeOptions);
+                    HttpContent content = new StringContent(
+                        ingredientAsJson,
+                        Encoding.UTF8,
+                        "application/json");
+            HttpResponseMessage httpResponseMessage = await client.PutAsync(uri + $"/UpdateIngredient",content);
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception($@"Error: {response.ReasonPhrase}");
+                APIError apiError = JsonSerializer.Deserialize<APIError>(await httpResponseMessage.Content.ReadAsStringAsync());
+                throw new Exception($@"Error: {apiError.message}");
             }
-            string result = await response.Content.ReadAsStringAsync();
-            Ingredient updatedIngredient = JsonSerializer.Deserialize<Ingredient>(result,
+
+            string result = await httpResponseMessage.Content.ReadAsStringAsync();
+            Ingredient gotIngredient = JsonSerializer.Deserialize<Ingredient>(result,
                 new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
-            return updatedIngredient;
+            return gotIngredient;
         }
 
         public async Task<Ingredient> RemoveIngredient(Ingredient ingredient)
         {
             HttpResponseMessage response =
-                await client.DeleteAsync(uri + $"?ingredient={@ingredient}");
+                await client.DeleteAsync(uri + $"/RemoveIngredient?id={ingredient.Id}");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($@"Error: {response.ReasonPhrase}");
+                APIError apiError = JsonSerializer.Deserialize<APIError>(await response.Content.ReadAsStringAsync());
+                throw new Exception($@"Error: {apiError.message}");
             }
 
             string result = await response.Content.ReadAsStringAsync();
@@ -92,7 +101,17 @@ namespace API.Data.ImplementationREST
 
         public async Task<IList<Ingredient>> GetAllIngredients()
         {
-            throw new System.NotImplementedException();
+            HttpResponseMessage httpResponseMessage = await client.GetAsync(uri + $"/GetAllIngredients");
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                APIError apiError = JsonSerializer.Deserialize<APIError>(await httpResponseMessage.Content.ReadAsStringAsync());
+                throw new Exception($@"Error: {apiError.message}");
+            }
+
+            string result = await httpResponseMessage.Content.ReadAsStringAsync();
+            List<Ingredient> gotIngredient = JsonSerializer.Deserialize<List<Ingredient>>(result,
+                new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            return gotIngredient;
         }
     }
 }

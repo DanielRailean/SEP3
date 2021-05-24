@@ -101,5 +101,15 @@ namespace API.Data
                 throw new Exception(e.Message);
             }
         }
+
+        public Order DataToBusiness(DataOrder dataOrder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataOrder BusinessToData(Order order)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

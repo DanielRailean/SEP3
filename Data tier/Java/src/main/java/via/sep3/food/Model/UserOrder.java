@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.util.Date;
 
 
 @Entity
@@ -13,9 +14,9 @@ public class UserOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
     int userId;
-    LocalDate orderDate;
-    String recipesIdList;
-    String recipesQuantityList;
+    Date OrderDate;
+    String RecipesIdList;
+    String RecipesQuantityList;
     String InvoiceAddress;
     String DeliveryAddress;
     String City;
@@ -25,7 +26,7 @@ public class UserOrder {
     double DeliveryPrice;
     String Currency;
     boolean IsDelivered;
-    String orderStatus;
+    String OrderStatus;
 
     public UserOrder(){
     }
@@ -46,13 +47,6 @@ public class UserOrder {
         this.userId = userId;
     }
 
-    public LocalDate getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDate orderdate) {
-        this.orderDate = orderdate;
-    }
 
     public String getInvoiceAddress() {
         return InvoiceAddress;
@@ -127,35 +121,41 @@ public class UserOrder {
     }
 
     public String getOrderStatus() {
-        return orderStatus;
+        return OrderStatus;
     }
 
     public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
+        this.OrderStatus = orderStatus;
     }
 
+    public Date getOrderDate() {
+        return OrderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        OrderDate = orderDate;
+    }
 
     public String getRecipesIdList() {
-        return recipesIdList;
+        return RecipesIdList;
     }
 
     public void setRecipesIdList(String recipesIdList) {
-        this.recipesIdList = recipesIdList;
+        RecipesIdList = recipesIdList;
     }
 
     public String getRecipesQuantityList() {
-        return recipesQuantityList;
+        return RecipesQuantityList;
     }
 
     public void setRecipesQuantityList(String recipesQuantityList) {
-        this.recipesQuantityList = recipesQuantityList;
+        RecipesQuantityList = recipesQuantityList;
     }
 
     @Override
     public String toString() {
         return "Order{" +
                 "UserId=" + userId +
-                ", orderdate=" + orderDate +
                 ", InvoiceAddress='" + InvoiceAddress + '\'' +
                 ", DeliveryAddress='" + DeliveryAddress + '\'' +
                 ", City='" + City + '\'' +
@@ -165,7 +165,6 @@ public class UserOrder {
                 ", DeliveryPrice=" + DeliveryPrice +
                 ", Currency='" + Currency + '\'' +
                 ", IsDelivered=" + IsDelivered +
-                ", Status='" + orderStatus + '\'' +
                 '}';
     }
 }

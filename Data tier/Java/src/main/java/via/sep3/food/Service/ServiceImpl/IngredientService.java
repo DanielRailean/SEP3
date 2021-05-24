@@ -2,6 +2,7 @@ package via.sep3.food.Service.ServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import via.sep3.food.Exceptions.IngredientExists;
 import via.sep3.food.Model.Ingredient;
 import via.sep3.food.Repository.IngredientRepository;
 import via.sep3.food.Service.IIngredientService;
@@ -51,6 +52,14 @@ public class IngredientService implements IIngredientService {
 
     @Override
     public Ingredient UpdateIngredient(Ingredient ingredient) throws Exception {
+        List<Ingredient> found = null;
+        try {
+            found  = ingredientRepository.findByName(ingredient.getName());
+        } catch (Exception e) {
+        }
+        if(found.size()>0){
+            throw  new IngredientExists();
+        }
         Ingredient updated = GetIngredient(ingredient.getId());
         updated.setCalories(ingredient.getCalories());
         updated.setName(ingredient.getName());

@@ -20,12 +20,12 @@ namespace API.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<Order>> AddOrder(Order order)
+        public async Task<ActionResult<Order>> AddOrder([FromBody]Order order)
         {
             try
             {
-                orderService.AddOrder(order);
-                return Ok(order);
+                Order returned = await orderService.AddOrder(order);
+                return Ok(returned);
             }
             catch (Exception e)
             {
@@ -35,7 +35,7 @@ namespace API.Controllers
         }
 
         [HttpGet("GetOrder")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<Order>> GetOrder([FromQuery]int id)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace API.Controllers
         }
 
         [HttpGet("GetUserOrders")]
-        public async Task<ActionResult<IList<Order>>> GetUserOrders(string email, string password)
+        public async Task<ActionResult<IList<Order>>> GetUserOrders([FromQuery]string email, [FromQuery]string password)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Order>> UpdateOrder(Order order)
+        public async Task<ActionResult<Order>> UpdateOrder([FromBody]Order order)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Order>> RemoveOrder(Order order)
+        public async Task<ActionResult<Order>> RemoveOrder([FromBody]Order order)
         {
             try
             {
