@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "dgSpecHash": "+fwytEIC4tOObOBCgWkDHUX+OeuYr9TozMW5JwW2OdeGEV0Ha7W2lr2Wa2SGyVNO3RalxRi3rHaZ98hfVBxBBg==",
+  "success": true,
+  "projectFilePath": "/Users/satish/Downloads/SEP3/Presentation Tier/WebApp/WebApp.csproj",
+  "expectedPackageFiles": [
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.authorization/5.0.5/microsoft.aspnetcore.authorization.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.components/5.0.5/microsoft.aspnetcore.components.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.components.analyzers/5.0.5/microsoft.aspnetcore.components.analyzers.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.components.forms/5.0.5/microsoft.aspnetcore.components.forms.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.components.web/5.0.5/microsoft.aspnetcore.components.web.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.connections.abstractions/5.0.5/microsoft.aspnetcore.connections.abstractions.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.http.connections.client/3.1.7/microsoft.aspnetcore.http.connections.client.3.1.7.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.http.connections.common/3.1.7/microsoft.aspnetcore.http.connections.common.3.1.7.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.http.features/5.0.5/microsoft.aspnetcore.http.features.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.metadata/5.0.5/microsoft.aspnetcore.metadata.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.signalr.client/3.1.7/microsoft.aspnetcore.signalr.client.3.1.7.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.signalr.client.core/5.0.5/microsoft.aspnetcore.signalr.client.core.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.signalr.common/5.0.5/microsoft.aspnetcore.signalr.common.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.aspnetcore.signalr.protocols.json/5.0.5/microsoft.aspnetcore.signalr.protocols.json.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.extensions.dependencyinjection/5.0.1/microsoft.extensions.dependencyinjection.5.0.1.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/5.0.0/microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.extensions.logging/5.0.0/microsoft.extensions.logging.5.0.0.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.extensions.logging.abstractions/5.0.0/microsoft.extensions.logging.abstractions.5.0.0.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.extensions.options/5.0.0/microsoft.extensions.options.5.0.0.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.extensions.primitives/5.0.1/microsoft.extensions.primitives.5.0.1.nupkg.sha512",
+    "/Users/satish/.nuget/packages/microsoft.jsinterop/5.0.5/microsoft.jsinterop.5.0.5.nupkg.sha512",
+    "/Users/satish/.nuget/packages/mudblazor/5.0.9/mudblazor.5.0.9.nupkg.sha512",
+    "/Users/satish/.nuget/packages/system.io.pipelines/5.0.1/system.io.pipelines.5.0.1.nupkg.sha512",
+    "/Users/satish/.nuget/packages/system.threading.channels/5.0.0/system.threading.channels.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
