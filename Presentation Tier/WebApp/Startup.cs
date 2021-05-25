@@ -39,7 +39,7 @@ namespace WebApp
                 options.AddPolicy("Admin", a =>
                     a.RequireAuthenticatedUser().RequireClaim("SecurityLevel", "2"));
                 options.AddPolicy("Customer", a =>
-                    a.RequireAuthenticatedUser().RequireClaim("SecurityLevel", "1", "2"));
+                    a.RequireAuthenticatedUser().RequireClaim("SecurityLevel", "1"));
             });
         }
 

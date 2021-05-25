@@ -71,22 +71,7 @@ namespace WebApp.Data
             };
             await client.SendAsync(request);
         }
-
-        public async Task<IList<User>> GetAllUsersAsync()
-        {
-            HttpResponseMessage response = await client.GetAsync(uri + "/getallusers");
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
-            }
-            
-            string result = await response.Content.ReadAsStringAsync();
-            List<User> users = JsonSerializer.Deserialize<List<User>>(result, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-            return users;
-        }
+        
 
         public User GetCurrentUser()
         {
