@@ -6,13 +6,14 @@ using WebApp.Models;
 
 namespace API.Models
 {
-    public class Order
+    public class DataOrder
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        
+        [Required]
         public DateTime OrderDate { get; set; }
-        public IList<BasketItem> Items { get; set; }
+        public string RecipesIdList { get; set; }
+        public string RecipesQuantityList { get; set; }
         [Required]
         public string InvoiceAddress { get; set; }
         [Required]
@@ -29,6 +30,7 @@ namespace API.Models
         public double DeliveryPrice { get; set; }
         [Required]
         public string Currency { get; set; }
+
         [JsonPropertyName("delivered")]
         public bool IsDelivered { get; set; }
         [JsonPropertyName("orderStatus")]

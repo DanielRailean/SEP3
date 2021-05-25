@@ -64,7 +64,9 @@ public class IngredientController {
             Ingredient returned = IngredientService.UpdateIngredient(ingredient);
             System.out.println(returned);
             return returned;
-        }catch (Exception e){
+        } catch (IngredientExists e) {
+            throw new IngredientExists();
+        } catch (Exception e) {
             throw new IngredientNotExists();
         }
     }

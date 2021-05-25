@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace API.Models
 {
-    public class Recipe
+    public class DataRecipe
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public IList<RecipeItem> Ingredient { get; set; }
         [Required]
         public double Calories { get; set; }
         [Required]
@@ -23,5 +22,9 @@ namespace API.Models
         public string Description { get; set; }
         [Required]
         public string Image { get; set; }
+        [Required]
+        public string IngredientIdList { get; set; }
+        [Required]
+        public string IngredientQuantityList { get; set; }
     }
 }

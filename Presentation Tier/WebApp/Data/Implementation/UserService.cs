@@ -10,7 +10,7 @@ namespace WebApp.Data
 {
     public class UserService : IUserService
     {
-        private const string uri = "https://localhost:5001/user";
+        private const string uri = "http://localhost:5000/user";
         private readonly HttpClient client;
         private User currentUser;
         public UserService()
