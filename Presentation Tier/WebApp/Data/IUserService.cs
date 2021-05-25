@@ -8,7 +8,7 @@ namespace WebApp.Data
     {
         Task RegisterUserAsync(User user);
         Task<User> ValidateUserAsync(string email, string password);
-        Task UpdateUserAsync(User user);
+        Task UpdateUserAsync(User user,string password);
         Task RemoveUserAsync(User user);
         User GetCurrentUser();
     }
