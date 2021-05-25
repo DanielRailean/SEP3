@@ -10,7 +10,7 @@ namespace WebApp.Data
 {
     public class UserService : IUserService
     {
-        private const string uri = "https://localhost:5001/user";
+        private const string uri = "http://localhost:5000/user";
         private readonly HttpClient client;
         private User currentUser;
         public UserService()
@@ -34,7 +34,7 @@ namespace WebApp.Data
 
         public async Task<User> ValidateUserAsync(string email, string password)
         {
-            HttpResponseMessage response = await client.GetAsync(uri + $"/getuser?email={@email}&password={@password}");
+            HttpResponseMessage response = await client.GetAsync(uri + $"?email={@email}&password={@password}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($@"Error: {response.ReasonPhrase}");
