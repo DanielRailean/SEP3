@@ -1,16 +1,17 @@
 ﻿@page "/profile"
-@attribute [Authorize(Policy = "Customer")]
+@attribute [Authorize]
 @using WebApp.Data
 @using WebApp.Models
 @using Microsoft.AspNetCore.Components
 @using WebApp.Authentication
+@using System.Text.Json
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
 
 <h3>Edit your profile:</h3>
-
+<h4 style="color: red">@errorMessage</h4>
 <EditForm Model="@userToEdit" OnValidSubmit="@Save">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
@@ -24,11 +25,15 @@
     </div>
     <div class="form-group">
         E-mail:<br/>
-        <InputText rows="4" @bind-Value="@userToEdit.Email"/>
+        <p>@userToEdit.Email</p>
     </div>
     <div class="form-group">
-        Password:<br/>
-        <InputText class="password" rows="4" @bind-Value="@userToEdit.Password"/>
+        Optional:<br/>
+        <input type="password" placeholder="New Password" @bind-value="@newPassword">
+    </div>
+    <div class="form-group">
+        Optional:<br/>
+       <input type="password" placeholder="Confirm New Password" @bind-value="@confirmNewPassword">
     </div>
     <div class="form-group">
         Address:<br/>
@@ -42,6 +47,10 @@
         Phone:<br/>
         <InputNumber rows="4" @bind-Value="@userToEdit.Phone"/>
     </div>
+    <div class="form-group">
+            Input your old password to save changes:<br/>
+            <InputText rows="4" @bind-Value="@password"/>
+        </div>
     <p class="actions">
         <button class="btn btn-outline-dark" type="submit">Save</button>
     </p>
@@ -50,17 +59,43 @@
 
 @code {
     User userToEdit = new User();
-    private string email;
     private string password;
+    private string newPassword="";
+    private string confirmNewPassword="";
+    private string errorMessage ="";
 
     protected override async Task OnInitializedAsync()
     {
         userToEdit = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
     }
 
-    private void Save()
+    private async void Save()
     {
-        UserService.UpdateUserAsync(userToEdit);
-        NavigationManager.NavigateTo("/");
+        
+        Console.WriteLine("save");
+        if (newPassword.Length > 5)
+        {
+            if (newPassword.Equals(confirmNewPassword))
+            {
+                userToEdit.Password = newPassword;
+            }
+            else
+            {
+                errorMessage = "New passwords do not match";
+            }
+    }
+
+        try
+        {
+            await UserService.UpdateUserAsync(userToEdit, password);
+            Console.WriteLine(JsonSerializer.Serialize(userToEdit));
+            Console.WriteLine(JsonSerializer.Serialize(confirmNewPassword));
+
+            NavigationManager.NavigateTo("/profile", true);
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
     }
 }
