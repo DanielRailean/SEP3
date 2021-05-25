@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebApp.Models
 {
     public class User
     {
-        public int UserId { get; set; }
+        public long Id { get; set; }
         [Required]
         public string Email { get; set; } 
         [Required]
@@ -14,16 +15,20 @@ namespace WebApp.Models
         [Required]
         public string LastName { get; set; }
         [Required]
+        [JsonPropertyName("phone")]
         public int Phone { get; set; }
         [Required]
         public string Address { get; set; }
         [Required]
+        [JsonPropertyName("postalCode")]
         public int PostalCode { get; set; }
+        [Required]
+        [JsonPropertyName("securityLevel")]
         public int SecurityLevel { get; set; }
 
         public void Update(User user)
         {
-            UserId = user.UserId;
+            Id = user.Id;
             Email = user.Email;
             Password = user.Password;
             FirstName = user.FirstName;

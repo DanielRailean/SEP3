@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,7 @@ namespace WebApp
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddBlazoredLocalStorage();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", a =>

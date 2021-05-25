@@ -39,12 +39,12 @@ else
         @foreach (User item in usersToShow)
         {
             <tr>
-                <td>@item.UserId</td>
+                <td>@item.Id</td>
                 <td>@item.FirstName, @item.LastName</td>
                 <td>@item.Email</td>
                 <td>@item.Phone</td>
                 <td>
-                    <button @onclick="@(() => RemoveUser(item.UserId))">
+                    <button @onclick="@(() => RemoveUser(item.Id))">
                         <i class="oi oi-trash" style="color: red"/>
                     </button>
                 </td>
@@ -66,9 +66,9 @@ else
         usersToShow = allUsers;
     }
     
-    private void RemoveUser(int Id)
+    private void RemoveUser(long Id)
     {
-        User userToRemove = allUsers.First(t => t.UserId == Id);
+        User userToRemove = allUsers.First(t => t.Id == Id);
         UserService.RemoveUserAsync(userToRemove);
         allUsers.Remove(userToRemove);
         usersToShow.Remove(userToRemove);

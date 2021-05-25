@@ -2,9 +2,7 @@
 @using WebApp.Models
 @using WebApp.Data
 @using MudBlazor
-@using System.ComponentModel.DataAnnotations
 
-@inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
 @inject IBasketService BasketService
 
@@ -35,9 +33,7 @@ else
         @*             <img src=@item.Image/> *@
         @*             <td>@item.Name</td> *@
         @*             <td>@item.Type</td> *@
-        @*             <td>@item.MinutesToMake</td> *@
-        @*             <td>@item.Price</td> *@
-        @*             <td>@item.Calories</td> *@
+        @*             <td>@item.Price DKK</td> *@
         @*         </tr> *@
         @*     </div> *@
         @* } *@
@@ -46,15 +42,17 @@ else
         @foreach (Recipe item in recipesToShow)
         {
             <MudItem xs="20">
-                <MudGrid Justify="Justify.SpaceBetween">
+                <MudGrid>
                     <MudCard>
-                        <MudCardContent @bind-Value="recipe">
+                        <MudCardContent @bind-Value="basketItem">
+                            <MudForm>
                             <MudCardMedia Image="@item.Image"/>
                             <MudText>@item.Name</MudText>
-                            <MudText>@item.Price</MudText>
+                            <MudText>@item.Price DKK</MudText>
+                            </MudForm>
                         </MudCardContent>
-                        <MudCardActions>
-                            <MudNumericField @bind-Value="amount" Label="Amount" Color="Color.Primary"/>
+                        <MudCardActions @bind-Value="basketItem">
+                            <MudNumericField @bind-Value="@item.Amount" Label="Amount" Color="Color.Primary"/>
                             <MudButton @onclick="AddToBasket" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
                         </MudCardActions>
                     </MudCard>
@@ -64,26 +62,22 @@ else
     </MudGrid>
 }
 
-
 @code {
     private IList<Recipe> recipes = new List<Recipe>();
     private IList<Recipe> recipesToShow = new List<Recipe>();
-    private Recipe recipe;
-    [Required, Range(1, 10)]
-    private int amount;
-
+    private Recipe recipe = new Recipe();
     private BasketItem basketItem;
 
     protected override async Task OnInitializedAsync()
     {
         recipes = await RecipeService.GetAllRecipesAsync();
         recipesToShow = recipes;
+        basketItem = new BasketItem();
     }
 
     private void AddToBasket()
     {
-        basketItem = new BasketItem();
-        basketItem.Amount = amount;
+        basketItem.Amount = recipe.Amount;
         basketItem.RecipeId = recipe.Id;
         BasketService.AddRecipe(basketItem);
     }

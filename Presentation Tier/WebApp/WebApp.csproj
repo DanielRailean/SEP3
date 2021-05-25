@@ -5,15 +5,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Blazored.LocalStorage" Version="4.1.1" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.7" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.5" />
       <PackageReference Include="MudBlazor" Version="5.0.9" />
     </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Pages\Components\AddEditIngredient.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Components\AddEditRecipe.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Components\EditUser.razor" />
-    </ItemGroup>
+    
+<!--    <ItemGroup>-->
+<!--      <Reference Include="System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">-->
+<!--        <HintPath>..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.0\System.Private.CoreLib.dll</HintPath>-->
+<!--      </Reference>-->
+<!--    </ItemGroup>-->
 
 </Project>

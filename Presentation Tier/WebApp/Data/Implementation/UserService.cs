@@ -34,7 +34,7 @@ namespace WebApp.Data
 
         public async Task<User> ValidateUserAsync(string email, string password)
         {
-            HttpResponseMessage response = await client.GetAsync(uri + $"/getuser?email={@email}&password={@password}");
+            HttpResponseMessage response = await client.GetAsync(uri + $"?email={@email}&password={@password}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($@"Error: {response.ReasonPhrase}");

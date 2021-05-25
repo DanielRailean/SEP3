@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -66,7 +67,7 @@ namespace WebApp.Authentication
             }
             catch(Exception e)
             {
-                throw e;
+                Debug.WriteLine(e.Message);
             }
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity))));
         }
