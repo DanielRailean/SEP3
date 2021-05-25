@@ -1,15 +1,16 @@
-﻿@page "/register"
+﻿@page "/Register"
 @using WebApp.Data
 @using WebApp.Models
 @using Microsoft.AspNetCore.Components
+@using WebApp.Authentication
 
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
+@inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <h3>Registration</h3>
 <EditForm Model="@newUserItem" OnValidSubmit="@AddNewUser">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
+    
     <div class="form-group"> Email:<br/>
         <InputText @bind-Value="newUserItem.Email"/>
     </div>
@@ -32,13 +33,15 @@
         <InputNumber @bind-Value="newUserItem.PostalCode"/>
     </div>
     <p class="actions">
-        <button class="btn btn-outline-dark"type="submit">Register</button>
+        <button class="btn btn-outline-dark" type="submit">Register</button>
     </p>
 </EditForm>
+<div style="color:red">@errorMessage</div>
 
 @code {
     private User newUserItem;
-
+    private string errorMessage;
+    
     protected override Task OnInitializedAsync()
     {
         SetupNewUser();
@@ -60,9 +63,11 @@
         };
     }
 
-    private void AddNewUser()
+    private async void AddNewUser()
     {
         UserService.RegisterUserAsync(newUserItem);
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/profile");
+
+       
     }
 }
