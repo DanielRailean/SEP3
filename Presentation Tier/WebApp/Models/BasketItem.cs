@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace WebApp.Models
+﻿namespace WebApp.Models
 {
     public class BasketItem
     {

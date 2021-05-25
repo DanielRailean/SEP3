@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,7 @@ namespace WebApp
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IBasketService, BasketService>();
+            services.AddBlazoredLocalStorage();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorization(options =>
             {

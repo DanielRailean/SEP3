@@ -39,6 +39,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        recipesInBasket = await BasketService.GetAllRecipesByOrder();
+        recipesInBasket = await BasketService.GetAllBasketItems();
     }
 }
