@@ -3,6 +3,8 @@
 @using WebApp.Data
 @using MudBlazor
 @using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using WebApp.Pages.Customer
 
 @inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
@@ -13,13 +15,13 @@
 <p> We are offering several variety of recipes from the best ingredient suppliers. </p>
 <p> Calories are counted for every 100 g of intake. </p>
 
-@if (recipes == null)
+@if (recipesToShow == null)
 {
     <p>
         <em>Loading...</em>
     </p>
 }
-else if (!recipes.Any())
+else if (!recipesToShow.Any())
 {
     <p>
         <em>No recipes found.</em>
@@ -42,49 +44,74 @@ else
         @*     </div> *@
         @* } *@
     // </div>
+    <h1>@error</h1>
+
     <MudGrid>
         @foreach (Recipe item in recipesToShow)
         {
             <MudItem xs="20">
-                <MudGrid Justify="Justify.SpaceBetween">
-                    <MudCard>
-                        <MudCardContent @bind-Value="recipe">
-                            <MudCardMedia Image="@item.Image"/>
-                            <MudText>@item.Name</MudText>
-                            <MudText>@item.Price</MudText>
-                        </MudCardContent>
-                        <MudCardActions>
-                            <MudNumericField @bind-Value="amount" Label="Amount" Color="Color.Primary"/>
-                            <MudButton @onclick="AddToBasket" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
-                        </MudCardActions>
-                    </MudCard>
-                </MudGrid>
-            </MudItem>
+                    <MudGrid Justify="Justify.SpaceBetween">
+                        <MudCard>
+                            <MudCardContent @bind-Value="recipe">
+                                <MudCardMedia Image="@item.Image"/>
+                                <MudText>@item.Name</MudText>
+                                <MudText>@item.Price</MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudNumericField @bind-Value="item.Amount" Label="Amount" Color="Color.Primary"/>
+                                <MudButton @onclick="() => AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudGrid>
+                </MudItem>
+            }
         }
     </MudGrid>
 }
 
 
 @code {
-    private IList<Recipe> recipes = new List<Recipe>();
     private IList<Recipe> recipesToShow = new List<Recipe>();
+    private IList<BasketItem> UserBasketItems = new List<BasketItem>();
     private Recipe recipe;
     [Required, Range(1, 10)]
-    private int amount;
 
-    private BasketItem basketItem;
+    private int counter;
+
+    private string error;
 
     protected override async Task OnInitializedAsync()
     {
-        recipes = await RecipeService.GetAllRecipesAsync();
-        recipesToShow = recipes;
+        recipesToShow = await RecipeService.GetAllRecipesAsync();
     }
 
-    private void AddToBasket()
+    private void AddToBasket(Recipe recipe)
     {
-        basketItem = new BasketItem();
-        basketItem.Amount = amount;
-        basketItem.RecipeId = recipe.Id;
-        BasketService.AddRecipe(basketItem);
+        BasketItem item = new BasketItem(recipe.Amount,recipe.Id);
+        if (item.Amount < 1)
+        {
+            error = "Please select at least one piece to add to cart.";
+            recipe.Amount = 0;
+            return;
+        }
+        error = "";
+        BasketService.AddRecipe(item);
+        if (!containsRecipe(UserBasketItems, item))
+        {
+
+            BasketItem toAdd = new BasketItem(item.Amount, item.RecipeId);
+            UserBasketItems.Add(toAdd);
+        }
+        else
+        {
+            UserBasketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId).Amount+=item.Amount;
+        }
+        recipe.Amount = 0;
+        Console.WriteLine(JsonSerializer.Serialize(UserBasketItems));
+    }
+
+    private bool containsRecipe(IList<BasketItem> basketItems,BasketItem item)
+    {
+        return (basketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId)!=null);
     }
 }
