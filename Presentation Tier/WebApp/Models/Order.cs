@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using WebApp.Models;
 
-namespace WebApp.Models
+namespace API.Models
 {
     public class Order
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        
         public DateTime OrderDate { get; set; }
-        public IList<BasketItem> Recipes { get; set; }
+        public IList<BasketItem> Items { get; set; }
         [Required]
         public string InvoiceAddress { get; set; }
         [Required]
@@ -26,6 +29,9 @@ namespace WebApp.Models
         public double DeliveryPrice { get; set; }
         [Required]
         public string Currency { get; set; }
-        public bool? IsShipped { get; set; }
+        [JsonPropertyName("delivered")]
+        public bool IsDelivered { get; set; }
+        [JsonPropertyName("orderStatus")]
+        public string Status { get; set; }
     }
 }

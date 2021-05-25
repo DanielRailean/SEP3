@@ -1,37 +1,39 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebApp.Models
 {
     public class User
     {
-        public int UserId { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public long id { get; set; }
         [Required]
+        [EmailAddress]
+        [JsonPropertyName("email")]
         public string Email { get; set; } 
         [Required]
+        [JsonPropertyName("password")]
         public string Password { get; set; }
         [Required]
+        [JsonPropertyName("firstName")]
         public string FirstName { get; set; }
         [Required]
+        [JsonPropertyName("lastName")]
         public string LastName { get; set; }
         [Required]
+        [JsonPropertyName("phone")]
+
         public int Phone { get; set; }
         [Required]
+        [JsonPropertyName("address")]
         public string Address { get; set; }
         [Required]
-        public int PostalCode { get; set; }
-        public int SecurityLevel { get; set; }
+        [JsonPropertyName("postalCode")]
 
-        public void Update(User user)
-        {
-            UserId = user.UserId;
-            Email = user.Email;
-            Password = user.Password;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
-            Phone = user.Phone;
-            Address = user.Address;
-            PostalCode = user.PostalCode;
-            SecurityLevel = user.SecurityLevel;
-        }
+        public int PostalCode { get; set; }
+        [Required]
+        [JsonPropertyName("securityLevel")]
+
+        public int SecurityLevel { get; set; }
     }
 }
