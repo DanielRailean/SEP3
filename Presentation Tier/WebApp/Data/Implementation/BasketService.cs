@@ -13,7 +13,6 @@ namespace WebApp.Data
     {
         private ILocalStorageService localStorage;
         private IList<BasketItem> basketItems;
-        private IRecipeService recipeService;
         private IList<Recipe> allRecipes;
         private int localStorageSize;
 
@@ -21,7 +20,6 @@ namespace WebApp.Data
         {
             this.localStorage = localStorage;
             basketItems = new List<BasketItem>();
-            recipeService = new RecipeService();
         }
 
         public async Task<IList<BasketItem>> GetAllBasketItems()
@@ -45,7 +43,7 @@ namespace WebApp.Data
                 return null;
             }
         }
-
+        
         public async Task AddRecipe(BasketItem basketItem)
         {
             try
@@ -63,10 +61,7 @@ namespace WebApp.Data
         {
             try
             {
-                // localStorageSize--;
                 await localStorage.RemoveItemAsync(basketItem.RecipeId.ToString());
-                // await jsRuntime.InvokeVoidAsync("localStorage.setItem", "localStorageSize", localStorageSize.ToString());
-                // await jsRuntime.InvokeVoidAsync("localStorage.removeItem", basketItem.RecipeId.ToString(), basketItem.Amount.ToString());
             }
             catch (Exception e)
             {
