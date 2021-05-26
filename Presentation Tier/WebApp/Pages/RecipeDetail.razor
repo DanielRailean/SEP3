@@ -1,8 +1,34 @@
 ﻿@page "/recipedetail/{id:int}"
-<h3></h3>
+@using WebApp.Models
+@using WebApp.Data
+
+@inject IRecipeService RecipeService
+
+<h3>@recipeToShow.Name</h3>
+<h6>Type: @recipeToShow.Type</h6>
+<img src="@recipeToShow.Image" alt="">
+<p>Ingredients:</p>
+<ul>
+    @foreach (var item in ingredientsInRecipe)
+    {
+        <li>@item.Quantity @item.UnitOfMeasure @item.Name</li>
+    }
+</ul>
+<p>@recipeToShow.Description</p>
+<p>Minutes to prepare: @recipeToShow.MinutesToMake</p>
+<p>Calories: @recipeToShow.Calories</p>
+<p>Price: @recipeToShow.Price</p>
 
 @code {
     [Parameter]
     public int id { get; set; }
-    
+
+    private Recipe recipeToShow = new Recipe();
+    private IList<Ingredient> ingredientsInRecipe = new List<Ingredient>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipeToShow = await RecipeService.GetRecipeAsync(id);
+        ingredientsInRecipe = recipeToShow.Ingredient;
+    }
 }

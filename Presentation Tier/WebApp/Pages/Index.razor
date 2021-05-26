@@ -5,10 +5,10 @@
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
-@using WebApp.Pages.Customer
 
 @inject IRecipeService RecipeService
 @inject IBasketService BasketService
+@inject NavigationManager NavigationManager
 
 <h1>Welcome to GodEats!</h1>
 
@@ -29,19 +29,6 @@ else if (!recipesToShow.Any())
 }
 else
 {
-@*     <div class="grid-container"> *@
-        @* @foreach (Recipe item in recipesToShow) *@
-        @* { *@
-        @*     <div class="grid-item"> *@
-        @*         <tr> *@
-        @*             <img src=@item.Image/> *@
-        @*             <td>@item.Name</td> *@
-        @*             <td>@item.Type</td> *@
-        @*             <td>@item.Price DKK</td> *@
-        @*         </tr> *@
-        @*     </div> *@
-        @* } *@
-    // </div>
     <h1>@error</h1>
 
     <MudGrid>
@@ -57,6 +44,7 @@ else
                             </MudCardContent>
                             <MudCardActions>
                                 <MudNumericField @bind-Value="item.Amount" Label="Amount" Color="Color.Primary"/>
+                                <MudButton @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</MudButton>
                                 <MudButton @onclick="() => AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
                             </MudCardActions>
                         </MudCard>
@@ -109,5 +97,10 @@ else
     private bool containsRecipe(IList<BasketItem> basketItems,BasketItem item)
     {
         return (basketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId)!=null);
+    }
+
+    private void ShowRecipeDetails(Recipe item)
+    {
+        NavigationManager.NavigateTo($"/recipedetail/{item.Id}");
     }
 }
