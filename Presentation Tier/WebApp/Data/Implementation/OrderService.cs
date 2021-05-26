@@ -20,27 +20,9 @@ namespace WebApp.Data
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
             {
                 return true;
-            }; 
+            };
             client = new HttpClient(clientHandler);
         }
-        
-        // public async Task<IList<Order>> GetAllOrdersAsync()
-        // {
-        //     HttpResponseMessage response = await client.GetAsync(uri);
-        //     if (!response.IsSuccessStatusCode)
-        //     {
-        //         throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
-        //     }
-        //     
-        //     string result = await response.Content.ReadAsStringAsync();
-        //     List<Order> orders = JsonSerializer.Deserialize<List<Order>>(result, new JsonSerializerOptions
-        //     {
-        //         PropertyNameCaseInsensitive = true,
-        //         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        //     });
-        //     return orders;
-        // }
-
         public async Task<Order> GetOrderAsync(int orderId)
         {
             var orderAsJson = await client.GetStringAsync($"{uri}/getorder?id={orderId}");
@@ -54,9 +36,14 @@ namespace WebApp.Data
 
         public async Task<IList<Order>> GetOrdersByUserAsync(User user)
         {
-            var orderAsJson = await client.GetStringAsync(
-                $"{uri}/getuserorders?email={user.Email}&password={user.Password}");
-            IList<Order> order = JsonSerializer.Deserialize<IList<Order>>(orderAsJson, 
+            HttpResponseMessage response = await client.GetAsync(uri+$"/GetUserOrders?email={user.Email}&password={user.Password}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
+
+            string result = await response.Content.ReadAsStringAsync();
+            IList<Order> order = JsonSerializer.Deserialize<IList<Order>>(result, 
                 new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
