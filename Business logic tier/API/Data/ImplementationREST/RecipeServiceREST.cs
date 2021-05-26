@@ -11,7 +11,7 @@ namespace API.Data.ImplementationREST
 {
     public class RecipeServiceREST : IRecipeService
     {
-        private string uri = "http://192.168.1.117:8080";
+        private string uri = "http://localhost:8080";
         private HttpClient client;
         JsonSerializerOptions serializeOptions = new JsonSerializerOptions
         {

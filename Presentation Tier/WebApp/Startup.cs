@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using WebApp.Authentication;
 using WebApp.Data;
-using WebApp.Data.Hub;
+using WebApp.Data.HubConnection;
 
 namespace WebApp
 {
