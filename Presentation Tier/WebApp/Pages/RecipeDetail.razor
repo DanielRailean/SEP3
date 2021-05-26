@@ -1,17 +1,18 @@
 ﻿@page "/recipedetail/{id:int}"
 @using WebApp.Models
 @using WebApp.Data
+@using global::Models
 
 @inject IRecipeService RecipeService
 
 <h3>@recipeToShow.Name</h3>
-<h6>Type: @recipeToShow.Type</h6>
+<h6>Type: @recipeToShow.NutritionType</h6>
 <img src="@recipeToShow.Image" alt="">
 <p>Ingredients:</p>
 <ul>
     @foreach (var item in ingredientsInRecipe)
     {
-        <li>@item.Quantity @item.UnitOfMeasure @item.Name</li>
+        <li>@item.Amount @item.IngredientId</li>
     }
 </ul>
 <p>@recipeToShow.Description</p>
@@ -24,7 +25,7 @@
     public int id { get; set; }
 
     private Recipe recipeToShow = new Recipe();
-    private IList<Ingredient> ingredientsInRecipe = new List<Ingredient>();
+    private IList<RecipeItem> ingredientsInRecipe = new List<RecipeItem>();
 
     protected override async Task OnInitializedAsync()
     {
