@@ -9,6 +9,7 @@
 <h3>@recipeToShow.Name</h3>
 <h6>Type: @recipeToShow.NutritionType</h6>
 <img src="@recipeToShow.Image" alt="">
+<br>
 <p>Ingredients:</p>
 <ul>
     @foreach (var item in ingredientsInRecipe)
@@ -16,6 +17,7 @@
         <li>@item.Quantity @item.UnitOfMeasure @item.Name</li>
     }
 </ul>
+<br>
 <p>@recipeToShow.Description</p>
 <p>Minutes to prepare: @recipeToShow.MinutesToMake</p>
 <p>Calories: @recipeToShow.Calories</p>
@@ -34,6 +36,7 @@
     protected override async Task OnInitializedAsync()
     {
         recipeToShow = await RecipeService.GetRecipeAsync(id);
+        allIngredients = await IngredientService.GetAllIngredientsAsync();
         recipeItems = recipeToShow.Ingredient;
         GetIngredients(recipeItems);
     }
@@ -42,7 +45,9 @@
     {
         foreach (var item in recipeItems)
         {
-            ingredientsInRecipe = allIngredients.Where(i => i.Id == item.IngredientId).ToList();
+            ingredient = allIngredients.First(i => i.Id == item.IngredientId);
+            ingredient.Quantity = item.Amount;
+            ingredientsInRecipe.Add(ingredient);
         }
     }
 }
