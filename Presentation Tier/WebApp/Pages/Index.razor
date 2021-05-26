@@ -33,7 +33,6 @@ else if (!recipesToShow.Any())
 else
 {
     <h1>@error</h1>
-
     <MudGrid>
         @foreach (Recipe item in recipesToShow)
         {
@@ -48,60 +47,55 @@ else
                             <MudCardActions>
                                 <MudNumericField @bind-Value="item.Amount" Label="Amount" Color="Color.Primary"/>
                                 <MudButton @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</MudButton>
-                                <MudButton @onclick="() => AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
+                                <MudButton @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </MudGrid>
                 </MudItem>
         }
     </MudGrid>
+    <h5>
+        Cart contents: @cartContents;
+        <br>
+        <br>
+    </h5>
 }
 
 @code {
     private IList<Recipe> recipesToShow = new List<Recipe>();
-    private IList<BasketItem> UserBasketItems = new List<BasketItem>();
     private Recipe recipe;
     [Required, Range(1, 10)]
 
     private int counter;
 
     private string error;
+    private string cartContents;
 
     protected override async Task OnInitializedAsync()
     {
         recipesToShow = await RecipeService.GetAllRecipesAsync();
+        await updateBasket();
     }
 
-    private void AddToBasket(Recipe recipe)
+    private async Task AddToBasket(Recipe recipe)
     {
-        BasketItem item = new BasketItem(recipe.Amount,recipe.Id);
-        if (item.Amount < 1)
+        try
         {
-            error = "Please select at least one piece to add to cart.";
-            recipe.Amount = 0;
-            return;
+            await BasketService.AddRecipe(recipe);
         }
-        error = "";
-        BasketService.AddRecipe(item);
-        if (!containsRecipe(UserBasketItems, item))
+        catch (Exception e)
         {
-
-            BasketItem toAdd = new BasketItem(item.Amount, item.RecipeId);
-            UserBasketItems.Add(toAdd);
-        }
-        else
-        {
-            UserBasketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId).Amount+=item.Amount;
+            error = e.Message;
         }
         recipe.Amount = 0;
-        Console.WriteLine(JsonSerializer.Serialize(UserBasketItems));
+        await updateBasket();
     }
 
-    private bool containsRecipe(IList<BasketItem> basketItems,BasketItem item)
+    private async Task updateBasket()
     {
-        return (basketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId)!=null);
+        cartContents = JsonSerializer.Serialize(await BasketService.GetAllBasketItems());
     }
-
+      
     private void ShowRecipeDetails(Recipe item)
     {
         NavigationManager.NavigateTo($"/recipedetail/{item.Id}");

@@ -35,6 +35,8 @@ namespace WebApp
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddBlazoredLocalStorage();
+            services.AddBlazoredLocalStorage(config =>
+                config.JsonSerializerOptions.WriteIndented = true);
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddAuthorization(options =>
             {

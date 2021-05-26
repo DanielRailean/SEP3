@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using API.Models;
@@ -14,66 +15,117 @@ namespace WebApp.Data
     public class BasketService : IBasketService
     {
         private ILocalStorageService localStorage;
-        private IList<BasketItem> basketItems;
-        private IList<Recipe> allRecipes;
+        private IList<BasketItem> basketItems = new List<BasketItem>();
+        private IList<Recipe> addedRecipes = new List<Recipe>();
         private int localStorageSize;
+        private string BasketCookieName = "basketItems";
+        private string RecipesCookieName = "addedRecipes";
 
         public BasketService(ILocalStorageService localStorage)
         {
             this.localStorage = localStorage;
-            basketItems = new List<BasketItem>();
+            Fetch();
         }
 
         public async Task<IList<BasketItem>> GetAllBasketItems()
         {
-            try
-            {
-                localStorageSize = await localStorage.LengthAsync();
-                
-                for (int i = 0; i < localStorageSize; i++)
-                {
-                    var key = await localStorage.KeyAsync(i);
-                    var item = await localStorage.GetItemAsync<string>(key);
-                    BasketItem basketItem = JsonSerializer.Deserialize<BasketItem>(item);
-                    basketItems.Add(basketItem);
-                }
-                return basketItems;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                return null;
-            }
-        }
-        
-        public async Task AddRecipe(BasketItem basketItem)
-        {
-            try
-            {
-                string basketItemAsJson = JsonSerializer.Serialize(basketItem);
-                await localStorage.SetItemAsync(basketItem.RecipeId.ToString(), basketItemAsJson);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
+            return basketItems;
         }
 
-        public async Task RemoveRecipe(BasketItem basketItem)
+        public async Task<IList<Recipe>> GetAllBasketRecipes()
         {
-            try
+            return addedRecipes;
+        }
+
+        public async Task AddRecipe(Recipe recipe)
+        {
+            BasketItem item = new BasketItem(recipe.Amount, recipe.Id);
+            if (item.Amount < 1)
             {
-                await localStorage.RemoveItemAsync(basketItem.RecipeId.ToString());
+                throw new Exception("Please select at least one piece to add to cart.");
             }
-            catch (Exception e)
+            if (!ContainsRecipe(recipe)&&(!ContainsItem(item)))
             {
-                Debug.WriteLine(e.Message);
+                basketItems.Add(item);
+                addedRecipes.Add(recipe);
+            }
+            else
+            {
+                if (basketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId).Amount + item.Amount <= 10)
+                {
+                    basketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId).Amount += item.Amount;
+                }
+                else throw new Exception("Max 10 units of each recipe per order");
+            }
+            Save();
+        }
+
+        public async Task RemoveRecipe(Recipe recipe)
+        {
+            Fetch();
+            if (ContainsRecipe(recipe))
+            {
+                removeRecipeById(recipe.Id);
+                removeBasketItemById(recipe.Id);
             }
         }
 
         public async Task Clear()
         {
-            await localStorage.ClearAsync();
+            addedRecipes = new List<Recipe>();
+            basketItems = new List<BasketItem>();
+            Save();
+        }
+
+        private bool ContainsRecipe(Recipe item)
+        {
+            return (addedRecipes.FirstOrDefault(i => i.Id == item.Id) != null);
+        }
+        private bool ContainsItem(BasketItem item)
+        {
+            return (basketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId) != null);
+        }
+
+        private async void Save()
+        {
+            string serialised = JsonSerializer.Serialize(basketItems);
+            await localStorage.SetItemAsync(BasketCookieName, serialised);
+            serialised = JsonSerializer.Serialize(addedRecipes);
+            await localStorage.SetItemAsync(RecipesCookieName, serialised);
+        }
+
+        private async void Fetch()
+        {
+            var cookieContent = await localStorage.GetItemAsync<string>(BasketCookieName);
+
+            if (cookieContent == null)
+            {
+                Console.WriteLine("Basket items Cookie is blank");
+            }
+            else
+            {
+                basketItems = JsonSerializer.Deserialize<IList<BasketItem>>(cookieContent);
+            }
+            cookieContent = await localStorage.GetItemAsync<string>(RecipesCookieName);
+            if (cookieContent == null)
+            {
+                Console.WriteLine("Recipes Cookie is blank");
+            }
+            else
+            {
+                addedRecipes = JsonSerializer.Deserialize<IList<Recipe>>(cookieContent);
+            }
+        }
+
+        private void removeRecipeById(int id)
+        {
+            Recipe toRemove = addedRecipes.FirstOrDefault(i => i.Id == id);
+            if (toRemove != null) addedRecipes.Remove(toRemove);
+        }
+        private void removeBasketItemById(int id)
+        {
+            BasketItem toRemove = basketItems.FirstOrDefault(i => i.RecipeId == id);
+            if (toRemove != null) basketItems.Remove(toRemove);
         }
     }
 }
