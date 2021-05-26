@@ -4,10 +4,12 @@
 @using WebApp.Models
 @using WebApp.Data
 @using API.Models
+@using WebApp.Authentication
 
 @inject NavigationManager NavigationManager
 @inject IOrderService OrderService
 @inject IUserService UserService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>My Orders</h3>
 <p> 
@@ -103,7 +105,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        currentUser = UserService.GetCurrentUser();
+        currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         allOrders = await OrderService.GetOrdersByUserAsync(currentUser);
         ordersToShow = allOrders;
     }
