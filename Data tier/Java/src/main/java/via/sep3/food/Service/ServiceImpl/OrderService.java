@@ -31,9 +31,6 @@ public class OrderService implements IOrderService {
             found  = orderRepository.findByUserId(userId);
         } catch (Exception e) {
         }
-        if(found.size()<1){
-            throw  new Exception("This user has no orders");
-        }
         return found;
 
     }
