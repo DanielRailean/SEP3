@@ -11,6 +11,7 @@
 
 @inject IRecipeService RecipeService
 @inject IBasketService BasketService
+@inject NavigationManager NavigationManager
 
 <h1>Welcome to GodEats!</h1>
 
@@ -36,20 +37,21 @@ else
         @foreach (Recipe item in recipesToShow)
         {
             <MudItem xs="20">
-                <MudGrid Justify="Justify.SpaceBetween">
-                    <MudCard>
-                        <MudCardContent @bind-Value="@recipe">
-                            <MudCardMedia Image="@item.Image"/>
-                            <MudText>@item.Name</MudText>
-                            <MudText>@item.Price</MudText>
-                        </MudCardContent>
-                        <MudCardActions>
-                            <MudNumericField @bind-Value="@item.Amount" Label="Amount" Color="Color.Primary"/>
-                            <MudButton @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
-                        </MudCardActions>
-                    </MudCard>
-                </MudGrid>
-            </MudItem>
+                    <MudGrid Justify="Justify.SpaceBetween">
+                        <MudCard>
+                            <MudCardContent @bind-Value="recipe">
+                                <MudCardMedia Image="@item.Image"/>
+                                <MudText>@item.Name</MudText>
+                                <MudText>@item.Price</MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudNumericField @bind-Value="item.Amount" Label="Amount" Color="Color.Primary"/>
+                                <MudButton @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</MudButton>
+                                <MudButton @onclick="() => AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudGrid>
+                </MudItem>
         }
     </MudGrid>
     <h5>
@@ -100,4 +102,8 @@ else
         await updateBasket();
     }
 
+    private void ShowRecipeDetails(Recipe item)
+    {
+        NavigationManager.NavigateTo($"/recipedetail/{item.Id}");
+    }
 }
