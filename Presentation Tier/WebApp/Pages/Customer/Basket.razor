@@ -20,15 +20,15 @@ else if (!recipesInBasket.Any())
 }
 else
 {
-    <MudTable Items="@recipes" Hover="true" Breakpoint="Breakpoint.Sm">
+    <MudTable Items="@recipesInBasket" Hover="true" Breakpoint="Breakpoint.Sm">
         <HeaderContent>
             <MudTh>Amount</MudTh>
             <MudTh>Name</MudTh>
-            <MudTh>Price</MudTh>
+            <MudTh>Price (DKK)</MudTh>
             <MudTh> </MudTh>
         </HeaderContent>
         <RowTemplate>
-            @foreach (var item in recipes)
+            @foreach (var item in recipesInBasket)
             {
                 <MudTd DataLabel="Amount">@item.Amount</MudTd>
                 <MudTd DataLabel="Name">@item.Name</MudTd>
@@ -45,19 +45,31 @@ else
     </MudTable>
 }
 @code {
-    private IList<BasketItem> recipesInBasket = new List<BasketItem>();
-    private IList<Recipe> recipes = new List<Recipe>();
-    private int? totalAmount { get; set; }
-    private double? totalPrice { get; set; }
+    private IList<Recipe> recipesInBasket = new List<Recipe>();
+    private IList<BasketItem> itemsInBasket = new List<BasketItem>();
+    private int? totalAmount;
+    private double? totalPrice;
 
     protected override async Task OnInitializedAsync()
     {
-        recipesInBasket = await BasketService.GetAllBasketItems();
-        recipes = await BasketService.GetAllBasketRecipes();
+        itemsInBasket = await BasketService.GetAllBasketItems();
+        recipesInBasket = await BasketService.GetAllBasketRecipes();
+        CalculateTotalAmountAndPrice();
     }
 
     private void RemoveBasketItem(Recipe recipe)
     {
         BasketService.RemoveRecipe(recipe);
+    }
+
+    private void CalculateTotalAmountAndPrice()
+    {
+        totalPrice = 0;
+        totalAmount = 0;
+        foreach (var item in recipesInBasket)
+        {
+            totalPrice += item.Price;
+            totalAmount += item.Amount;
+        }
     }
 }
