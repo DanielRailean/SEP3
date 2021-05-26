@@ -1,7 +1,9 @@
 ﻿@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IBasketService BasketService;
 
 @using WebApp.Authentication
+@using WebApp.Data
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">God Eats</a>
@@ -77,6 +79,11 @@
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="async ()=> await ClearCart()" Match="NavLinkMatch.All">
+                        <span class="oi oi-reload" aria-hidden="true"></span> Clear Basket
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
                     <NavLink class="nav-link" @onclick="PerformLogout" href="/" Match="NavLinkMatch.All">
                         <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
                     </NavLink>
@@ -121,6 +128,11 @@
         {
             Console.WriteLine(e.StackTrace);
         }
+    }
+    private async Task ClearCart()
+    {
+        await BasketService.Clear();
+        NavigationManager.NavigateTo("/",true);
     }
 
 }
