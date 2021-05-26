@@ -4,6 +4,7 @@
 @using global::Models
 
 @inject IRecipeService RecipeService
+@inject IIngredientService IngredientService
 
 <h3>@recipeToShow.Name</h3>
 <h6>Type: @recipeToShow.NutritionType</h6>
@@ -26,11 +27,22 @@
 
     private Recipe recipeToShow = new Recipe();
     private IList<Ingredient> ingredientsInRecipe = new List<Ingredient>();
+    private IList<Ingredient> allIngredients = new List<Ingredient>();
+    private Ingredient ingredient;
     private IList<RecipeItem> recipeItems = new List<RecipeItem>();
 
     protected override async Task OnInitializedAsync()
     {
         recipeToShow = await RecipeService.GetRecipeAsync(id);
         recipeItems = recipeToShow.Ingredient;
+        GetIngredients(recipeItems);
+    }
+
+    private void GetIngredients(IList<RecipeItem> recipeItems)
+    {
+        foreach (var item in recipeItems)
+        {
+            ingredientsInRecipe = allIngredients.Where(i => i.Id == item.IngredientId).ToList();
+        }
     }
 }

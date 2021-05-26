@@ -25,25 +25,26 @@ else
             <MudTh>Amount</MudTh>
             <MudTh>Name</MudTh>
             <MudTh>Price (DKK)</MudTh>
-            <MudTh> </MudTh>
+            <MudTh>Remove</MudTh>
         </HeaderContent>
         <RowTemplate>
-            @foreach (var item in recipesInBasket)
-            {
-                <MudTd DataLabel="Amount">@item.Amount</MudTd>
-                <MudTd DataLabel="Name">@item.Name</MudTd>
-                <MudTd DataLabel="Price">@item.Price</MudTd>
+            <MudTd DataLabel="Amount">@context.Amount</MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Price">@context.Price</MudTd>
                 <MudTd>
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="() => RemoveBasketItem(item)">Remove</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="() => RemoveBasketItem(context)">X</MudButton>
                 </MudTd>
-            }
         </RowTemplate>
-        <RowTemplate>
-            <MudTd DataLabel="Total amount">@totalAmount</MudTd>
-            <MudTd DataLabel="Total price">@totalPrice</MudTd>
-        </RowTemplate>
+        <FooterContent>
+            <MudTd DataLabel="Total amount">Total amounts of recipes in the basket: @totalAmount</MudTd>
+            <MudTd DataLabel="Total price"> Total to pay (excluding shipment): @totalPrice DKK</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="() => FinalizeBasket()">Next</MudButton>
+            </MudTd>
+        </FooterContent>
     </MudTable>
 }
+
 @code {
     private IList<Recipe> recipesInBasket = new List<Recipe>();
     private IList<BasketItem> itemsInBasket = new List<BasketItem>();
@@ -54,22 +55,35 @@ else
     {
         itemsInBasket = await BasketService.GetAllBasketItems();
         recipesInBasket = await BasketService.GetAllBasketRecipes();
-        CalculateTotalAmountAndPrice();
+        CalculateTotalPrice();
+        CalculateTotalAmount();
     }
 
-    private void RemoveBasketItem(Recipe recipe)
+    private async void RemoveBasketItem(Recipe recipe)
     {
-        BasketService.RemoveRecipe(recipe);
+        await BasketService.RemoveRecipe(recipe);
     }
 
-    private void CalculateTotalAmountAndPrice()
+    private void CalculateTotalPrice()
     {
         totalPrice = 0;
+        foreach (var item in recipesInBasket)
+        {
+            totalPrice += item.Price * item.Amount;
+        }
+    }
+
+    private void CalculateTotalAmount()
+    {
         totalAmount = 0;
         foreach (var item in recipesInBasket)
         {
-            totalPrice += item.Price;
             totalAmount += item.Amount;
         }
+    }
+
+    private void FinalizeBasket()
+    {
+        NavigationManager.NavigateTo("/orderfinal");
     }
 }
