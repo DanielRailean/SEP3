@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Models;
 using WebApp.Models;
 
 namespace WebApp.Data

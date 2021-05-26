@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Components
 @using WebApp.Models
 @using WebApp.Data
+@using global::Models
 @attribute [Authorize(Policy = "Admin")]
 
 @inject NavigationManager NavigationManager
@@ -27,7 +28,7 @@
             <InputNumber @bind-Value="newRecipe.MinutesToMake"/>
         </div>
         <div class="form-group"> Type:<br/>
-            <InputSelect @bind-Value="newRecipe.Type">
+            <InputSelect @bind-Value="newRecipe.NutritionType">
                 @foreach (var type in Enum.GetValues(typeof(NutritionType)))
                 {
                     <option value="@type">@type</option>
@@ -59,10 +60,10 @@
         }
         else
         {
-            @foreach (Ingredient item in recipeIngredients)
+            @foreach (var item in recipeIngredients)
             {
                 <ul>
-                    <li> @item.Quantity @item.UnitOfMeasure @item.Name</li>
+                    <li> @item.IngredientId @item.Amount</li>
                 </ul>
             }
         }
@@ -88,11 +89,11 @@
 </div>
 @code {
     private Recipe newRecipe;
-    private Ingredient ingredient;
+    private RecipeItem ingredient;
     private int ingredientQuantity;
     private string ingredientName;
     private IList<Ingredient> ingredients = new List<Ingredient>();
-    private IList<Ingredient> recipeIngredients = new List<Ingredient>();
+    private IList<RecipeItem> recipeIngredients = new List<RecipeItem>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -115,7 +116,7 @@
 
     private async Task SetupIngredient()
     {
-        ingredient = new Ingredient("", "", 0);
+        ingredient = new RecipeItem();
     }
 
     private void AddNewRecipe()
@@ -127,8 +128,6 @@
 
     private void AddIngredientToRecipe()
     {
-        ingredient = ingredients.Single(i => i.Name.Equals(ingredientName));
-        ingredient.Quantity = ingredientQuantity;
-        recipeIngredients.Add(ingredient);
+        
     }
 }
