@@ -48,13 +48,13 @@ namespace WebApp.Data
             return user;
         }
 
-        public async Task UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(User user,string password)
         {
             var userAsJson = JsonSerializer.Serialize(user);
             HttpContent content = new StringContent(userAsJson,
                 Encoding.UTF8,
                 "application/json");
-            HttpResponseMessage response = await client.PutAsync(uri + "?password=" + user.Password, content);
+            HttpResponseMessage response = await client.PutAsync(uri + "?password=" + password ,content);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");

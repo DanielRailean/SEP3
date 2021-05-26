@@ -2,6 +2,7 @@
 @attribute [Authorize(Policy = "Admin")]
 @using WebApp.Models
 @using WebApp.Data
+@using API.Models
 
 @inject IOrderService OrderService
 @inject IUserService UserService
@@ -42,9 +43,9 @@ else
                 <td>@item.OrderDate</td>
                 <td>@user.FirstName, @user.LastName, @user.Email</td>
                 <td>@item.TotalPrice</td>
-                <td>@item.IsShipped</td>
+                <td>@item.IsDelivered</td>
                 <td>
-                    <input type="checkbox" checked=@item.IsShipped @onchange="@((arg) => CompletedChange(arg, item))"/>
+                    <input type="checkbox" checked=@item.IsDelivered @onchange="@((arg) => CompletedChange(arg, item))"/>
                 </td>
                 <td>
                     <button @onclick="@(() => RemoveOrder(item.Id))">
@@ -107,7 +108,7 @@ else
     }
 
     private async Task CompletedChange(ChangeEventArgs evt, Order order) {
-        order.IsShipped = (bool) evt.Value;
+        order.IsDelivered = (bool) evt.Value;
         await OrderService.UpdateOrderAsync(order);
     }
 }
