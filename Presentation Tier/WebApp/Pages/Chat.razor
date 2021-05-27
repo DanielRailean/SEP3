@@ -1,33 +1,34 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@page "/Chat"
+@attribute [Authorize]
+@using WebApp.Models
+@using WebApp.Authentication
+@using WebApp.Data
 
-@page "/Chat"
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IUserService UserService
+@inject IJSRuntime JSRuntime
+
 
 <h3>Chat</h3>
 
 <div class="container">
-    <p id="notification">Notification</p>
     <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-2">User</div>
-        <div class="col-4"><input type="number" id="userInput"/></div>
-    </div>
     <div class="row">
         <div class="col-2">Message</div>
     </div>
+    <div class="row">
+        <p id="notification">@notification</p>
+    </div>
+    
     <div class="row">&nbsp;</div>
     <div class="row">
-        <div class="col-4"><input type="text" id="messageInput"/></div>
+        <div class="col-4"><input type="text" id="messageInput" @bind="@message"/></div>
         <div class="col-4">
-            <input type="button" id="sendButton" value="Send Message"/>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-3">
-            <input type="button" id="connectAsAdmin" value="Admin "/>
-        </div>
-        <div class="col-3">
-            <input type="button" id="connectAsUser" value="User"/>
-        </div>
+            <button type="button" class="btn btn-primary" @onclick="async() => await SendMessage()">Send Message</button>
+            </div>
+        <button @onclick=" ()=> StartTimerAsync()" type="button" class="@ButtonClass" display="none" >@ButtonValue</button>
     </div>
 
 </div>
@@ -44,13 +45,47 @@
 
 
 @code {
+    public int Time = 3;
+    User userToEdit = new User();
+    private string message;
+    private string notification;
+    private string ButtonValue;
+    private string ButtonClass = "btn btn-primary";
+    private bool isChatting = false;
+    
+    public async Task StartTimerAsync()
+    {
+        ButtonValue = "Starting chatting in " + Time +" seconds";
+        while (Time > 0)
+        {
+            ButtonValue = "Starting chatting in " + Time +" seconds";
+            Time--;
+            StateHasChanged();
+            await Task.Delay(1000);
+        }
+        await StartChat();
+        ButtonClass = "btn btn-success";
+        ButtonValue = "Connected";
+        isChatting = true;
+
+    }
+
     protected override async Task OnInitializedAsync()
     {
-       
-    }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
+        ButtonValue = "Start chatting";
+        userToEdit = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
         await JSRuntime.InvokeVoidAsync("initialise");
+        notification = "Press start to start chatting";
     }
+
+    private async Task StartChat()
+    {
+        await JSRuntime.InvokeVoidAsync("connectToChat",userToEdit.SecurityLevel,userToEdit.FirstName);
+    }
+    private async Task SendMessage()
+    {
+        await JSRuntime.InvokeVoidAsync("sendMessage",userToEdit.SecurityLevel,message);
+    }
+
 }
