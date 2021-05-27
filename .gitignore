@@ -18,6 +18,4 @@ bin/
 obj/
 
 # any json / db file (sqlite)
-*.json
-Data tier/food.db
 *.db

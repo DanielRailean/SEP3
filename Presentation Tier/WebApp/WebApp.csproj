@@ -17,4 +17,8 @@
       <_ContentIncludedByDefault Remove="Pages\Components\EditUser.razor" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\js" />
+    </ItemGroup>
+
 </Project>
