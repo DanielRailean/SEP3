@@ -1,13 +1,25 @@
 "use strict";
 var connection;
 
-function start(){
+async function start(){
     connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-    document.getElementById("sendButton").disabled = true;
+    await connection.start();
 }
 //Disable send button until connection is established
 
+async function connectToChat(securityLevel,username){
+    connection.invoke("getConnection",securityLevel, username).catch(function (err) {
+        return console.error(err.toString());
+    });
+    console.log("connected as "+securityLevel+username);
+}
 
+async function sendMessage(securityLevel,message){
+    connection.invoke("SendMessage", securityLevel, message).catch(function (err) {
+        return console.error(err.toString());
+    });
+    console.log("sent message");
+}
 
 async function initialise(){
     connection.on("ReceiveMessage", function (user, message) {
@@ -19,13 +31,7 @@ async function initialise(){
         li.textContent = `${user} says ${message}`;
         console.log("receive");
     });
-
-    await connection.start().then(function () {
-        document.getElementById("sendButton").disabled = false;
-    }).catch(function (err) {
-        return console.error(err.toString());
-
-    });
+    
     connection.on("Notify", function (message) {
         document.getElementById("notification").textContent=message;
         // We can assign user-supplied strings to an element's textContent because it
@@ -33,34 +39,7 @@ async function initialise(){
         // should be aware of possible script injection concerns.
         console.log("notify");
     });
-    document.getElementById("sendButton").addEventListener("click", function (event) {
-        console.log("clicked");
-        var user = parseInt(document.getElementById("userInput").value,10);
-        var message = document.getElementById("messageInput").value;
-        connection.invoke("SendMessage", user, message).catch(function (err) {
-            return console.error(err.toString());
-        });
+    
+    
 
-        event.preventDefault();
-    });
-    document.getElementById("connectAsAdmin").addEventListener("click", function (event) {
-        console.log("clicked admin");
-        connection.invoke("getConnection", 2, "Admin").catch(function (err) {
-            return console.error(err.toString());
-        });
-        connection.invoke("NotifyServer","Admin connected").catch(function (err) {
-            return console.error(err.toString());
-        });
-        event.preventDefault();
-    });
-    document.getElementById("connectAsUser").addEventListener("click", function (event) {
-        console.log("clicked user");
-        connection.invoke("getConnection", 1, "USER").catch(function (err) {
-            return console.error(err.toString());
-        });
-        connection.invoke("NotifyServer","User connected").catch(function (err) {
-            return console.error(err.toString());
-        });
-        event.preventDefault();
-    });
 }

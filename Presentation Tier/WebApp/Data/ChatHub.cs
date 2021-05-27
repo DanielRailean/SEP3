@@ -50,27 +50,30 @@ namespace WebApp.Data
 
         public async Task getConnection(int securityLevel, string name)
         {
+            ChatUser newChatUser = new ChatUser();
             if (securityLevel == 1)
             {
-                ChatUser newChatUser = new ChatUser();
                 newChatUser.SecurityLevel = 1;
                 newChatUser.FirstName = name;
                 newChatUser.ConnectionId = Context.ConnectionId;
                 newChatUser.ChatRoom = "user_" + newChatUser.ConnectionId;
                 await chatService.RegisterUser(newChatUser);
+                await NotifyClient(Context.ConnectionId, "You are now connected as user with name "+ newChatUser.FirstName);
+
             }
 
             if (securityLevel == 2)
             {
-                ChatUser newChatUser = new ChatUser();
                 newChatUser.SecurityLevel = 2;
                 newChatUser.FirstName = name;
                 newChatUser.ConnectionId = Context.ConnectionId;
                 newChatUser.ChatRoom = "admin_" + newChatUser.ConnectionId;
                 await chatService.AddAdmin(newChatUser);
-            }
+                await NotifyClient(Context.ConnectionId, "You are now connected as admin with name "+ newChatUser.FirstName);
 
+            }
             await match();
+            
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("USERS " + JsonSerializer.Serialize(chatService.GetAllUsers()));
@@ -106,7 +109,7 @@ namespace WebApp.Data
             Console.WriteLine();
             Console.WriteLine("ADMINS " + JsonSerializer.Serialize(chatService.GetAllAdmins()));
         }
-
+        
         public async Task match()
         {
             foreach (var item in await chatService.GetAllAdmins())
