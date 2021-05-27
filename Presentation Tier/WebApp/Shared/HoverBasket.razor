@@ -1,5 +1,4 @@
-﻿@page "/basket"
-@using WebApp.Data
+﻿@using WebApp.Data
 @using WebApp.Models
 @using MudBlazor
 @using global::Models
@@ -7,7 +6,6 @@
 @inject IBasketService BasketService
 @inject NavigationManager NavigationManager
 
-<h3>Basket</h3>
 @if (recipesInBasket == null)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />

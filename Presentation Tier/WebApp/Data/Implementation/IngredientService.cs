@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using WebApp.Models;
 
-namespace WebApp.Data
+namespace WebApp.Data.Implementation
 {
     public class IngredientService : IIngredientService
     {
