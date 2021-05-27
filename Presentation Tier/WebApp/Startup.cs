@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using WebApp.Authentication;
 using WebApp.Data;
-using WebApp.Data.Hub;
 
 namespace WebApp
 {
@@ -70,7 +69,6 @@ namespace WebApp
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
-                endpoints.MapHub<ChatHub>(ChatHub.HubUrl);
             });
         }
     }
