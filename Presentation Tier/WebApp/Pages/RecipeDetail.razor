@@ -8,8 +8,8 @@
 @inject IIngredientService IngredientService
 
 <h3>@recipeToShow.Name</h3>
-<h6>Type: @recipeToShow.NutritionType</h6>
-<img src="@recipeToShow.Image" alt="">
+<h6>Food category: @recipeToShow.NutritionType</h6>
+<img src="@recipeToShow.Image" alt="@recipeToShow.Name" width="300px" height="400">
 <br>
 <p>Ingredients:</p>
 <ul>
@@ -22,7 +22,7 @@
 <p>@recipeToShow.Description</p>
 <p>Minutes to prepare: @recipeToShow.MinutesToMake</p>
 <p>Calories: @recipeToShow.Calories</p>
-<p>Price: @recipeToShow.Price</p>
+<p>Price: @recipeToShow.Price DKK</p>
 
 @code {
     [Parameter]

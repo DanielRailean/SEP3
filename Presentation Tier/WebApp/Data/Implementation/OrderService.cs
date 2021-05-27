@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using API.Models;
 using WebApp.Models;
 
-namespace WebApp.Data
+namespace WebApp.Data.Implementation
 {
     public class OrderService : IOrderService
     {

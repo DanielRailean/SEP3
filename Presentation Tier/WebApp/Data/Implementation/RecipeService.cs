@@ -5,9 +5,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Models;
-using WebApp.Models;
 
-namespace WebApp.Data
+namespace WebApp.Data.Implementation
 {
     public class RecipeService : IRecipeService
     {

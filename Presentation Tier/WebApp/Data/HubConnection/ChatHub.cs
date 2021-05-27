@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-namespace WebApp.Data.Hub
+namespace WebApp.Data.HubConnection
 {
-    public class ChatHub : Microsoft.AspNetCore.SignalR.Hub
+    public class ChatHub : Hub
     {
         public const string HubUrl = "/ws";
 

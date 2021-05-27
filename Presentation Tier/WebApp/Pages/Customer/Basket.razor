@@ -29,18 +29,27 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Amount">@context.Amount</MudTd>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Price">@context.Price</MudTd>
-                <MudTd>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="() => RemoveBasketItem(context)">X</MudButton>
-                </MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="() => RemoveBasketItem(context)">X</MudButton>
+            </MudTd>
         </RowTemplate>
         <FooterContent>
             <MudTd DataLabel="Total amount">Total amounts of recipes in the basket: @totalAmount</MudTd>
             <MudTd DataLabel="Total price"> Total to pay (excluding shipment): @totalPrice DKK</MudTd>
-            <MudTd>
-                <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="() => FinalizeBasket()">Next</MudButton>
-            </MudTd>
+            <AuthorizeView Policy="Customer">
+                <NotAuthorized>
+                    <MudTd>
+                        <MudText>Please log in to continue with your order.</MudText>
+                    </MudTd>
+                </NotAuthorized>
+                <Authorized>
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="FinalizeBasket">Next</MudButton>
+                    </MudTd>
+                </Authorized>
+            </AuthorizeView>
         </FooterContent>
     </MudTable>
 }
