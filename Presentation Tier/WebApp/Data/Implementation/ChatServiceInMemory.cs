@@ -10,6 +10,7 @@ namespace WebApp.Data.Implementation
     {
         private IList<ChatUser> AllUsers;
         private IList<ChatUser> Admins;
+        private IList<ChatRoom> ChatRooms;
         private int maxUsers;
         private int maxAdmins;
 
@@ -17,6 +18,7 @@ namespace WebApp.Data.Implementation
         {
             AllUsers = new List<ChatUser>();
             Admins = new List<ChatUser>();
+            ChatRooms = new List<ChatRoom>();
             maxUsers = 0;
             maxAdmins = 0;
         }
@@ -91,6 +93,39 @@ namespace WebApp.Data.Implementation
         {
             ChatUser toRemove = AllUsers.FirstOrDefault(u=>u.IsInChat==false);
             return toRemove;
+        }
+
+        public async Task<ChatUser> GetGroupAdmin(string roomId)
+        {
+            ChatRoom room = ChatRooms.FirstOrDefault(u=>u.Id.Equals(roomId));
+            if(room!=null)
+            {
+                return room.Admin;
+            }
+
+            return null;
+        }
+
+        public async Task<ChatUser> GetGroupUser(string roomId)
+        {
+            ChatRoom room = ChatRooms.FirstOrDefault(u=>u.Id.Equals(roomId));
+            if(room!=null)
+            {
+                return room.Customer;
+            }
+
+            return null;
+        }
+
+        public async Task<IList<Message>> GetGroupMessages(string roomId)
+        {
+            ChatRoom room = ChatRooms.FirstOrDefault(u=>u.Id.Equals(roomId));
+            if(room!=null)
+            {
+                return room.Messages;
+            }
+
+            return null;
         }
 
         public async Task<IList<ChatUser>> GetAllAdmins()
