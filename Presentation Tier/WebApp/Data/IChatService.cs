@@ -13,10 +13,16 @@ namespace WebApp.Data
         Task<IList<ChatUser>> GetAllAdmins();
         Task<ChatUser> AddAdmin(ChatUser admin);
 
+        
         Task<ChatUser> GetUserByConnectionId(string connectionId);
         Task<ChatUser> GetAdminByConnectionId(string connectionId);
         Task ChangeAdminStatus(string roomId, bool isInRoom);
         Task ChangeUserStatus(string roomId, bool isInRoom);
         Task<ChatUser> NextInQueue();
+
+        Task<ChatUser> GetGroupAdmin(string roomId);
+        Task<ChatUser> GetGroupUser(string roomId);
+
+        Task<IList<Message>> GetGroupMessages(string roomId);
     }
 }
