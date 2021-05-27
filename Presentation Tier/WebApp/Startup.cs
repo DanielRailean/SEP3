@@ -1,3 +1,4 @@
+
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using WebApp.Authentication;
 using WebApp.Data;
+using WebApp.Data.Implementation;
 
 namespace WebApp
 {
@@ -33,6 +35,7 @@ namespace WebApp
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IBasketService, BasketService>();
+            services.AddSingleton<IChatService, ChatServiceInMemory>();
             services.AddBlazoredLocalStorage();
             services.AddBlazoredLocalStorage(config =>
                 config.JsonSerializerOptions.WriteIndented = true);
@@ -69,6 +72,7 @@ namespace WebApp
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }
