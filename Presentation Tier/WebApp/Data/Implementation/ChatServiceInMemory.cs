@@ -34,48 +34,60 @@ namespace WebApp.Data.Implementation
             
         }
 
-        public async Task<ChatRoom> GetRoom(string connectionId)
+        public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId)
         {
-            ChatRoom find = ChatRooms.FirstOrDefault(r => r.Customer.ConnectionId.Equals(connectionId));
+            ChatRoom find = ChatRooms.FirstOrDefault(r => r.Customer.Id.Equals(userId));
+            if(find!=null)
+            {
+                find.Customer.ConnectionId = connectionId;
+                return find;
+            }
+            find = ChatRooms.FirstOrDefault(r => r.Admin.Id.Equals(userId));
             if(find!=null)
             {
                 return find;
             }
-            find = ChatRooms.FirstOrDefault(r => r.Admin.ConnectionId.Equals(connectionId));
-            if(find!=null)
+            if(isAdmin)
             {
-                return find;
+                ChatUser admin = new ChatUser(connectionId);
+                admin.Status = 1;
+                admin.Id = userId;
+                Admins.Add(admin);
+                return await NextInQueue(connectionId);
+            }
+            else
+            {
+                ChatRoom created = new ChatRoom();
+                created.Id = connectionId;
+                created.Customer = new ChatUser(connectionId);
+                created.Customer.Status = 1;
+                created.Customer.Id = userId;
+                ChatRooms.Add(created);
+                return created;
             }
 
             return null;
         }
 
-        public async Task RemoveUser(string userConnectionId)
+        public async Task RemoveUser(string connectionId)
         {
-            ChatRoom find = await GetRoom(userConnectionId);
-            if(find!=null)
+            ChatRoom find = null;
+            try
             {
-                if (await IsAdmin(userConnectionId))
-                {
-                    ChatUser admin =  Admins.FirstOrDefault(u => u.ConnectionId.Equals(userConnectionId));
-                    Admins.Remove(admin);
-                    find.RoomStatus = 1;
-                    find.Admin = new ChatUser("none");
-                    
-                }
-                else
-                {
-                    if(!find.Admin.ConnectionId.Equals("none"))
-                    {
-                        Admins.First(a => a.ConnectionId.Equals(find.Admin.ConnectionId)).Status = 1;
-                    }
-                    ChatRooms.Remove(find);
-                }
-                //Check if has admin and change its status if has
+                find = ChatRooms.First(r => r.Id == connectionId);
                 
-                
-               
             }
+            catch (Exception e)
+            {
+                ChatUser admin =  Admins.FirstOrDefault(u => u.ConnectionId.Equals(connectionId));
+                ChatRoom room = ChatRooms.FirstOrDefault(r => r.Admin.ConnectionId.Equals(connectionId));
+                room.RoomStatus = 1;
+                room.Admin = new ChatUser("none");
+                Admins.Remove(admin);
+                return;
+            }
+
+            find.Customer.ConnectionId = "none";
         }
         public async Task ChangeUserStatus(string connectionId, int status)
         {
@@ -96,6 +108,7 @@ namespace WebApp.Data.Implementation
         {
             return ChatRooms;
         }
+        
 
         public async Task<string> GetUpdates(string connectionId)
         {

@@ -4,6 +4,7 @@
 @using WebApp.Authentication
 @using WebApp.Data
 @using Blazored.LocalStorage
+@using System.Text.Json
 
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -11,6 +12,7 @@
 @inject IUserService UserService
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService LocalStorage;
+@inject IChatService ChatService;
 
 <h3>Chat</h3>
 
@@ -20,6 +22,16 @@
         
         <div class="col-2">Message</div>
     </div>
+    @if (room == null)
+    {
+        <p> no room</p>
+    }
+    else
+    {
+        <p>@room.Id</p>
+        <p>@room.RoomStatus</p>
+        <p>@JsonSerializer.Serialize(room.Messages)</p>
+    }
     <div class="row">
         <p id="notification">@notification</p>
     </div>
@@ -51,20 +63,23 @@
 
 @code {
     public int Time = 0;
+    public int Time2 = 1;
     User currentUser = new User();
     private string connectionCoockie = "connectionC";
+    private string connectionId;
     private string message;
     private string notification;
     private string ButtonValue;
     private string ButtonClass = "btn btn-primary";
     private bool isChatting = false;
+    private ChatRoom room;
 
     public async Task StartTimerAsync()
     {
-        ButtonValue = "Starting chatting in " + Time +" seconds";
+        ButtonValue = "Starting chatting in " + Time + " seconds";
         while (Time > 0)
         {
-            ButtonValue = "Starting chatting in " + Time +" seconds";
+            ButtonValue = "Starting chatting in " + Time + " seconds";
             Time--;
             StateHasChanged();
             await Task.Delay(1000);
@@ -75,10 +90,23 @@
         isChatting = true;
 
     }
+    public async Task StartTimerAsync2(bool admin)
+    {
+        while (Time2 > 0)
+        {
+            Time2--;
+            StateHasChanged();
+            await Task.Delay(1000);
+        }
+        await FetchChat(admin);
+        ButtonClass = "btn btn-primary";
+        ButtonValue = "Connected";
+        isChatting = true;
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(await LocalStorage.GetItemAsync<string>("notification"));
         ButtonValue = "Start chatting";
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
@@ -88,22 +116,33 @@
 
     private async Task StartChat()
     {
-        if(currentUser.SecurityLevel==1)
+        if (currentUser.SecurityLevel == 1)
         {
-            await JSRuntime.InvokeVoidAsync("ConnectUser",currentUser.id,currentUser.FirstName);
+            await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id, currentUser.FirstName);
         }
-        if(currentUser.SecurityLevel==2)
+        if (currentUser.SecurityLevel == 2)
         {
-            await JSRuntime.InvokeVoidAsync("ConnectAdmin",currentUser.id,currentUser.FirstName);
+            await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id, currentUser.FirstName);
         }
+        StartTimerAsync2(currentUser.SecurityLevel==2);
+        
     }
+
     private async Task SendMessage()
     {
-        await JSRuntime.InvokeVoidAsync("sendMessage",message);
+        await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message);
     }
+
     private async Task HelpNext()
     {
         await JSRuntime.InvokeVoidAsync("HelpNextUser");
+    }
+
+    private async Task FetchChat(bool admin)
+    {
+        connectionId = await LocalStorage.GetItemAsync<string>(connectionCoockie);
+        room= await ChatService.GetRoom(currentUser.id,admin,connectionId);
+        StateHasChanged();
     }
 
 }

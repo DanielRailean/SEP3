@@ -18,26 +18,33 @@ namespace WebApp.Data
         }
         public async Task ConnectAdminHub(int userId, string name)
         {
-            ChatUser user = new ChatUser(userId,name,2,1,Context.ConnectionId,"admin_"+Context.ConnectionId);
-            await ChatService.AddChatUser(user);
-            await NotifyClient(Context.ConnectionId, "Notify","You are now connected as admin with name "+ user.FirstName);
+            ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId);
+            if (!room.Id.Equals(Context.ConnectionId))
+            {
+                await AddUserToHub(Context.ConnectionId, room.Id);
+            }
+            await NotifyClient(Context.ConnectionId, "Notify","You are now connected ");
             await SendConnectionId(Context.ConnectionId);
             Debug("Connect adminHub");
         }
         
         public async Task ConnectUserHub(int userId, string name)
         {
-            ChatUser user = new ChatUser(userId,name,1,1,Context.ConnectionId,"room_"+Context.ConnectionId);
-            await ChatService.AddChatUser(user);
-            await NotifyClient(Context.ConnectionId, "Notify","You are now connected as admin with name "+ user.FirstName);
+            ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId);
+            if (!room.Id.Equals(Context.ConnectionId))
+            {
+                await AddUserToHub(Context.ConnectionId, room.Id);
+            }
+            await NotifyClient(Context.ConnectionId, "Notify","You are now connected ");
             await SendConnectionId(Context.ConnectionId);
             Debug("Connect userhub");
 
         }
         
-        public async Task SendMessage(string message)
+        public async Task SendMessage(int userId,bool isAdmin,string message)
         {
-            var current = await ChatService.GetRoom(Context.ConnectionId);
+            var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId);
+            Console.WriteLine("current :"+JsonSerializer.Serialize(current));
             if(current!=null)
             {
                 var newMessage = new Message {Body = message, timestamp = DateTime.Now};
@@ -63,11 +70,9 @@ namespace WebApp.Data
         
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            ChatRoom room = await ChatService.GetRoom(Context.ConnectionId);
-            if(room!=null)
-            {
-                await ChatService.RemoveUser(Context.ConnectionId);
-            }
+ 
+            await ChatService.RemoveUser(Context.ConnectionId);
+            
             
             Debug("Disconnect");
             
@@ -113,13 +118,13 @@ namespace WebApp.Data
 
         private void Debug(string codePart)
         {
-            Console.WriteLine(codePart);
+            Console.WriteLine("start" +codePart);
             Console.WriteLine();
             Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetAdmins()));
             Console.WriteLine();
             Console.WriteLine("Rooms"+JsonSerializer.Serialize(ChatService.GetChatRooms()));
             Console.WriteLine();
-            Console.WriteLine(codePart);
+            Console.WriteLine("end "+codePart);
         }
         
         /*public async Task NotifyServer(string message)

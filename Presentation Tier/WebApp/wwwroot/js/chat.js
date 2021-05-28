@@ -21,8 +21,8 @@ async function ConnectAdmin(userId,username){
     console.log("connected as "+userId+username);
 }
 
-async function sendMessage(message){
-    connection.invoke("SendMessage", message).catch(function (err) {
+async function sendMessage(userId,isAdmin,message){
+    connection.invoke("SendMessage", userId,isAdmin,message).catch(function (err) {
         return console.error(err.toString());
     });
     console.log("sent message");
