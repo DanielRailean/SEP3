@@ -32,33 +32,28 @@ else if (!recipesToShow.Any())
 }
 else
 {
-    <h1>@error</h1>
-    <MudGrid>
+     <h1>@error</h1>
+
+    <div class="allItems">
         @foreach (Recipe item in recipesToShow)
-        {
-            <MudItem xs="20">
-                    <MudGrid Justify="Justify.SpaceBetween">
-                        <MudCard>
-                            <MudCardContent @bind-Value="recipe">
-                                <MudCardMedia Image="@item.Image"/>
-                                <MudText>@item.Name</MudText>
-                                <MudText>@item.Price</MudText>
-                            </MudCardContent>
-                            <MudCardActions>
-                                <MudNumericField @bind-Value="item.Amount" Label="Amount" Color="Color.Primary"/>
-                                <MudButton @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</MudButton>
-                                <MudButton @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</MudButton>
-                            </MudCardActions>
-                        </MudCard>
-                    </MudGrid>
-                </MudItem>
-        }
-    </MudGrid>
+        {<div class="item">
+             <img src="@item.Image"/>
+                                                      <p>@item.Name</p>
+                                                      <p>@item.Price</p>
+                     
+                                                      <input type="number" @bind="@item.Amount" Label="Amount" Color="Color.Primary"/>
+                                                      <Button @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</Button>
+                                                      <Button @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</Button>
+                     
+         </div>
+                    
+                 }
+    </div>
     <h5>
-        Cart contents: @cartContents;
-        <br>
-        <br>
-    </h5>
+     Cart contents: @cartContents;
+         <br>
+         <br>
+     </h5>
 }
 
 @code {
