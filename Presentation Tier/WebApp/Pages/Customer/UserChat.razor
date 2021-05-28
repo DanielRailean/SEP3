@@ -1,7 +1,7 @@
 ﻿@page "/userchat"
 @attribute [Authorize(Policy = "Customer")]
 @using Microsoft.AspNetCore.SignalR.Client
-@using WebApp.Data.Hub
+@using WebApp.Data.HubConnection
 
 @inject NavigationManager navigationManager
 

@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using API.Models;
 using Blazored.LocalStorage;
-using Microsoft.JSInterop;
 using Models;
 using WebApp.Models;
 
-namespace WebApp.Data
+namespace WebApp.Data.Implementation
 {
     public class BasketService : IBasketService
     {
         private ILocalStorageService localStorage;
         private IList<BasketItem> basketItems = new List<BasketItem>();
         private IList<Recipe> addedRecipes = new List<Recipe>();
-        private int localStorageSize;
         private string BasketCookieName = "basketItems";
         private string RecipesCookieName = "addedRecipes";
 
@@ -57,24 +53,25 @@ namespace WebApp.Data
                 }
                 else throw new Exception("Max 10 units of each recipe per order");
             }
-            Save();
+            await Save();
         }
 
         public async Task RemoveRecipe(Recipe recipe)
         {
-            Fetch();
+            await Fetch();
             if (ContainsRecipe(recipe))
             {
                 removeRecipeById(recipe.Id);
                 removeBasketItemById(recipe.Id);
             }
+            await Save();
         }
 
         public async Task Clear()
         {
             addedRecipes = new List<Recipe>();
             basketItems = new List<BasketItem>();
-            Save();
+            await Save();
         }
 
         private bool ContainsRecipe(Recipe item)
@@ -86,7 +83,7 @@ namespace WebApp.Data
             return (basketItems.FirstOrDefault(i => i.RecipeId == item.RecipeId) != null);
         }
 
-        private async void Save()
+        private async Task Save()
         {
             string serialised = JsonSerializer.Serialize(basketItems);
             await localStorage.SetItemAsync(BasketCookieName, serialised);
@@ -94,7 +91,7 @@ namespace WebApp.Data
             await localStorage.SetItemAsync(RecipesCookieName, serialised);
         }
 
-        private async void Fetch()
+        private async Task Fetch()
         {
             var cookieContent = await localStorage.GetItemAsync<string>(BasketCookieName);
 

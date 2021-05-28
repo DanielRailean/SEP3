@@ -61,9 +61,12 @@ else
         CalculateTotalAmount();
     }
 
-    private async void RemoveBasketItem(Recipe recipe)
+    private async void RemoveBasketItem(Recipe recipeToRemove)
     {
-        await BasketService.RemoveRecipe(recipe);
+        BasketItem item = itemsInBasket.FirstOrDefault(i => i.RecipeId == recipeToRemove.Id);
+        await BasketService.RemoveRecipe(recipeToRemove);
+        recipesInBasket.Remove(recipeToRemove);
+        itemsInBasket.Remove(item);
     }
 
     private void MatchItems(IList<Recipe> recipes, IList<BasketItem> basketItem)
