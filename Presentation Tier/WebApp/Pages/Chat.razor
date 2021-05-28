@@ -96,7 +96,7 @@
     }
     private async Task SendMessage()
     {
-        await JSRuntime.InvokeVoidAsync("sendMessage",currentUser.SecurityLevel,message);
+        await JSRuntime.InvokeVoidAsync("sendMessage",message);
     }
     private async Task HelpNext()
     {

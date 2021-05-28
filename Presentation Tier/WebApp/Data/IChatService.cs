@@ -7,29 +7,25 @@ namespace WebApp.Data
 {
     public interface IChatService
     {
-        Task<ChatUser> RegisterUser(ChatUser chatUser);
-        Task<ChatUser> RemoveUser(ChatUser chatUser);
-        Task<ChatUser> RemoveAdmin(ChatUser admin);
-        Task<IList<ChatUser>> GetAllUsers();
-        Task<IList<ChatUser>> GetAllAdmins();
-        Task<ChatUser> AddAdmin(ChatUser admin);
-        
-        Task<ChatUser> GetUserByConnectionId(string connectionId);
-        Task<ChatUser> GetAdminByConnectionId(string connectionId);
-        Task ChangeAdminStatus(string roomId, bool isInRoom);
-        Task ChangeUserStatus(string roomId, bool isInRoom);
-        Task<ChatUser> NextInQueue(string adminConnectionId);
-
-        Task<ChatUser> GetGroupAdmin(string roomId);
-        Task<ChatUser> GetGroupUser(string roomId);
-
-        Task<string> CreateGroup(ChatUser user);
-
-        Task AddMessage(Message message, string roomId);
-        Task<IList<Message>> GetGroupMessages(string roomId);
-
+        //Read
+        Task<IList<ChatUser>> GetAdmins();
         Task<IList<ChatRoom>> GetChatRooms();
-
+        Task<ChatRoom> GetRoom(string connectionId);
+        Task<IList<Message>> GetGroupMessages(string roomId);
+        Task<ChatRoom> NextInQueue(string adminConnectionId);
+        Task<bool> IsAdmin(string connectionId);
         Task<string> GetUpdates(string connectionId);
+        Task<ChatUser> GetUser(string connectionId);
+        
+        //Create
+        Task AddChatUser(ChatUser user);
+        Task AddMessage(Message message, string roomId);
+        
+        //Update
+        Task ChangeUserStatus(string connectionId, int status);
+        
+        //Delete
+        Task RemoveUser(string userConnectionId);
+        
     }
 }

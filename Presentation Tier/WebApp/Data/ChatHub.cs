@@ -18,105 +18,76 @@ namespace WebApp.Data
         }
         public async Task ConnectAdminHub(int userId, string name)
         {
-            ChatUser newChatUser = new ChatUser();
-            newChatUser.FirstName = name;
-            newChatUser.ConnectionId = Context.ConnectionId;
-            newChatUser.ChatRoom = "admin_" + newChatUser.ConnectionId;
-            newChatUser.SecurityLevel = 2;
-            newChatUser.Id = userId;
-            await ChatService.AddAdmin(newChatUser);
-            await NotifyClient(Context.ConnectionId, "You are now connected as admin with name "+ newChatUser.FirstName);
-            print();
+            ChatUser user = new ChatUser(userId,name,2,1,Context.ConnectionId,"admin_"+Context.ConnectionId);
+            await ChatService.AddChatUser(user);
+            await NotifyClient(Context.ConnectionId, "You are now connected as admin with name "+ user.FirstName);
+            Debug("Connect adminHub");
         }
         public async Task ConnectUserHub(int userId, string name)
         {
-            ChatUser newChatUser = new ChatUser();
-            newChatUser.FirstName = name;
-            newChatUser.ConnectionId = Context.ConnectionId;
-            newChatUser.ChatRoom = "user_" + newChatUser.ConnectionId;
-            newChatUser.SecurityLevel = 1;
-            newChatUser.Id = userId;
-            await ChatService.RegisterUser(newChatUser);
-            print();
+            ChatUser user = new ChatUser(userId,name,1,1,Context.ConnectionId,"room_"+Context.ConnectionId);
+            await ChatService.AddChatUser(user);
+            await NotifyClient(Context.ConnectionId, "You are now connected as admin with name "+ user.FirstName);
+            Debug("Connect userhub");
+
         }
-        public async Task SendMessage(int security, string message)
+        public async Task SendMessage(string message)
         {
-            if (security == 1)
+            var current = await ChatService.GetRoom(Context.ConnectionId);
+            if(current!=null)
             {
-                ChatUser sender = await ChatService.GetUserByConnectionId(Context.ConnectionId);
-                await Clients.Group(sender.ChatRoom).SendAsync("ReceiveMessage", sender.FirstName, message);
-                Message msg = new Message();
-                msg.timestamp = DateTime.Now;
-                msg.Body = message;
-                msg.IsAdminMessage = false;
-                await ChatService.AddMessage(msg, sender.ChatRoom);
-            }
+                var newMessage = new Message {Body = message, timestamp = DateTime.Now};
+                await ChatService.AddMessage(newMessage, current.Id);
+                if(await ChatService.IsAdmin(Context.ConnectionId))
+                {
+                    newMessage.IsAdminMessage = true;
+                    await SendToGroup(current.Id,current.Admin.FirstName, message);
+                }
+                else
+                {
+                    await SendToGroup(current.Id,current.Customer.FirstName, message);
+                }
 
-            if (security == 2)
-            {
-                ChatUser sender = await ChatService.GetAdminByConnectionId(Context.ConnectionId);
-                await Clients.Group(sender.ChatRoom).SendAsync("ReceiveMessage", sender.FirstName, message);
-                Message msg = new Message();
-                msg.timestamp = DateTime.Now;
-                msg.Body = message;
-                msg.IsAdminMessage = true;
-                await ChatService.AddMessage(msg, sender.ChatRoom);
             }
-
-            Console.WriteLine("Message sent");
-            print();
+            Debug("SendMessage");
         }
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            ChatUser sender = await ChatService.GetUserByConnectionId(Context.ConnectionId);
-            if (sender != null)
+            ChatRoom room = await ChatService.GetRoom(Context.ConnectionId);
+            if(room!=null)
             {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, sender.ChatRoom);
-                await ChatService.RemoveUser(sender);
-                await ChatService.ChangeAdminStatus(sender.ChatRoom, false);
-                await NotifyClient(sender.ConnectionId,
-                    ChatService.GetAllUsers().Result.Count + " users left in queue");
-                await base.OnDisconnectedAsync(exception);
+                await ChatService.RemoveUser(Context.ConnectionId);
             }
-            sender = await ChatService.GetAdminByConnectionId(Context.ConnectionId);
-            if (sender != null)
-            {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, sender.ChatRoom);
-                await ChatService.RemoveAdmin(sender);
-                await ChatService.ChangeUserStatus(sender.ChatRoom, false);
-                await base.OnDisconnectedAsync(exception);
-            }
-            print();
+            
+            Debug("Disconnect");
+            
         }
+        
         
         public async Task Match()
         {
-            foreach (var item in await ChatService.GetAllAdmins())
+            foreach (var item in await ChatService.GetAdmins())
             {
-                if (!item.IsInChat)
-                {
-                    if (ChatService.GetAllUsers().Result.Any())
-                    {
-                        ChatUser nextChatUser = await ChatService.NextInQueue(item.ConnectionId);
-                        if(nextChatUser!=null)
-                        {
-                            await ChatService.ChangeUserStatus(nextChatUser.ChatRoom, true);
-                            await Groups.AddToGroupAsync(nextChatUser.ConnectionId, nextChatUser.ChatRoom);
-                            await Groups.AddToGroupAsync(item.ConnectionId, nextChatUser.ChatRoom);
-                            item.ChatRoom = nextChatUser.ChatRoom;
-                            item.IsInChat = true;
-                            await NotifyClient(nextChatUser.ConnectionId, "You are now talking to " + item.FirstName);
-                            await NotifyClient(item.ConnectionId, "You are now talking to " + nextChatUser.FirstName);
-
-                        }
-                    }
-                }
+                if (item.Status != 1) continue;
+                if (!ChatService.GetChatRooms().Result.Any()) continue;
+                var nextInQueue = await ChatService.NextInQueue(item.ConnectionId);
+                if (nextInQueue == null) continue;
+                await AddUserToHub(item.ConnectionId, nextInQueue.Id);
+                await AddUserToHub(nextInQueue.Customer.ConnectionId, nextInQueue.Id);
+                await ChatService.ChangeUserStatus(item.ConnectionId, 2);
+                nextInQueue.Customer.Status = 2;
+                nextInQueue.RoomStatus = 2;
             }
+            Debug("Match admin to user");
         }
-        
+
+        public async Task AddUserToHub(string connectionId, string groupName)
+        {
+            await Groups.AddToGroupAsync(connectionId, groupName);
+        }
         public async Task GetUpdates()
         {
-            string update = await ChatService.GetUpdates(Context.ConnectionId);
+            var update = await ChatService.GetUpdates(Context.ConnectionId);
             await NotifyClient(Context.ConnectionId, update);
         }
 
@@ -124,17 +95,22 @@ namespace WebApp.Data
         {
             await Clients.Group(group).SendAsync("Notify",message);
         }
+        public async Task SendToGroup(string group,string user, string message)
+        {
+            await Clients.Group(group).SendAsync("ReceiveMessage",user,message);
+        }
         
-        public async Task NotifyServer(string message)
+        /*public async Task NotifyServer(string message)
         {
             Console.WriteLine(message);
-        }
+        }*/
+        
         public async Task NotifyClient(string clientConnectionId, string message)
         {
             await Clients.Client(clientConnectionId).SendAsync("Notify",message);
         }
         
-        public async Task NotifyAllGroups(string message)
+        /*public async Task NotifyAllGroups(string message)
         {
             IList<ChatRoom> chatRooms = await ChatService.GetChatRooms();
             foreach (var item in chatRooms)
@@ -142,18 +118,19 @@ namespace WebApp.Data
                 await NotifyClient(item.Customer.ConnectionId, message);
             }
         }
+        */
         
         
         
-        public void print()
+        private void Debug(string codePart)
         {
+            Console.WriteLine(codePart);
             Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("USERS " + JsonSerializer.Serialize(ChatService.GetAllUsers()));
-            Console.WriteLine();
-            Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetAllAdmins()));
+            Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetAdmins()));
             Console.WriteLine();
             Console.WriteLine("Rooms"+JsonSerializer.Serialize(ChatService.GetChatRooms()));
+            Console.WriteLine();
+            Console.WriteLine(codePart);
         }
     }
 }
