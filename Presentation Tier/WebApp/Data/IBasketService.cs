@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Models;
 using WebApp.Models;
-using WebApp.Pages.Customer;
 
 namespace WebApp.Data
 {

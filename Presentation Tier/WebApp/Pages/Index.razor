@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using WebApp.Models
 @using WebApp.Data
 @using MudBlazor
 
@@ -7,7 +6,6 @@
 @using System.Text.Json
 @using global::Models
 @using Microsoft.AspNetCore.Components
-@using WebApp.Pages.Customer
 
 @inject IRecipeService RecipeService
 @inject IBasketService BasketService
@@ -74,6 +72,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         recipesToShow = await RecipeService.GetAllRecipesAsync();
+        foreach (var item in recipesToShow)
+        {
+            item.Amount = 1;
+        }
         await updateBasket();
     }
 
@@ -87,7 +89,7 @@ else
         {
             error = e.Message;
         }
-        recipe.Amount = 0;
+        recipe.Amount = 1;
         await updateBasket();
     }
 

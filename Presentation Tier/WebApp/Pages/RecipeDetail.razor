@@ -2,34 +2,60 @@
 @using WebApp.Models
 @using WebApp.Data
 @using global::Models
+@using System.Diagnostics
 
 @inject IRecipeService RecipeService
+@inject IIngredientService IngredientService
 
 <h3>@recipeToShow.Name</h3>
-<h6>Type: @recipeToShow.NutritionType</h6>
-<img src="@recipeToShow.Image" alt="">
+<h6>Food category: @recipeToShow.NutritionType</h6>
+<img src="@recipeToShow.Image" alt="@recipeToShow.Name">
+<br>
 <p>Ingredients:</p>
 <ul>
     @foreach (var item in ingredientsInRecipe)
     {
-        <li>@item.Amount @item.IngredientId</li>
+        <li>@item.Quantity @item.UnitOfMeasure @item.Name</li>
     }
 </ul>
+<br>
 <p>@recipeToShow.Description</p>
 <p>Minutes to prepare: @recipeToShow.MinutesToMake</p>
 <p>Calories: @recipeToShow.Calories</p>
-<p>Price: @recipeToShow.Price</p>
+<p>Price: @recipeToShow.Price DKK</p>
 
 @code {
     [Parameter]
     public int id { get; set; }
 
     private Recipe recipeToShow = new Recipe();
-    private IList<RecipeItem> ingredientsInRecipe = new List<RecipeItem>();
+    private IList<Ingredient> ingredientsInRecipe = new List<Ingredient>();
+    private IList<Ingredient> allIngredients = new List<Ingredient>();
+    private Ingredient ingredient;
+    private IList<RecipeItem> recipeItems = new List<RecipeItem>();
 
     protected override async Task OnInitializedAsync()
     {
         recipeToShow = await RecipeService.GetRecipeAsync(id);
-        ingredientsInRecipe = recipeToShow.Ingredient;
+        allIngredients = await IngredientService.GetAllIngredientsAsync();
+        recipeItems = recipeToShow.Ingredient;
+        try
+        {
+            GetIngredients(recipeItems);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e.Message);
+        }
+    }
+
+    private void GetIngredients(IList<RecipeItem> recipeItems)
+    {
+        foreach (var item in recipeItems)
+        {
+            ingredient = allIngredients.First(i => i.Id == item.IngredientId);
+            ingredient.Quantity = item.Amount;
+            ingredientsInRecipe.Add(ingredient);
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿@page "/basket"
 @using WebApp.Data
 @using WebApp.Models
+@using MudBlazor
+@using global::Models
 
 @inject IBasketService BasketService
 @inject NavigationManager NavigationManager
@@ -22,23 +24,80 @@ else
         <HeaderContent>
             <MudTh>Amount</MudTh>
             <MudTh>Name</MudTh>
-            <MudTh>Price</MudTh>
+            <MudTh>Price (DKK)</MudTh>
+            <MudTh>Remove</MudTh>
         </HeaderContent>
-        @foreach (var item in recipesInBasket)
-        {
-            <RowTemplate>
-                <MudTd DataLabel="Amount">@recipesInBasket.Count</MudTd>
-                <MudTd DataLabel="Name">@item.Amount</MudTd>
-                @* <MudTd DataLabel="Price">@item.Price</MudTd> *@
-            </RowTemplate>
-        }
+        <RowTemplate>
+            <MudTd DataLabel="Amount">@context.Amount</MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Price">@context.Price</MudTd>
+                <MudTd>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="async () => await RemoveBasketItem(context)">X</MudButton>
+                </MudTd>
+        </RowTemplate>
+        <FooterContent>
+            <MudTd DataLabel="Total amount">Total amounts of recipes in the basket: @totalAmount</MudTd>
+            <MudTd DataLabel="Total price"> Total to pay (excluding shipment): @totalPrice DKK</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="() => FinalizeBasket()">Next</MudButton>
+            </MudTd>
+        </FooterContent>
     </MudTable>
 }
+
 @code {
-    private IList<BasketItem> recipesInBasket = new List<BasketItem>();
+    private IList<Recipe> recipesInBasket = new List<Recipe>();
+    private IList<BasketItem> itemsInBasket = new List<BasketItem>();
+    private Recipe recipe = new Recipe();
+    private int? totalAmount;
+    private double? totalPrice;
 
     protected override async Task OnInitializedAsync()
     {
-        recipesInBasket = await BasketService.GetAllBasketItems();
+        itemsInBasket = await BasketService.GetAllBasketItems();
+        recipesInBasket = await BasketService.GetAllBasketRecipes();
+        MatchItems(recipesInBasket, itemsInBasket);
+        CalculateTotalPrice();
+        CalculateTotalAmount();
+    }
+
+    private async Task RemoveBasketItem(Recipe recipeToRemove)
+    {
+        BasketItem item = itemsInBasket.FirstOrDefault(i => i.RecipeId == recipeToRemove.Id);
+        await BasketService.RemoveRecipe(recipeToRemove);
+        recipesInBasket.Remove(recipeToRemove);
+        itemsInBasket.Remove(item);
+    }
+
+    private void MatchItems(IList<Recipe> recipes, IList<BasketItem> basketItem)
+    {
+        foreach (var item in basketItem)
+        {
+            recipe = recipes.First(r => r.Id == item.RecipeId);
+            recipe.Amount = item.Amount;
+        }
+    }
+
+    private void CalculateTotalPrice()
+    {
+        totalPrice = 0;
+        foreach (var item in recipesInBasket)
+        {
+            totalPrice += item.Price * item.Amount;
+        }
+    }
+
+    private void CalculateTotalAmount()
+    {
+        totalAmount = 0;
+        foreach (var item in recipesInBasket)
+        {
+            totalAmount += item.Amount;
+        }
+    }
+
+    private void FinalizeBasket()
+    {
+        NavigationManager.NavigateTo("/orderfinal");
     }
 }
