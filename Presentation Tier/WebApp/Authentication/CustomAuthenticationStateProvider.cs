@@ -28,7 +28,7 @@ namespace WebApp.Authentication
             var identity = new ClaimsIdentity();
             if (cachedUser == null)
             {
-                string userAsJson = await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+                string userAsJson = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
                 if(!string.IsNullOrEmpty(userAsJson))
                 {
                     cachedUser = JsonSerializer.Deserialize<User>(userAsJson);
@@ -62,7 +62,7 @@ namespace WebApp.Authentication
                 User user = Task.Run(() => userService.ValidateUserAsync(email, password)).Result;
                 identity = SetupClaimsForUser(user);
                 string serializedUser = JsonSerializer.Serialize(user);
-                jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serializedUser);
+                jsRuntime.InvokeVoidAsync("localStorage.setItem", "currentUser", serializedUser);
                 cachedUser = user;
             }
             catch(Exception e)
@@ -76,7 +76,7 @@ namespace WebApp.Authentication
         {
             cachedUser = null;
             var user = new ClaimsPrincipal(new ClaimsIdentity());
-            jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", "");
+            jsRuntime.InvokeVoidAsync("localStorage.setItem", "currentUser", "");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
 
