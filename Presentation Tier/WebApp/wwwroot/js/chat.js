@@ -42,6 +42,10 @@ async function HelpNextUser(){
     });
     console.log("pressod on help");
 }
+
+async function saveLocally(key,value){
+    localStorage.setItem(key, value);
+}
 async function initialise(){
     connection.on("ReceiveMessage", function (user, message) {
         var li = document.createElement("li");
@@ -54,6 +58,11 @@ async function initialise(){
         document.getElementById("notification").textContent=message;
         console.log("notify");
     });
+    connection.on("SetConnection", function (message) {
+        saveLocally("connectionC",message);
+        console.log("notify");
+    });
+    
     
     
 

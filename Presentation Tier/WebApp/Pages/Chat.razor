@@ -3,25 +3,26 @@
 @using WebApp.Models
 @using WebApp.Authentication
 @using WebApp.Data
+@using Blazored.LocalStorage
 
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
 @inject IJSRuntime JSRuntime
-
+@inject ILocalStorageService LocalStorage;
 
 <h3>Chat</h3>
 
 <div class="container">
     <div class="row">&nbsp;</div>
     <div class="row">
+        
         <div class="col-2">Message</div>
     </div>
     <div class="row">
         <p id="notification">@notification</p>
     </div>
-    
     <div class="row">&nbsp;</div>
     <div class="row">
         @if (currentUser.SecurityLevel == 2)
@@ -51,12 +52,13 @@
 @code {
     public int Time = 0;
     User currentUser = new User();
+    private string connectionCoockie = "connectionC";
     private string message;
     private string notification;
     private string ButtonValue;
     private string ButtonClass = "btn btn-primary";
     private bool isChatting = false;
-    
+
     public async Task StartTimerAsync()
     {
         ButtonValue = "Starting chatting in " + Time +" seconds";
@@ -76,6 +78,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine(await LocalStorage.GetItemAsync<string>("notification"));
         ButtonValue = "Start chatting";
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
