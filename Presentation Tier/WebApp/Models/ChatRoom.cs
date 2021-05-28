@@ -4,6 +4,14 @@ namespace WebApp.Models
 {
     public class ChatRoom
     {
+        public ChatRoom()
+        {
+            Admin = new ChatUser("none");
+            Customer = new ChatUser("none");
+            RoomStatus = 1;
+            Messages = new List<Message>();
+        }
+
         public string Id { get; set; }
         public ChatUser Admin { get; set; }
         public ChatUser Customer { get; set; }
