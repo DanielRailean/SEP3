@@ -24,7 +24,7 @@
     
     <div class="row">&nbsp;</div>
     <div class="row">
-        @if (userToEdit.SecurityLevel == 2)
+        @if (currentUser.SecurityLevel == 2)
         {
             <button @onclick="() => HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
         }
@@ -49,8 +49,8 @@
 
 
 @code {
-    public int Time = 3;
-    User userToEdit = new User();
+    public int Time = 0;
+    User currentUser = new User();
     private string message;
     private string notification;
     private string ButtonValue;
@@ -77,7 +77,7 @@
     protected override async Task OnInitializedAsync()
     {
         ButtonValue = "Start chatting";
-        userToEdit = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
+        currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
         await JSRuntime.InvokeVoidAsync("initialise");
         notification = "Press start to start chatting";
@@ -85,11 +85,18 @@
 
     private async Task StartChat()
     {
-        await JSRuntime.InvokeVoidAsync("connectToChat",userToEdit.SecurityLevel,userToEdit.FirstName);
+        if(currentUser.SecurityLevel==1)
+        {
+            await JSRuntime.InvokeVoidAsync("ConnectUser",currentUser.id,currentUser.FirstName);
+        }
+        if(currentUser.SecurityLevel==2)
+        {
+            await JSRuntime.InvokeVoidAsync("ConnectAdmin",currentUser.id,currentUser.FirstName);
+        }
     }
     private async Task SendMessage()
     {
-        await JSRuntime.InvokeVoidAsync("sendMessage",userToEdit.SecurityLevel,message);
+        await JSRuntime.InvokeVoidAsync("sendMessage",currentUser.SecurityLevel,message);
     }
     private async Task HelpNext()
     {
