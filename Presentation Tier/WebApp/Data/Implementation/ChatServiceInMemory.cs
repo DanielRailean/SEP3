@@ -81,9 +81,17 @@ namespace WebApp.Data.Implementation
             {
                 ChatUser admin =  Admins.FirstOrDefault(u => u.ConnectionId.Equals(connectionId));
                 ChatRoom room = ChatRooms.FirstOrDefault(r => r.Admin.ConnectionId.Equals(connectionId));
-                room.RoomStatus = 1;
-                room.Admin = new ChatUser("none");
-                Admins.Remove(admin);
+                if(room!=null)
+                {
+                    room.RoomStatus = 1;
+                    room.Admin = new ChatUser("none");
+                }
+
+                if (admin != null)
+                {
+                    Admins.Remove(admin);
+                }
+                
                 return;
             }
 

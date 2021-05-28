@@ -19,9 +19,12 @@ namespace WebApp.Data
         public async Task ConnectAdminHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId);
-            if (!room.Id.Equals(Context.ConnectionId))
+            if(room!=null)
             {
-                await AddUserToHub(Context.ConnectionId, room.Id);
+                if (!room.Id.Equals(Context.ConnectionId))
+                {
+                    await AddUserToHub(Context.ConnectionId, room.Id);
+                }
             }
             await NotifyClient(Context.ConnectionId, "Notify","You are now connected ");
             await SendConnectionId(Context.ConnectionId);
@@ -72,8 +75,6 @@ namespace WebApp.Data
         {
  
             await ChatService.RemoveUser(Context.ConnectionId);
-            
-            
             Debug("Disconnect");
             
         }
