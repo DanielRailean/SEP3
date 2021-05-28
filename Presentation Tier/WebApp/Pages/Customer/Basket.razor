@@ -32,7 +32,7 @@ else
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Price">@context.Price</MudTd>
                 <MudTd>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="() => RemoveBasketItem(context)">X</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="async () => await RemoveBasketItem(context)">X</MudButton>
                 </MudTd>
         </RowTemplate>
         <FooterContent>
@@ -61,7 +61,7 @@ else
         CalculateTotalAmount();
     }
 
-    private async void RemoveBasketItem(Recipe recipeToRemove)
+    private async Task RemoveBasketItem(Recipe recipeToRemove)
     {
         BasketItem item = itemsInBasket.FirstOrDefault(i => i.RecipeId == recipeToRemove.Id);
         await BasketService.RemoveRecipe(recipeToRemove);
