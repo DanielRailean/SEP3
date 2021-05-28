@@ -6,13 +6,19 @@ async function start(){
     await connection.start();
 }
 
-async function connectToChat(securityLevel,username){
-    connection.invoke("GetConnection",securityLevel, username).catch(function (err) {
+async function ConnectUser(userId,username){
+    connection.invoke("ConnectUserHub",userId, username).catch(function (err) {
         return console.error(err.toString());
     });
     GetUpdates();
-    console.log("connected as "+securityLevel+username);
-    
+    console.log("connected as "+userId+username);
+}
+async function ConnectAdmin(userId,username){
+    connection.invoke("ConnectAdminHub",userId, username).catch(function (err) {
+        return console.error(err.toString());
+    });
+    GetUpdates();
+    console.log("connected as "+userId+username);
 }
 
 async function sendMessage(securityLevel,message){
