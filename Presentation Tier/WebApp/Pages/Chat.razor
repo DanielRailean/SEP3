@@ -24,11 +24,15 @@
     
     <div class="row">&nbsp;</div>
     <div class="row">
+        @if (userToEdit.SecurityLevel == 2)
+        {
+            <button @onclick="() => HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
+        }
         <div class="col-4"><input type="text" id="messageInput" @bind="@message"/></div>
         <div class="col-4">
-            <button type="button" class="btn btn-primary" @onclick="async() => await SendMessage()">Send Message</button>
-            </div>
-        <button @onclick=" ()=> StartTimerAsync()" type="button" class="@ButtonClass" display="none" >@ButtonValue</button>
+            <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">Send Message</button>
+        </div>
+        <button @onclick="() => StartTimerAsync()" type="button" class="@ButtonClass" display="none">@ButtonValue</button>
     </div>
 
 </div>
@@ -86,6 +90,10 @@
     private async Task SendMessage()
     {
         await JSRuntime.InvokeVoidAsync("sendMessage",userToEdit.SecurityLevel,message);
+    }
+    private async Task HelpNext()
+    {
+        await JSRuntime.InvokeVoidAsync("HelpNextUser");
     }
 
 }
