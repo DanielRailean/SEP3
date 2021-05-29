@@ -16,7 +16,7 @@ namespace WebApp.Models
         public ChatUser Admin { get; set; }
         public ChatUser Customer { get; set; }
         public IList<Message> Messages { get; set; }
-        //1 = user waiting for the admin 2= admin joined the chat 
+        //1 = user waiting for the admin 2= admin joined the chat 3 - admin was last that responded
         public int Status { get; set; }
 }
 }

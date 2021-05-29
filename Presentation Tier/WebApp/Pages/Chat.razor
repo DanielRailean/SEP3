@@ -53,9 +53,15 @@
         }
         <div class="col-4"><input type="text" id="messageInput" @bind="@message"/></div>
         <div class="col-4">
-            <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">Send Message</button>
+            <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">@ButtonValue</button>
+        </div> 
+        <div class="col-4">
+            <button type="button" class="btn btn-success" @onclick="async () => await ConnectToChat()">Connect To chat</button>
         </div>
-        <button @onclick="() => StartTimerAsync()" type="button" class="@ButtonClass" display="none">@ButtonValue</button>
+        <div class="col-4">
+            <button type="button" class="btn btn-warning" @onclick="async () => await Disconnect()">Disconnect</button>
+        </div>
+        @*<button @onclick="() => countdownAutoStart()" type="button" class="@ButtonClass" display="none">@ButtonValue</button>*@
     </div>
 
 </div>
@@ -84,8 +90,9 @@
     private bool isChatting = false;
     private ChatRoom room;
     IList<Message> messages;
+    private bool started = false;
 
-    public async Task StartTimerAsync()
+    /*public async Task countdownAutoStart()
     {
         ButtonValue = "Starting chatting in " + Time + " seconds";
         while (Time > 0)
@@ -100,8 +107,8 @@
         ButtonValue = "Connected";
         isChatting = true;
 
-    }
-    public async Task StartTimerAsync2(bool admin)
+    }*/
+    /*public async Task CountdownFetchChat(bool admin)
     {
         while (Time2 > 0)
         {
@@ -114,34 +121,58 @@
         ButtonValue = "Connected";
         isChatting = true;
 
-    }
+    }*/
 
     protected override async Task OnInitializedAsync()
     {
-        ButtonValue = "Start chatting";
-        currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
-        await JSRuntime.InvokeVoidAsync("start");
-        await JSRuntime.InvokeVoidAsync("initialise");
-        notification = "Press start to start chatting";
-    }
-
-    private async Task StartChat()
-    {
-        if (currentUser.SecurityLevel == 1)
-        {
-            await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id, currentUser.FirstName);
-        }
         if (currentUser.SecurityLevel == 2)
         {
-            await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id, currentUser.FirstName);
+            ButtonValue = "Send message";
         }
-        StartTimerAsync2(currentUser.SecurityLevel==2);
+        else
+        {
+            ButtonValue = "Ask question";
+        }
         
+        currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
+    }
+
+    /*private async Task StartChat()
+    {
+        
+        
+        if (currentUser.SecurityLevel == 2)
+        {
+            await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
+        }
+        CountdownFetchChat(currentUser.SecurityLevel==2);
+        
+    }*/
+
+    private async Task ConnectToChat(){
+        await JSRuntime.InvokeVoidAsync("start");
+        await JSRuntime.InvokeVoidAsync("initialise");
+        await JSRuntime.InvokeVoidAsync("GoOnlineJS",currentUser.id,currentUser.SecurityLevel==2,(currentUser.FirstName+" "+currentUser.LastName));
+        await FetchChat(currentUser.SecurityLevel==2);
+
     }
 
     private async Task SendMessage()
     {
-        await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,currentUser.FirstName+" "+currentUser.LastName);
+        if(!started)
+        {
+            if (currentUser.SecurityLevel == 1)
+            {
+                await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
+            }
+            if (currentUser.SecurityLevel == 2)
+            {
+                await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
+            }
+            started = true;
+            ButtonValue = "Send message";
+        }
+        await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,(currentUser.FirstName+" "+currentUser.LastName));
     }
 
     private async Task HelpNext()
@@ -149,16 +180,22 @@
         await JSRuntime.InvokeVoidAsync("HelpNextUser");
     }
 
+    private async Task Disconnect()
+    {
+        await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
+    }
+
     private async Task FetchChat(bool admin)
     {
         connectionId = await LocalStorage.GetItemAsync<string>(connectionCoockie);
         await LocalStorage.SetItemAsync("isAdmin", admin);
         ChatRoom fetched = await ChatService.GetRoom(currentUser.id, admin, connectionId, currentUser.FirstName);
-        string roomJson = JsonSerializer.Serialize(fetched.Messages);
-        Console.WriteLine("fetched "+roomJson);
-        messages = JsonSerializer.Deserialize<IList<Message>>(roomJson);
-        Console.WriteLine("deserealised "+JsonSerializer.Serialize(messages));
-        StateHasChanged();
+        if (fetched != null)
+        {
+            string roomJson = JsonSerializer.Serialize(fetched.Messages);
+            messages = JsonSerializer.Deserialize<IList<Message>>(roomJson);
+            StateHasChanged();
+        }
     }
 
 }

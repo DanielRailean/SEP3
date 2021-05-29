@@ -21,8 +21,15 @@
         public string FullName { get; set; }
         public int SecurityLevel { get; set; }
         
+        //Only user states
+        // 1 - online, in user list
+        // 2 - connected,in room
+        // 3 - online, left page - room exists
         
-        // 1 - not in room 2- in room
+        //Only Admin states
+        // 4 - online  in admin list
+        // 5-  connected, in room
+
         public int Status { get; set; }
         
         public string ConnectionId { get; set; }

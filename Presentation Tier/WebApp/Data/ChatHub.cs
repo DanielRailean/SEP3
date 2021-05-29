@@ -21,10 +21,7 @@ namespace WebApp.Data
             ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId,name);
             if(room!=null)
             {
-                if (!room.Id.Equals(Context.ConnectionId))
-                {
-                    await AddUserToHub(Context.ConnectionId, room.Id);
-                }
+                await AddUserToHub(Context.ConnectionId, room.Id);
                 room.Admin.FullName = name;
                 await SendChatRoom(Context.ConnectionId, room.Id);
             }
@@ -32,14 +29,27 @@ namespace WebApp.Data
             Debug("Connect adminHub");
         }
         
+        /*public override async Task OnConnectedAsync()
+        {
+            Debug();
+        }*/
+        public async Task GoOnline(int userId, bool isAdmin , string name)
+        {
+            await ChatService.ConnectToChat(userId, isAdmin, Context.ConnectionId, name);
+            await SendConnectionId(Context.ConnectionId);
+            if(isAdmin)
+            {
+                await SendChatRoom(Context.ConnectionId, "none");
+            }
+            Debug("Go online");
+        }
+
         public async Task ConnectUserHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId,name);
-            if (!room.Id.Equals(Context.ConnectionId))
-            {
-                await AddUserToHub(Context.ConnectionId, room.Id);
-            }
+            await AddUserToHub(Context.ConnectionId, room.Id);
             room.Customer.FullName = name;
+            room.Customer.Status = 2;
             await SendConnectionId(Context.ConnectionId);
             await SendChatRoom(Context.ConnectionId, room.Id);
             Debug("Connect userhub");
@@ -49,7 +59,6 @@ namespace WebApp.Data
         public async Task SendMessage(int userId,bool isAdmin,string message,string name)
         {
             var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId,name);
-            Console.WriteLine("current :"+JsonSerializer.Serialize(current));
             if(current!=null)
             {
                 var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=name};
@@ -77,28 +86,33 @@ namespace WebApp.Data
         {
             await NotifyClient(connectionId, "SetChatRoom", chatRoomId);
         }
-        
-        public override async Task OnDisconnectedAsync(Exception exception)
+
+
+        public async Task Disconnect(long userId)
+        {
+            await ChatService.DisconnectUser(userId);
+            Debug("Disconnect");
+        }
+        /*public override async Task OnDisconnectedAsync(Exception exception)
         {
  
-            await ChatService.DisconnectUser(Context.ConnectionId);
-            Debug("Disconnect");
             
-        }
+            
+        }*/
         
         public async Task Match()
         {
-            foreach (var item in await ChatService.GetAdmins())
+            foreach (var item in await ChatService.GetOnlineAdmins())
             {
-                if (item.Status != 1) continue;
+                if (item.Status != 4) continue;
                 if (!ChatService.GetChatRooms().Result.Any()) continue;
                 var nextInQueue = await ChatService.NextInQueue(item.ConnectionId);
                 if (nextInQueue == null) continue;
-                await AddUserToHub(item.ConnectionId, nextInQueue.Id);
+                await AddUserToHub(Context.ConnectionId, nextInQueue.Id);
                 await AddUserToHub(nextInQueue.Customer.ConnectionId, nextInQueue.Id);
-                await ChatService.ChangeUserStatus(item.ConnectionId, 2);
-                nextInQueue.Customer.Status = 2;
+                nextInQueue.Admin.Status = 5;
                 nextInQueue.Status = 2;
+                nextInQueue.Admin.ConnectionId = Context.ConnectionId;
             }
             Debug("Match admin to user");
         }
@@ -126,13 +140,16 @@ namespace WebApp.Data
 
         private void Debug(string codePart)
         {
-            /*Console.WriteLine("start" +codePart);
+            Console.WriteLine("start" +codePart);
             Console.WriteLine();
-            Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetAdmins()));
+            Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetOnlineAdmins()));
+            Console.WriteLine();
+            Console.WriteLine("Online Users ");
+            Console.WriteLine(JsonSerializer.Serialize(ChatService.GetOnlineUsers()));
             Console.WriteLine();
             Console.WriteLine("Rooms"+JsonSerializer.Serialize(ChatService.GetChatRooms()));
             Console.WriteLine();
-            Console.WriteLine("end "+codePart);*/
+            Console.WriteLine("end "+codePart);
         }
         
         /*public async Task NotifyServer(string message)
