@@ -9,6 +9,5 @@ namespace WebApp.Data
         Task<User> ValidateUserAsync(string email, string password);
         Task UpdateUserAsync(User user,string password);
         Task RemoveUserAsync(User user);
-        User GetCurrentUser();
     }
 }

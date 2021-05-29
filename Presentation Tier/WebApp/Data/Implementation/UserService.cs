@@ -22,6 +22,11 @@ namespace WebApp.Data.Implementation
             client = new HttpClient(clientHandler);
         }
         
+        /// <summary>
+        /// Posts a new user to the REST endpoint,
+        /// in JSON format.
+        /// </summary>
+        /// <param name="user">User to create.</param>
         public async Task RegisterUserAsync(User user)
         {
             var userAsJson = JsonSerializer.Serialize(user);
@@ -31,6 +36,15 @@ namespace WebApp.Data.Implementation
             await client.PostAsync(uri, content);
         }
 
+        /// <summary>
+        /// Consumes REST endpoint to get a user as in validate,
+        /// by sending parameters in body to check if user exists
+        /// by these, in JSON format.
+        /// </summary>
+        /// <param name="email">Email address to check.</param>
+        /// <param name="password">Password to check.</param>
+        /// <returns>User item.</returns>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task<User> ValidateUserAsync(string email, string password)
         {
             HttpResponseMessage response = await client.GetAsync(uri + $"?email={@email}&password={@password}");
@@ -47,6 +61,14 @@ namespace WebApp.Data.Implementation
             return user;
         }
 
+        /// <summary>
+        /// Sends a Put request to the REST endpoint,
+        /// and validates if user is logged in and is eligible by
+        /// asking for password.
+        /// </summary>
+        /// <param name="user">User to update.</param>
+        /// <param name="password">Password to confirm.</param>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task UpdateUserAsync(User user,string password)
         {
             var userAsJson = JsonSerializer.Serialize(user);
@@ -60,6 +82,11 @@ namespace WebApp.Data.Implementation
             }
         }
 
+        /// <summary>
+        /// Sends a Delete request to the REST endpoint,
+        /// to remove a specific user, in JSON format.
+        /// </summary>
+        /// <param name="user">User to remove.</param>
         public async Task RemoveUserAsync(User user)
         {
             var request = new HttpRequestMessage
@@ -69,12 +96,6 @@ namespace WebApp.Data.Implementation
                 Content = new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json")
             };
             await client.SendAsync(request);
-        }
-        
-
-        public User GetCurrentUser()
-        {
-            return currentUser;
         }
     }
 }
