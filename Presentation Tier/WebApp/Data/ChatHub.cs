@@ -18,7 +18,7 @@ namespace WebApp.Data
         }
         public async Task ConnectAdminHub(int userId, string name)
         {
-            ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId,name);
+            ChatRoom room = await ChatService.GetConnection(userId, true, Context.ConnectionId,name);
             if(room!=null)
             {
                 if (!room.Id.Equals(Context.ConnectionId))
@@ -32,14 +32,30 @@ namespace WebApp.Data
             Debug("Connect adminHub");
         }
         
+        /*public override async Task OnConnectedAsync()
+        {
+            Debug();
+        }*/
+        public async Task GoOnline(int userId, bool isAdmin , string name)
+        {
+            await ChatService.ConnectToChat(userId, isAdmin, Context.ConnectionId, name);
+            await SendConnectionId(Context.ConnectionId);
+            if(isAdmin)
+            {
+                await SendChatRoom(Context.ConnectionId, "none");
+            }
+            Debug("Go online");
+        }
+
         public async Task ConnectUserHub(int userId, string name)
         {
-            ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId,name);
+            ChatRoom room = await ChatService.GetConnection(userId, false, Context.ConnectionId,name);
             if (!room.Id.Equals(Context.ConnectionId))
             {
                 await AddUserToHub(Context.ConnectionId, room.Id);
             }
             room.Customer.FullName = name;
+            room.Customer.Status = 2;
             await SendConnectionId(Context.ConnectionId);
             await SendChatRoom(Context.ConnectionId, room.Id);
             Debug("Connect userhub");
@@ -48,7 +64,7 @@ namespace WebApp.Data
         
         public async Task SendMessage(int userId,bool isAdmin,string message,string name)
         {
-            var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId,name);
+            var current = await ChatService.GetConnection(userId,isAdmin,Context.ConnectionId,name);
             if(current!=null)
             {
                 var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=name};
@@ -87,7 +103,7 @@ namespace WebApp.Data
         
         public async Task Match()
         {
-            foreach (var item in await ChatService.GetAdmins())
+            foreach (var item in await ChatService.GetOnlineAdmins())
             {
                 if (item.Status != 1) continue;
                 if (!ChatService.GetChatRooms().Result.Any()) continue;
@@ -128,7 +144,10 @@ namespace WebApp.Data
         {
             Console.WriteLine("start" +codePart);
             Console.WriteLine();
-            Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetAdmins()));
+            Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetOnlineAdmins()));
+            Console.WriteLine();
+            Console.WriteLine("Online Users ");
+            Console.WriteLine(JsonSerializer.Serialize(ChatService.GetOnlineUsers()));
             Console.WriteLine();
             Console.WriteLine("Rooms"+JsonSerializer.Serialize(ChatService.GetChatRooms()));
             Console.WriteLine();

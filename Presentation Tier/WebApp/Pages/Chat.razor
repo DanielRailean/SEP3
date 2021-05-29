@@ -123,17 +123,18 @@
         await JSRuntime.InvokeVoidAsync("start");
         await JSRuntime.InvokeVoidAsync("initialise");
         notification = "Press start to start chatting";
+        await JSRuntime.InvokeVoidAsync("GoOnlineJS",currentUser.id,currentUser.SecurityLevel==2,(currentUser.FirstName+" "+currentUser.LastName));
     }
 
     private async Task StartChat()
     {
         if (currentUser.SecurityLevel == 1)
         {
-            await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id, currentUser.FirstName);
+            await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
         }
         if (currentUser.SecurityLevel == 2)
         {
-            await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id, currentUser.FirstName);
+            await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
         }
         StartTimerAsync2(currentUser.SecurityLevel==2);
         
@@ -141,7 +142,7 @@
 
     private async Task SendMessage()
     {
-        await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,currentUser.FirstName+" "+currentUser.LastName);
+        await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,(currentUser.FirstName+" "+currentUser.LastName));
     }
 
     private async Task HelpNext()
@@ -153,7 +154,7 @@
     {
         connectionId = await LocalStorage.GetItemAsync<string>(connectionCoockie);
         await LocalStorage.SetItemAsync("isAdmin", admin);
-        ChatRoom fetched = await ChatService.GetRoom(currentUser.id, admin, connectionId, currentUser.FirstName);
+        ChatRoom fetched = await ChatService.GetConnection(currentUser.id, admin, connectionId, currentUser.FirstName);
         string roomJson = JsonSerializer.Serialize(fetched.Messages);
         messages = JsonSerializer.Deserialize<IList<Message>>(roomJson);
         StateHasChanged();

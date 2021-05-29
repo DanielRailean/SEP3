@@ -10,6 +10,12 @@ async function start(){
     GetUpdates();
 }
 
+async function GoOnlineJS(userId,isAdmin,name){
+    connection.invoke("GoOnline", userId,isAdmin,name).catch(function (err) {
+        return console.error(err.toString());
+    });
+}
+
 async function ConnectUser(userId,username){
     connection.invoke("ConnectUserHub",userId, username).catch(function (err) {
         return console.error(err.toString());
