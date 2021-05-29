@@ -31,7 +31,7 @@ namespace WebApp.Data
         Task ChangeUserStatus(string connectionId, int status);
         
         //Delete
-        Task DisconnectUser(string connectionId);
+        Task DisconnectUser(long userId);
         Task StopChat(string connectionId);
 
     }

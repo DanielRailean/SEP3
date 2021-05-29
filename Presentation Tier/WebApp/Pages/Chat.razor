@@ -153,6 +153,8 @@
         await JSRuntime.InvokeVoidAsync("start");
         await JSRuntime.InvokeVoidAsync("initialise");
         await JSRuntime.InvokeVoidAsync("GoOnlineJS",currentUser.id,currentUser.SecurityLevel==2,(currentUser.FirstName+" "+currentUser.LastName));
+        await FetchChat(currentUser.SecurityLevel==2);
+
     }
 
     private async Task SendMessage()
@@ -163,6 +165,10 @@
             {
                 await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
             }
+            if (currentUser.SecurityLevel == 2)
+            {
+                await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
+            }
             started = true;
             ButtonValue = "Send message";
         }
@@ -172,12 +178,11 @@
     private async Task HelpNext()
     {
         await JSRuntime.InvokeVoidAsync("HelpNextUser");
-        await FetchChat(true);
     }
 
     private async Task Disconnect()
     {
-        await JSRuntime.InvokeVoidAsync("DisconnectJS");
+        await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
     }
 
     private async Task FetchChat(bool admin)
@@ -185,9 +190,12 @@
         connectionId = await LocalStorage.GetItemAsync<string>(connectionCoockie);
         await LocalStorage.SetItemAsync("isAdmin", admin);
         ChatRoom fetched = await ChatService.GetRoom(currentUser.id, admin, connectionId, currentUser.FirstName);
-        string roomJson = JsonSerializer.Serialize(fetched.Messages);
-        messages = JsonSerializer.Deserialize<IList<Message>>(roomJson);
-        StateHasChanged();
+        if (fetched != null)
+        {
+            string roomJson = JsonSerializer.Serialize(fetched.Messages);
+            messages = JsonSerializer.Deserialize<IList<Message>>(roomJson);
+            StateHasChanged();
+        }
     }
 
 }

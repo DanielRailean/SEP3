@@ -21,10 +21,7 @@ namespace WebApp.Data
             ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId,name);
             if(room!=null)
             {
-                if (!room.Id.Equals(Context.ConnectionId))
-                {
-                    await AddUserToHub(Context.ConnectionId, room.Id);
-                }
+                await AddUserToHub(Context.ConnectionId, room.Id);
                 room.Admin.FullName = name;
                 await SendChatRoom(Context.ConnectionId, room.Id);
             }
@@ -50,10 +47,7 @@ namespace WebApp.Data
         public async Task ConnectUserHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId,name);
-            if (!room.Id.Equals(Context.ConnectionId))
-            {
-                await AddUserToHub(Context.ConnectionId, room.Id);
-            }
+            await AddUserToHub(Context.ConnectionId, room.Id);
             room.Customer.FullName = name;
             room.Customer.Status = 2;
             await SendConnectionId(Context.ConnectionId);
@@ -94,9 +88,9 @@ namespace WebApp.Data
         }
 
 
-        public async Task Disconnect()
+        public async Task Disconnect(long userId)
         {
-            await ChatService.DisconnectUser(Context.ConnectionId);
+            await ChatService.DisconnectUser(userId);
             Debug("Disconnect");
         }
         /*public override async Task OnDisconnectedAsync(Exception exception)
