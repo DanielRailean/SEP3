@@ -23,6 +23,11 @@ namespace WebApp.Data.Implementation
             client = new HttpClient(clientHandler);
         }
         
+        /// <summary>
+        /// Consumes the REST endpoint and returns JSON formatted value.
+        /// </summary>
+        /// <returns>List of all ingredients.</returns>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task<IList<Ingredient>> GetAllIngredientsAsync()
         {
             HttpResponseMessage response = await client.GetAsync(uri + "/getallingredients");
@@ -39,6 +44,12 @@ namespace WebApp.Data.Implementation
             return ingredients;
         }
 
+        /// <summary>
+        /// Consumes the REST endpoint to get a specific
+        /// ingredient JSON formatted by id.
+        /// </summary>
+        /// <param name="ingredientId">Id of ingredient to get.0</param>
+        /// <returns>Specific ingredient.</returns>
         public async Task<Ingredient> GetIngredientAsync(int ingredientId)
         {
             var ingredientAsJson = await client.GetStringAsync($"{uri}/getingredient?id={ingredientId}");
@@ -50,6 +61,12 @@ namespace WebApp.Data.Implementation
             return ingredient;
         }
 
+        /// <summary>
+        /// Posts a new ingredient of type to the REST endpoint,
+        /// in JSON format.
+        /// </summary>
+        /// <param name="ingredient">Ingredient to create.</param>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task CreateIngredientAsync(Ingredient ingredient)
         {
             var ingredientAsJson = JsonSerializer.Serialize(ingredient);
@@ -63,6 +80,12 @@ namespace WebApp.Data.Implementation
             }
         }
 
+        /// <summary>
+        /// Sends a Delete request to the REST endpoint,
+        /// to remove a specific ingredient,
+        /// in JSON format.
+        /// </summary>
+        /// <param name="ingredient">Ingredient to delete.</param>
         public async Task RemoveIngredientAsync(Ingredient ingredient)
         {
             var request = new HttpRequestMessage
@@ -74,6 +97,12 @@ namespace WebApp.Data.Implementation
             await client.SendAsync(request);
         }
 
+        /// <summary>
+        /// Sends a Put request to the REST endpoint,
+        /// to update an existing ingredient, in JSON format.
+        /// </summary>
+        /// <param name="ingredient">Ingredient to update.</param>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task UpdateIngredientAsync(Ingredient ingredient)
         {
             // TODO

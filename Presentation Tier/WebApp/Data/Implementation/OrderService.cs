@@ -23,6 +23,13 @@ namespace WebApp.Data.Implementation
             };
             client = new HttpClient(clientHandler);
         }
+        
+        /// <summary>
+        /// Consumes REST endpoint to get order by
+        /// a specific id.
+        /// </summary>
+        /// <param name="orderId">Id of order to get.</param>
+        /// <returns>Order item.</returns>
         public async Task<Order> GetOrderAsync(int orderId)
         {
             var orderAsJson = await client.GetStringAsync($"{uri}/getorder?id={orderId}");
@@ -34,6 +41,13 @@ namespace WebApp.Data.Implementation
             return order;
         }
 
+        /// <summary>
+        /// Consumes REST endpoint to get order(s) by
+        /// a specific user.
+        /// </summary>
+        /// <param name="user">User item to get the order(s) by.</param>
+        /// <returns>List of orders.</returns>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task<IList<Order>> GetOrdersByUserAsync(User user)
         {
             HttpResponseMessage response = await client.GetAsync(uri+$"/GetUserOrders?email={user.Email}&password={user.Password}");
@@ -52,6 +66,12 @@ namespace WebApp.Data.Implementation
             return order;
         }
 
+        /// <summary>
+        /// Posts a new order to the REST endpoint,
+        /// in JSON format.
+        /// </summary>
+        /// <param name="order">Order to create.</param>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task CreateOrderAsync(Order order)
         {
             var orderAsJson = JsonSerializer.Serialize(order);
@@ -65,6 +85,11 @@ namespace WebApp.Data.Implementation
             }
         }
 
+        /// <summary>
+        /// Sends a Delete request to the REST endpoint,
+        /// to remove a specific order, in JSON format.
+        /// </summary>
+        /// <param name="order">Order to remove.</param>
         public async Task RemoveOrderAsync(Order order)
         {
             var request = new HttpRequestMessage
@@ -76,6 +101,12 @@ namespace WebApp.Data.Implementation
             await client.SendAsync(request);
         }
 
+        /// <summary>
+        /// Sends a Put request to the REST endpoint,
+        /// to update an existing order, in JSON format.
+        /// </summary>
+        /// <param name="order">Order to update.</param>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task UpdateOrderAsync(Order order)
         {
             var orderAsJson = JsonSerializer.Serialize(order);

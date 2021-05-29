@@ -23,6 +23,12 @@ namespace WebApp.Data.Implementation
             client = new HttpClient(clientHandler);
         }
 
+        /// <summary>
+        /// Consumes REST endpoint to return all the recipes,
+        /// in JSON format.
+        /// </summary>
+        /// <returns>List of recipes.</returns>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task<IList<Recipe>> GetAllRecipesAsync()
         {
             HttpResponseMessage response = await client.GetAsync(uri + "/getallrecipes");
@@ -40,6 +46,11 @@ namespace WebApp.Data.Implementation
             return recipes;
         }
 
+        /// <summary>
+        /// Consumes REST endpoint to get a specific recipe.
+        /// </summary>
+        /// <param name="recipeId">Id of recipe to get.</param>
+        /// <returns>Recipe item.</returns>
         public async Task<Recipe> GetRecipeAsync(int recipeId)
         {
             var adultAsJson = await client.GetStringAsync($"{uri}/getrecipe?id={recipeId}");
@@ -51,6 +62,12 @@ namespace WebApp.Data.Implementation
             return recipe;
         }
 
+        /// <summary>
+        /// Posts a new recipe to the REST endpoint,
+        /// in JSON format.
+        /// </summary>
+        /// <param name="recipe">Recipe to create.</param>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task CreateRecipeAsync(Recipe recipe)
         {
             var recipeAsJson = JsonSerializer.Serialize(recipe);
@@ -63,7 +80,12 @@ namespace WebApp.Data.Implementation
                 throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
             }
         }
-
+        
+        /// <summary>
+        /// Sends a Delete request to the REST endpoint,
+        /// to remove a specific recipe, in JSON format.
+        /// </summary>
+        /// <param name="recipe">Recipe to remove.</param>
         public async Task RemoveRecipeAsync(Recipe recipe)
         {
             var request = new HttpRequestMessage
@@ -75,6 +97,12 @@ namespace WebApp.Data.Implementation
             await client.SendAsync(request);
         }
 
+        /// <summary>
+        /// Sends a Put request to the REST endpoint,
+        /// to update an existing recipe, in JSON format.
+        /// </summary>
+        /// <param name="recipe">Recipe to update.</param>
+        /// <exception cref="Exception">Response phrase.</exception>
         public async Task UpdateRecipeAsync(Recipe recipe)
         {
             var request = new HttpRequestMessage
