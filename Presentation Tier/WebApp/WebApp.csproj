@@ -11,6 +11,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Blazored.SessionStorage" Version="2.1.0" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.7" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.5" />
       <PackageReference Include="MudBlazor" Version="5.0.9" />

@@ -4,16 +4,19 @@ var isAdmin;
 var timeout;
 
 async function start(){
-    console.log("connect");
-    connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-    await connection.start();
-    clearTimeout(timeout);
-    GetUpdates();
+    if(connection==null){
+        console.log("connect");
+        connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
+        await connection.start();
+        clearTimeout(timeout);
+        GetUpdates();
+        initialise();
+    }
 }
 
-async function GoOnlineJS(userId,isAdmin,name){
+async function GoOnlineJS(userId,isAdmin,name,connectionId){
     if(connection!=null){
-        connection.invoke("GoOnline", userId,isAdmin,name).catch(function (err) {
+        connection.invoke("GoOnline", userId,isAdmin,name,connectionId).catch(function (err) {
             return console.error(err.toString());
         });
     }
@@ -88,10 +91,10 @@ async function HelpNextUser(){
 }
 
 async function saveLocally(key,value){
-    localStorage.setItem(key, value);
+    sessionStorage.setItem(key, value);
 }
 async function getLocally(key){
-    return localStorage.getItem(key);
+    return sessionStorage.getItem(key);
 }
 async function initialise(){
     if(connection!=null){
@@ -104,7 +107,7 @@ async function initialise(){
 
         connection.on("Notify", function (message) {
             document.getElementById("notification").textContent=message;
-            console.log("notify");
+            console.log("notify "+message);
         });
         connection.on("SetConnection", function (message) {
             saveLocally("connectionC",message);
@@ -113,6 +116,11 @@ async function initialise(){
         connection.on("SetChatRoom", function (message) {
             saveLocally("chatRoom",message);
             console.log("room");
+        });
+        connection.on("ClearLocalKeys", function () {
+            saveLocally("startedChat",false);
+            /*document.getElementById("connectButton").innerText=;*/
+            console.log("clear keys");
         });
     }
 }

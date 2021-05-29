@@ -33,10 +33,14 @@ namespace WebApp.Data
         {
             Debug();
         }*/
-        public async Task GoOnline(int userId, bool isAdmin , string name)
+        public async Task GoOnline(int userId, bool isAdmin , string name,string connectionId)
         {
             await ChatService.ConnectToChat(userId, isAdmin, Context.ConnectionId, name);
-            await SendConnectionId(Context.ConnectionId);
+            if (!Context.ConnectionId.Equals(connectionId))
+            {
+                await NotifyClient(Context.ConnectionId, "ClearLocalKeys", null);
+                await SendConnectionId(Context.ConnectionId);
+            } 
             if(isAdmin)
             {
                 await SendChatRoom(Context.ConnectionId, "none");
@@ -47,7 +51,10 @@ namespace WebApp.Data
         public async Task ConnectUserHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId,name);
-            await AddUserToHub(Context.ConnectionId, room.Id);
+            if (!Context.ConnectionId.Equals(room.Id))
+            {
+                await AddUserToHub(Context.ConnectionId, room.Id);
+            }
             room.Customer.FullName = name;
             room.Customer.Status = 2;
             await SendConnectionId(Context.ConnectionId);
@@ -72,6 +79,9 @@ namespace WebApp.Data
                 {
                     await SendToGroup(current.Id,current.Customer.FullName, message);
                 }
+
+                await AddUserToHub(current.Customer.ConnectionId, current.Id);
+                await AddUserToHub(current.Admin.ConnectionId, current.Id);
 
             }
             Debug("SendMessage");
