@@ -155,9 +155,7 @@
         await LocalStorage.SetItemAsync("isAdmin", admin);
         ChatRoom fetched = await ChatService.GetRoom(currentUser.id, admin, connectionId, currentUser.FirstName);
         string roomJson = JsonSerializer.Serialize(fetched.Messages);
-        Console.WriteLine("fetched "+roomJson);
         messages = JsonSerializer.Deserialize<IList<Message>>(roomJson);
-        Console.WriteLine("deserealised "+JsonSerializer.Serialize(messages));
         StateHasChanged();
     }
 

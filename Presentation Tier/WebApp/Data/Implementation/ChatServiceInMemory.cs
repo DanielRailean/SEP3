@@ -151,21 +151,23 @@ namespace WebApp.Data.Implementation
                 return "You are connected but not yet helping users, press Connect, then help next user to start";
                 
             }
-            room = ChatRooms.FirstOrDefault(u => u.Customer.ConnectionId.Equals(connectionId));
-            if (room == null)
+            else
             {
-                return "You are online but not yet in a waiting room. Press connect to get in queue";
+                room = ChatRooms.FirstOrDefault(u => u.Customer.ConnectionId.Equals(connectionId));
+                if (room == null)
+                {
+                    return "You are online but not yet connected. Press connect to start";
+                }
+                if(room.Status==2)
+                {
+                    return "You are now talking to " + room.Admin.FullName;
+                }
+                return "You are number " + (ChatRooms.IndexOf(room)+1) + " in the queue";
             }
-            if(room.Status==2)
-            {
-                return "You are now talking to " + room.Admin.FullName;
-            }
-            return "You are number " + (ChatRooms.IndexOf(room)+1) + " in the queue";
         }
 
         public async Task<ChatUser> GetUser(string connectionId)
         {
-            Console.WriteLine("find: "+connectionId);
             ChatUser find = ChatRooms.FirstOrDefault(r => r.Customer.ConnectionId.Equals(connectionId))?.Customer;
             if(find!=null)
             {

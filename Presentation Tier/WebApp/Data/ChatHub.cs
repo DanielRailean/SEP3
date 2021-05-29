@@ -49,7 +49,6 @@ namespace WebApp.Data
         public async Task SendMessage(int userId,bool isAdmin,string message,string name)
         {
             var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId,name);
-            Console.WriteLine("current :"+JsonSerializer.Serialize(current));
             if(current!=null)
             {
                 var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=name};
@@ -94,11 +93,12 @@ namespace WebApp.Data
                 if (!ChatService.GetChatRooms().Result.Any()) continue;
                 var nextInQueue = await ChatService.NextInQueue(item.ConnectionId);
                 if (nextInQueue == null) continue;
-                await AddUserToHub(item.ConnectionId, nextInQueue.Id);
+                await AddUserToHub(Context.ConnectionId, nextInQueue.Id);
                 await AddUserToHub(nextInQueue.Customer.ConnectionId, nextInQueue.Id);
                 await ChatService.ChangeUserStatus(item.ConnectionId, 2);
                 nextInQueue.Customer.Status = 2;
                 nextInQueue.Status = 2;
+                nextInQueue.Admin.ConnectionId = Context.ConnectionId;
             }
             Debug("Match admin to user");
         }
@@ -126,13 +126,13 @@ namespace WebApp.Data
 
         private void Debug(string codePart)
         {
-            /*Console.WriteLine("start" +codePart);
+            Console.WriteLine("start" +codePart);
             Console.WriteLine();
             Console.WriteLine("ADMINS " + JsonSerializer.Serialize(ChatService.GetAdmins()));
             Console.WriteLine();
             Console.WriteLine("Rooms"+JsonSerializer.Serialize(ChatService.GetChatRooms()));
             Console.WriteLine();
-            Console.WriteLine("end "+codePart);*/
+            Console.WriteLine("end "+codePart);
         }
         
         /*public async Task NotifyServer(string message)

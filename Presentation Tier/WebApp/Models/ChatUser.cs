@@ -22,7 +22,12 @@
         public int SecurityLevel { get; set; }
         
         
-        // 1 - not in room 2- in room
+        // 1 - Connected, not in room
+        // 2- connected,in room
+        // 3 - disconnected - room exists
+        // 4 - connected not in admin list
+        // 5-disconnected , in admin list
+        // 6-connected- in admin list
         public int Status { get; set; }
         
         public string ConnectionId { get; set; }
