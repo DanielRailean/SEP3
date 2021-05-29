@@ -92,14 +92,19 @@ namespace WebApp.Data
         {
             await NotifyClient(connectionId, "SetChatRoom", chatRoomId);
         }
-        
-        public override async Task OnDisconnectedAsync(Exception exception)
+
+
+        public async Task Disconnect()
         {
- 
             await ChatService.DisconnectUser(Context.ConnectionId);
             Debug("Disconnect");
-            
         }
+        /*public override async Task OnDisconnectedAsync(Exception exception)
+        {
+ 
+            
+            
+        }*/
         
         public async Task Match()
         {

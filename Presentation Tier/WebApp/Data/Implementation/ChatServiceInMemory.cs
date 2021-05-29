@@ -71,7 +71,28 @@ namespace WebApp.Data.Implementation
 
         public async Task DisconnectUser(string connectionId)
         {
-            ChatRoom find = null;
+            //check if user wants to disconnect
+            if (IsUserOnline(connectionId))
+            { 
+                // if online - remove from list
+                ChatUser toRemove = OnlineUsers.First(u => u.ConnectionId.Equals(connectionId));
+
+                    OnlineUsers.Remove(toRemove);
+                    // if created a room before disconnecting - remove the room
+                    var find = ChatRooms.FirstOrDefault(r => r.Customer.Id.Equals(toRemove.Id));
+                    if (find != null)
+                    {
+                        ChatRooms.Remove(find);
+                    }
+            }
+            // else if admin wants to disconnect
+            else if (IsAdminOnline(connectionId))
+            {
+                // if online - remove from list
+                ChatUser toRemove = OnlineAdmins.First(u => u.ConnectionId.Equals(connectionId));
+                OnlineAdmins.Remove(toRemove);
+            }
+            /*ChatRoom find = null;
             try
             {
                 find = ChatRooms.First(r => r.Id == connectionId);
@@ -95,7 +116,7 @@ namespace WebApp.Data.Implementation
                 return;
             }
 
-            find.Customer.ConnectionId = "none";
+            find.Customer.ConnectionId = "none";*/
         }
 
         public Task StopChat(string connectionId)
@@ -167,7 +188,7 @@ namespace WebApp.Data.Implementation
                 room = ChatRooms.FirstOrDefault(u => u.Customer.ConnectionId.Equals(connectionId));
                 if (room == null)
                 {
-                    return "You are online but not yet connected. Press connect to start";
+                    return "Ask a question to start chatting";
                 }
                 if(room.Status==2)
                 {

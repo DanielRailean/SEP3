@@ -1,9 +1,10 @@
 "use strict";
-var connection;
+var connection = null;
 var isAdmin;
 var timeout;
 
 async function start(){
+    console.log("connect");
     connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
     await connection.start();
     clearTimeout(timeout);
@@ -51,6 +52,18 @@ async function GetUpdates(){
     timeout = setTimeout(GetUpdates, 1000);
 }
 
+async function DisconnectJS(){
+    console.log("null connection");
+    // do whatever you like here
+    if(connection!=null){
+        connection.invoke("Disconnect").catch(function (err) {
+            return console.error(err.toString());
+        });
+        console.log("disconnect");
+        clearTimeout(timeout);
+    }
+    
+}
 async function HelpNextUser(){
     connection.invoke("Match").catch(function (err) {
         return console.error(err.toString());
