@@ -11,7 +11,7 @@ namespace WebApp.Data
         Task<IList<ChatUser>> GetOnlineAdmins();
         Task<IList<ChatUser>> GetOnlineUsers();
         Task<IList<ChatRoom>> GetChatRooms();
-        Task<ChatRoom> GetConnection(long userId,bool isAdmin,string connectionId,string name);
+        Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId,string name);
         Task<IList<Message>> GetGroupMessages(string roomId);
         Task<ChatRoom> NextInQueue(string adminConnectionId);
         bool IsAdminOnline(string connectionId);

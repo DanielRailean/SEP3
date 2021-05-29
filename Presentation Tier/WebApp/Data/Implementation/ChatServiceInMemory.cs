@@ -41,7 +41,7 @@ namespace WebApp.Data.Implementation
             
         }
 
-        public async Task<ChatRoom> GetConnection(long userId,bool isAdmin,string connectionId,string name)
+        public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId,string name)
         {
             ChatRoom find = ChatRooms.FirstOrDefault(r => r.Customer.Id.Equals(userId));
             if(find!=null)
@@ -61,10 +61,8 @@ namespace WebApp.Data.Implementation
 
             ChatRoom created = new ChatRoom();
                 created.Id = connectionId;
-                created.Customer = new ChatUser(connectionId);
-                created.Customer.Status = 1;
-                created.Customer.Id = userId;
-                created.Customer.FullName = name;
+                ChatUser user = OnlineUsers.First(u => u.Id.Equals(userId));
+                created.Customer = user;
                 ChatRooms.Add(created);
                 return created;
 

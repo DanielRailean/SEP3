@@ -18,7 +18,7 @@ namespace WebApp.Data
         }
         public async Task ConnectAdminHub(int userId, string name)
         {
-            ChatRoom room = await ChatService.GetConnection(userId, true, Context.ConnectionId,name);
+            ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId,name);
             if(room!=null)
             {
                 if (!room.Id.Equals(Context.ConnectionId))
@@ -49,7 +49,7 @@ namespace WebApp.Data
 
         public async Task ConnectUserHub(int userId, string name)
         {
-            ChatRoom room = await ChatService.GetConnection(userId, false, Context.ConnectionId,name);
+            ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId,name);
             if (!room.Id.Equals(Context.ConnectionId))
             {
                 await AddUserToHub(Context.ConnectionId, room.Id);
@@ -64,7 +64,7 @@ namespace WebApp.Data
         
         public async Task SendMessage(int userId,bool isAdmin,string message,string name)
         {
-            var current = await ChatService.GetConnection(userId,isAdmin,Context.ConnectionId,name);
+            var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId,name);
             if(current!=null)
             {
                 var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=name};
@@ -105,14 +105,13 @@ namespace WebApp.Data
         {
             foreach (var item in await ChatService.GetOnlineAdmins())
             {
-                if (item.Status != 1) continue;
+                if (item.Status != 4) continue;
                 if (!ChatService.GetChatRooms().Result.Any()) continue;
                 var nextInQueue = await ChatService.NextInQueue(item.ConnectionId);
                 if (nextInQueue == null) continue;
                 await AddUserToHub(Context.ConnectionId, nextInQueue.Id);
                 await AddUserToHub(nextInQueue.Customer.ConnectionId, nextInQueue.Id);
-                await ChatService.ChangeUserStatus(item.ConnectionId, 2);
-                nextInQueue.Customer.Status = 2;
+                nextInQueue.Admin.Status = 5;
                 nextInQueue.Status = 2;
                 nextInQueue.Admin.ConnectionId = Context.ConnectionId;
             }
