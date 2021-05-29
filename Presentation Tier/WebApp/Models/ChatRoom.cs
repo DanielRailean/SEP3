@@ -8,7 +8,7 @@ namespace WebApp.Models
         {
             Admin = new ChatUser("none");
             Customer = new ChatUser("none");
-            RoomStatus = 1;
+            Status = 1;
             Messages = new List<Message>();
         }
 
@@ -17,6 +17,6 @@ namespace WebApp.Models
         public ChatUser Customer { get; set; }
         public IList<Message> Messages { get; set; }
         //1 = user waiting for the admin 2= admin joined the chat 
-        public int RoomStatus { get; set; }
+        public int Status { get; set; }
 }
 }

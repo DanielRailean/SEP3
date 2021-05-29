@@ -29,8 +29,18 @@
     else
     {
         <p>@room.Id</p>
-        <p>@room.RoomStatus</p>
-        <p>@JsonSerializer.Serialize(room.Messages)</p>
+        <p>@room.Status</p>
+    }
+    @if (messages != null)
+    {
+        foreach (var item in messages)
+        {
+            <p>@item.Body</p>
+        }
+    }
+    else
+    {
+        <p>No previous messages</p>
     }
     <div class="row">
         <p id="notification">@notification</p>
@@ -73,6 +83,7 @@
     private string ButtonClass = "btn btn-primary";
     private bool isChatting = false;
     private ChatRoom room;
+    IList<Message> messages;
 
     public async Task StartTimerAsync()
     {
@@ -130,7 +141,7 @@
 
     private async Task SendMessage()
     {
-        await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message);
+        await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,currentUser.FirstName+" "+currentUser.LastName);
     }
 
     private async Task HelpNext()
@@ -141,7 +152,12 @@
     private async Task FetchChat(bool admin)
     {
         connectionId = await LocalStorage.GetItemAsync<string>(connectionCoockie);
-        room= await ChatService.GetRoom(currentUser.id,admin,connectionId);
+        await LocalStorage.SetItemAsync("isAdmin", admin);
+        ChatRoom fetched = await ChatService.GetRoom(currentUser.id, admin, connectionId, currentUser.FirstName);
+        string roomJson = JsonSerializer.Serialize(fetched.Messages);
+        Console.WriteLine("fetched "+roomJson);
+        messages = JsonSerializer.Deserialize<IList<Message>>(roomJson);
+        Console.WriteLine("deserealised "+JsonSerializer.Serialize(messages));
         StateHasChanged();
     }
 

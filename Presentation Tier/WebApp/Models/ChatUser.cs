@@ -7,10 +7,10 @@
             ConnectionId = connectionId;
         }
 
-        public ChatUser(long id, string firstName, int securityLevel, int status, string connectionId, string roomId)
+        public ChatUser(long id, string fullName, int securityLevel, int status, string connectionId, string roomId)
         {
             Id = id;
-            FirstName = firstName;
+            FullName = fullName;
             SecurityLevel = securityLevel;
             Status = status;
             ConnectionId = connectionId;
@@ -18,7 +18,7 @@
         }
 
         public long Id { get; set; }
-        public string FirstName { get; set; }
+        public string FullName { get; set; }
         public int SecurityLevel { get; set; }
         
         
