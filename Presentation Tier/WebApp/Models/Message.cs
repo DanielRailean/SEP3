@@ -6,6 +6,7 @@ namespace WebApp.Models
     {
         public string Body { get; set; }
         public bool IsAdminMessage { get; set; }
-        public DateTime timestamp { get; set; }
+        public string Sender { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace WebApp.Data.Implementation
             
         }
 
-        public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId)
+        public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId,string name)
         {
             ChatRoom find = ChatRooms.FirstOrDefault(r => r.Customer.Id.Equals(userId));
             if(find!=null)
@@ -52,7 +52,9 @@ namespace WebApp.Data.Implementation
                 ChatUser admin = new ChatUser(connectionId);
                 admin.Status = 1;
                 admin.Id = userId;
+                admin.FullName = name;
                 Admins.Add(admin);
+                return null;
                 return await NextInQueue(connectionId);
             }
             else
@@ -62,6 +64,7 @@ namespace WebApp.Data.Implementation
                 created.Customer = new ChatUser(connectionId);
                 created.Customer.Status = 1;
                 created.Customer.Id = userId;
+                created.Customer.FullName = name;
                 ChatRooms.Add(created);
                 return created;
             }
@@ -69,7 +72,7 @@ namespace WebApp.Data.Implementation
             return null;
         }
 
-        public async Task RemoveUser(string connectionId)
+        public async Task DisconnectUser(string connectionId)
         {
             ChatRoom find = null;
             try
@@ -83,7 +86,7 @@ namespace WebApp.Data.Implementation
                 ChatRoom room = ChatRooms.FirstOrDefault(r => r.Admin.ConnectionId.Equals(connectionId));
                 if(room!=null)
                 {
-                    room.RoomStatus = 1;
+                    room.Status = 1;
                     room.Admin = new ChatUser("none");
                 }
 
@@ -97,6 +100,12 @@ namespace WebApp.Data.Implementation
 
             find.Customer.ConnectionId = "none";
         }
+
+        public Task StopChat(string connectionId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task ChangeUserStatus(string connectionId, int status)
         {
             ChatUser user = await GetUser(connectionId);
@@ -106,7 +115,7 @@ namespace WebApp.Data.Implementation
             }
         }
 
-        public async Task<bool> IsAdmin(string connectionId)
+        public bool AdminConnected(string connectionId)
         {
             return Admins.FirstOrDefault(u => u.ConnectionId.Equals(connectionId)) != null;
         }
@@ -118,15 +127,40 @@ namespace WebApp.Data.Implementation
         }
         
 
-        public async Task<string> GetUpdates(string connectionId)
+        public async Task<string> GetUpdates(string connectionId,bool isAdmin)
         {
-            var room = ChatRooms.FirstOrDefault(u => u.Customer.ConnectionId.Equals(connectionId));
-            if(room!=null)
+            ChatRoom room;
+            if (isAdmin)
             {
-                return "You are number " +(ChatRooms.Count-ChatRooms.IndexOf(room))+" in the queue";
-            }
+                if (AdminConnected(connectionId))
+                {
+                    if(ChatRooms.Any())
+                    { 
+                        room = ChatRooms.FirstOrDefault(u => u.Admin.ConnectionId.Equals(connectionId));
+                        if (room==null)
+                        {
+                            return "There are " + ChatRooms.Count + " users left In queue";
+                        }
 
-            return "You are not connected to a chat room";
+                        return "You are now talking to " + room.Customer.FullName;
+                    }
+
+                    return "There are no more users to help";
+                    
+                }
+                return "You are connected but not yet helping users, press Connect, then help next user to start";
+                
+            }
+            room = ChatRooms.FirstOrDefault(u => u.Customer.ConnectionId.Equals(connectionId));
+            if (room == null)
+            {
+                return "You are online but not yet in a waiting room. Press connect to get in queue";
+            }
+            if(room.Status==2)
+            {
+                return "You are now talking to " + room.Admin.FullName;
+            }
+            return "You are number " + (ChatRooms.IndexOf(room)+1) + " in the queue";
         }
 
         public async Task<ChatUser> GetUser(string connectionId)
@@ -148,7 +182,7 @@ namespace WebApp.Data.Implementation
 
         public async Task<ChatRoom> NextInQueue(string adminConnectionId)
         {
-            ChatRoom toRemove = ChatRooms.FirstOrDefault(u => u.RoomStatus == 1);
+            ChatRoom toRemove = ChatRooms.FirstOrDefault(u => u.Status == 1);
             if(toRemove!=null)
             {
                 ChatUser admin = Admins.FirstOrDefault(u => u.ConnectionId.Equals(adminConnectionId));

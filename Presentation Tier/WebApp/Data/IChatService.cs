@@ -10,11 +10,11 @@ namespace WebApp.Data
         //Read
         Task<IList<ChatUser>> GetAdmins();
         Task<IList<ChatRoom>> GetChatRooms();
-        Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId);
+        Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId,string name);
         Task<IList<Message>> GetGroupMessages(string roomId);
         Task<ChatRoom> NextInQueue(string adminConnectionId);
-        Task<bool> IsAdmin(string connectionId);
-        Task<string> GetUpdates(string connectionId);
+        bool AdminConnected(string connectionId);
+        Task<string> GetUpdates(string connectionId,bool isAdmin);
         Task<ChatUser> GetUser(string connectionId);
         
         //Create
@@ -25,7 +25,8 @@ namespace WebApp.Data
         Task ChangeUserStatus(string connectionId, int status);
         
         //Delete
-        Task RemoveUser(string connectionId);
-        
+        Task DisconnectUser(string connectionId);
+        Task StopChat(string connectionId);
+
     }
 }
