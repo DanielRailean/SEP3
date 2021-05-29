@@ -94,9 +94,9 @@ namespace WebApp.Data.Implementation
         /// </summary>
         public async Task Clear()
         {
+            await localStorage.ClearAsync();
             addedRecipes = new List<Recipe>();
             basketItems = new List<BasketItem>();
-            await Save();
         }
 
         /// <summary>
