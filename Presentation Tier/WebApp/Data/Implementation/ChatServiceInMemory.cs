@@ -226,7 +226,7 @@ namespace WebApp.Data.Implementation
                 admin.Id = userId;
                 admin.SecurityLevel = 2;
                 admin.FullName = name;
-                admin.Status = 1;
+                admin.Status = 4;
                 if(!IsAdminConnected(userId))
                 {
                     OnlineAdmins.Add(admin);
