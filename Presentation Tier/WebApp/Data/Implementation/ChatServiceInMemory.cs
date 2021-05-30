@@ -9,7 +9,7 @@ namespace WebApp.Data.Implementation
     public class ChatServiceInMemory : IChatService
     {
         private IList<ChatUser> OnlineAdmins;
-        private IList<ChatUser> OnlineUsers;
+        private IList<ChatUser> UsersFromRooms;
         private IList<ChatRoom> ChatRooms;
         private int maxUsers;
         private int maxAdmins;
@@ -17,7 +17,7 @@ namespace WebApp.Data.Implementation
         public ChatServiceInMemory()
         {
             OnlineAdmins = new List<ChatUser>();
-            OnlineUsers = new List<ChatUser>();
+            UsersFromRooms = new List<ChatUser>();
             ChatRooms = new List<ChatRoom>();
         }
         
@@ -46,7 +46,7 @@ namespace WebApp.Data.Implementation
                 user.FullName = name;
                 user.Status = 1;
                 user.IsAdmin = false;
-                OnlineUsers.Add(user);
+                UsersFromRooms.Add(user);
                 /*if(!IsUserConnected(userId))
                 {
                 }*/
@@ -55,7 +55,7 @@ namespace WebApp.Data.Implementation
         }
         public async Task<ChatUser> GetUser(string connectionId)
         {
-            ChatUser find = OnlineUsers.FirstOrDefault(r => r.ConnectionId.Equals(connectionId));
+            ChatUser find = UsersFromRooms.FirstOrDefault(r => r.ConnectionId.Equals(connectionId));
             if(find!=null)
             {
                 return find;
@@ -68,6 +68,23 @@ namespace WebApp.Data.Implementation
             
             return null;
         }
+
+        public async Task<ChatUser> GetUserById(int userId)
+        {
+            ChatUser find = UsersFromRooms.FirstOrDefault(r => r.Id.Equals(userId));
+            if(find!=null)
+            {
+                return find;
+            } 
+            find = OnlineAdmins.FirstOrDefault(r => r.Id.Equals(userId));
+            if(find!=null)
+            {
+                return find;
+            }
+            
+            return null;
+        }
+
         public async Task<ChatRoom> AskQuestion(string question,string connectionId)
         {
             ChatUser existingUser = await GetUser(connectionId);
@@ -132,6 +149,53 @@ namespace WebApp.Data.Implementation
 
             return toGetIn;
         }
+        public async Task<ChatRoom> ExitRoom(string userConnectionId)
+        {
+            ChatUser currentUser = await GetUser(userConnectionId);
+            ChatRoom toExit = await GetRoom(currentUser.CurrentRoom);
+            if (currentUser.IsAdmin)
+            {
+                toExit.Admin = new ChatUser("none");
+                currentUser.Status = 4;
+                currentUser.CurrentRoom = "";
+            }
+            else
+            {
+                toExit.Customer = new ChatUser("none");
+                currentUser.Status = 1;
+            }
+            return toExit;
+        }
+
+        public async Task<ChatRoom> ReconnectToChat(int userId, string userConnectionId)
+        {
+            ChatUser beforeDisconnect = await GetUserById(userId);
+            Console.WriteLine(beforeDisconnect.Id);
+            beforeDisconnect.ConnectionId = userConnectionId;
+            ChatRoom roomBeforeDisconnect = await GetRoom(beforeDisconnect.CurrentRoom);
+            if (roomBeforeDisconnect != null)
+            {
+                if (beforeDisconnect.IsAdmin)
+                {
+                    roomBeforeDisconnect.Admin.Status = 5;
+                }
+                else
+                {
+                    roomBeforeDisconnect.Customer.Status = 2;
+                }
+            }
+            return roomBeforeDisconnect;
+        }
+
+        public async Task<ChatRoom> NextInQueue(string adminConnectionId)
+        {
+            ChatRoom nextRoom = ChatRooms.FirstOrDefault(u => u.Status == 1);
+            ChatUser adminRequestingNextUser = await GetUser(adminConnectionId);
+            adminRequestingNextUser.Status = 5;
+            adminRequestingNextUser.CurrentRoom = nextRoom.Id;
+            nextRoom.Admin = adminRequestingNextUser;
+            return nextRoom;
+        }
         public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId)
         {
             // find room where customer id is the same
@@ -158,7 +222,7 @@ namespace WebApp.Data.Implementation
             // else create a new room and add the online user there
             ChatRoom created = new ChatRoom();
                 created.Id = connectionId;
-                ChatUser user = OnlineUsers.FirstOrDefault(u => u.Id.Equals(userId));
+                ChatUser user = UsersFromRooms.FirstOrDefault(u => u.Id.Equals(userId));
                 if (user != null)
                 {
                     created.Customer = user;
@@ -167,7 +231,7 @@ namespace WebApp.Data.Implementation
                 else
                 {
                     await ConnectToChat(userId, isAdmin, connectionId, "Please reconnect");
-                    ChatUser newUser = OnlineUsers.First(u => u.Id.Equals(userId));
+                    ChatUser newUser = UsersFromRooms.First(u => u.Id.Equals(userId));
                     created.Customer = newUser;
                     ChatRooms.Add(created);
 
@@ -182,9 +246,37 @@ namespace WebApp.Data.Implementation
             return find;
         }
 
-        public async Task DisconnectUser(long userId)
+        public async Task<ChatRoom> DisconnectUser(string userConnectionId)
         {
-            //check if user wants to disconnect
+            ChatUser userToDisconnect = await GetUser(userConnectionId);
+            ChatRoom roomToDisconnectFrom = await GetRoom(userToDisconnect.CurrentRoom);
+            if (roomToDisconnectFrom != null)
+            {
+                if (userToDisconnect.IsAdmin)
+                {
+                    roomToDisconnectFrom.Admin.ConnectionId = "";
+                    roomToDisconnectFrom.Admin.Status = 6;
+                }
+                else
+                {
+                    roomToDisconnectFrom.Customer.ConnectionId = "";
+                    roomToDisconnectFrom.Customer.Status = 3;
+                }
+            }
+            else
+            {
+                if (userToDisconnect.IsAdmin)
+                {
+                    OnlineAdmins.Remove(userToDisconnect);
+                }
+                else
+                {
+                    UsersFromRooms.Remove(userToDisconnect);
+                }
+            }
+
+            return roomToDisconnectFrom;
+            /*//check if user wants to disconnect
             if (IsUserConnected(userId))
             { 
                 // if online - remove from list
@@ -212,7 +304,7 @@ namespace WebApp.Data.Implementation
                     find.Admin = new ChatUser("none");
                     find.Status = 1;
                 }
-            }
+            }*/
             /*ChatRoom find = null;
             try
             {
@@ -264,13 +356,13 @@ namespace WebApp.Data.Implementation
         }
         public bool IsUserOnline(string connectionId)
         {
-            return OnlineUsers.FirstOrDefault(u => u.ConnectionId.Equals(connectionId)) != null;
+            return UsersFromRooms.FirstOrDefault(u => u.ConnectionId.Equals(connectionId)) != null;
         }
 
 
         public async Task<IList<ChatUser>> GetOnlineUsers()
         {
-            return OnlineUsers;
+            return UsersFromRooms;
         }
 
         public async Task<IList<ChatRoom>> GetChatRooms()
@@ -359,23 +451,14 @@ namespace WebApp.Data.Implementation
 
         public bool IsUserConnected(long userId)
         {
-            return OnlineUsers.FirstOrDefault(u => u.Id==userId) != null;
+            return UsersFromRooms.FirstOrDefault(u => u.Id==userId) != null;
         }
 
         public bool IsAdminConnected(long userId)
         {
             return OnlineAdmins.FirstOrDefault(u => u.Id==userId) != null;
         }
-        public async Task<ChatRoom> NextInQueue(string adminConnectionId)
-        {
-            ChatRoom toRemove = ChatRooms.FirstOrDefault(u => u.Status == 1);
-            if(toRemove!=null)
-            {
-                ChatUser admin = OnlineAdmins.FirstOrDefault(u => u.ConnectionId.Equals(adminConnectionId));
-                toRemove.Admin = admin;
-            }
-            return toRemove;
-        }
+        
         
 
         public async Task AddMessage(Message message, string roomId)

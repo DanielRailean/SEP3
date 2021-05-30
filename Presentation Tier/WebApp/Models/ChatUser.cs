@@ -37,11 +37,13 @@
         
         /// <summary>
         //Only user states
+        // 0 - default user do not exist
         // 1 - online, in user list
         // 2 - online, in room
-        // 3 - online, left page - room exists // NO WAY TO TRACK -> solution disposable
+        // 3 - offline, left page - room exists // NO WAY TO TRACK -> solution disposable
         
         //Only Admin states
+        // 0 - admin do not exist
         // 4 - online  in admin list
         // 5-  online, in room
         // 6- connected , left chat page

@@ -43,6 +43,14 @@ function CloseChatRoomJS(){
         
     }
 }
+function ExitRoomJS(){
+    if(connection!=null){
+        connection.invoke("ExitRoom").catch(function (err) {
+            return console.error(err.toString());
+        });
+        
+    }
+}
 
 async function ConnectUser(userId,username){
     if(connection!=null){
@@ -70,9 +78,9 @@ async function SendMessageJS(message){
     }
 }
 
-async function ReconnectJS(userId,isAdmin,name){
+async function ReconnectToChatJS(userId){
     if(connection!=null){
-        connection.invoke("Reconnect", userId,isAdmin).catch(function (err) {
+        connection.invoke("ReconnectToChat",userId).catch(function (err) {
             return console.error(err.toString());
         });
         console.log("reconnect");
@@ -83,7 +91,7 @@ async function DisconnectJS(userId){
     console.log("null connection");
     // do whatever you like here
     if(connection!=null){
-        connection.invoke("Disconnect",userId).catch(function (err) {
+        connection.invoke("Disconnect").catch(function (err) {
             return console.error(err.toString());
         });
         document.getElementById("messagesList").innerHTML="";
@@ -91,9 +99,9 @@ async function DisconnectJS(userId){
     }
 }
 
-async function HelpNextUser(){
+async function HelpNextUserJS(){
     if(connection!=null){
-        connection.invoke("Match").catch(function (err) {
+        connection.invoke("HelpNextUser").catch(function (err) {
             return console.error(err.toString());
         });
         console.log("pressod on help");

@@ -19,6 +19,7 @@ namespace WebApp.Data
         bool IsUserOnline(string connectionId);
         Task<string> GetUpdates(long userId,bool isAdmin);
         Task<ChatUser> GetUser(string connectionId);
+        Task<ChatUser> GetUserById(int userId);
         bool IsUserConnected(long userId);
         bool IsAdminConnected(long userId);
         Task<ChatRoom> AskQuestion(string question,string connectionId);
@@ -34,9 +35,11 @@ namespace WebApp.Data
         Task ChangeUserStatus(string connectionId, int status);
         Task ChangeUserRoom(string userConnectionId, string roomId);
         Task<ChatRoom> ConnectToRoom(string userConnectionId, string roomId);
+        Task<ChatRoom> ExitRoom(string userConnectionId);
+        Task<ChatRoom> ReconnectToChat(int userId,string userConnectionId);
         
         //Delete
-        Task DisconnectUser(long userId);
+        Task<ChatRoom> DisconnectUser(string userConnectionId);
         Task StopChat(string connectionId);
         Task RemoveRoom(string roomId);
 

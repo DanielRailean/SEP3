@@ -20,6 +20,10 @@ namespace WebApp.Data
         {
             await Groups.AddToGroupAsync(userConnection, groupName);
         }
+        public async Task RemoveUserFromHub(string userConnection, string groupName)
+        {
+            await Groups.RemoveFromGroupAsync(userConnection, groupName);
+        }
         public async Task ConnectAdminHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId);
@@ -71,7 +75,44 @@ namespace WebApp.Data
         {
             ChatUser currentUser = await ChatService.GetUser(Context.ConnectionId);
             await ChatService.RemoveRoom(currentUser.CurrentRoom);
-            Debug("connect to room");
+            Debug("close room");
+        }
+        public async Task ExitRoom()
+        {
+            ChatRoom toExit = await ChatService.ExitRoom(Context.ConnectionId);
+            await RemoveUserFromHub(Context.ConnectionId, toExit.Id);
+            Debug("exit room");
+        }
+        public async Task ReconnectToChat(int userId)
+        {
+            ChatRoom toReconnectTo = await ChatService.ReconnectToChat(userId,Context.ConnectionId);
+            if (toReconnectTo != null)
+            {
+                await AddUserToHub(Context.ConnectionId, toReconnectTo.Id);
+                await SendToGroup(toReconnectTo.Id,"admin", "connected");
+            }
+            Debug("reconnect room");
+
+        }
+        public async Task HelpNextUser()
+        {
+            ChatRoom nextRoom = await ChatService.NextInQueue(Context.ConnectionId);
+            await AddUserToHub(Context.ConnectionId, nextRoom.Id);
+            await SendToGroup(nextRoom.Id,"admin", "connected");
+            Debug("next room");
+            /*foreach (var item in await ChatService.GetOnlineAdmins())
+            {
+                if (item.Status != 4) continue;
+                if (!ChatService.GetChatRooms().Result.Any()) continue;
+                var nextInQueue = await ChatService.NextInQueue(item.ConnectionId);
+                if (nextInQueue == null) continue;
+                await AddUserToHub(Context.ConnectionId, nextInQueue.Id);
+                await AddUserToHub(nextInQueue.Customer.ConnectionId, nextInQueue.Id);
+                nextInQueue.Admin.Status = 5;
+                nextInQueue.Status = 2;
+                nextInQueue.Admin.ConnectionId = Context.ConnectionId;
+            }
+            Debug("Match admin to user");*/
         }
         public async Task ConnectUserHub(int userId, string name)
         {
@@ -144,9 +185,13 @@ namespace WebApp.Data
         }
 
 
-        public async Task Disconnect(long userId)
+        public async Task Disconnect()
         {
-            await ChatService.DisconnectUser(userId);
+            ChatRoom disconnectFrom = await ChatService.DisconnectUser(Context.ConnectionId);
+            if (disconnectFrom != null)
+            {
+                await RemoveUserFromHub(Context.ConnectionId, disconnectFrom.Id);
+            }
             Debug("Disconnect");
         }
         /*public override async Task OnDisconnectedAsync(Exception exception)
@@ -156,22 +201,7 @@ namespace WebApp.Data
             
         }*/
         
-        public async Task Match()
-        {
-            foreach (var item in await ChatService.GetOnlineAdmins())
-            {
-                if (item.Status != 4) continue;
-                if (!ChatService.GetChatRooms().Result.Any()) continue;
-                var nextInQueue = await ChatService.NextInQueue(item.ConnectionId);
-                if (nextInQueue == null) continue;
-                await AddUserToHub(Context.ConnectionId, nextInQueue.Id);
-                await AddUserToHub(nextInQueue.Customer.ConnectionId, nextInQueue.Id);
-                nextInQueue.Admin.Status = 5;
-                nextInQueue.Status = 2;
-                nextInQueue.Admin.ConnectionId = Context.ConnectionId;
-            }
-            Debug("Match admin to user");
-        }
+        
 
         public async Task GetUpdates(long userId,bool isAdmin)
         {
