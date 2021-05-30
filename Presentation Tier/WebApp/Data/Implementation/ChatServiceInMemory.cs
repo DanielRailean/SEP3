@@ -69,7 +69,18 @@ namespace WebApp.Data.Implementation
             return null;
         }
 
-        public async Task<ChatUser> GetUserById(int userId)
+        public async Task<int> GetUserStatus(long userId)
+        {
+            ChatUser checkStatusUser = await GetUserById(userId);
+            if (checkStatusUser != null)
+            {
+                return checkStatusUser.Status;
+            }
+
+            return 0;
+        }
+
+        public async Task<ChatUser> GetUserById(long userId)
         {
             ChatUser find = UsersFromRooms.FirstOrDefault(r => r.Id.Equals(userId));
             if(find!=null)

@@ -20,70 +20,112 @@
 
 <h3>Chat</h3>
 <AuthorizeView Policy="Admin">
-    @if (chatRooms != null)
+    @if (displayRooms)
     {
-        <table class="table">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">UserName</th>
-                <th scope="col">AdminName</th>
-                <th scope="col">Problem</th>
-                <th scope="col">Status</th>
-                <th scope="col">RoomId</th>
-                <th scope="col">Connect</th>
-                <th scope="col">Answered</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var chatRoom in chatRooms)
-            {
+        @if (chatRooms != null)
+        {
+            <table class="table">
+                <thead class="thead-dark">
                 <tr>
-                    <th scope="row">@chatRooms.IndexOf(chatRoom)</th>
-                    <td>@chatRoom.Customer.FullName</td>
-                    <td>@chatRoom.Admin.FullName</td>
-                    <td>@chatRoom.Question</td>
-                    <td>@chatRoom.Status</td>
-                    <td>@chatRoom.Id</td>
-                    <td>
-                        <button type="button" class="btn btn-success" @onclick="async () => await ConnectToRoom(chatRoom.Id)">Connect</button>
-                    </td>
-                    @if (chatRoom.Messages.Any())
-                    {
-                        <td>@chatRoom.Messages[^1].IsAdminMessage</td>
-                    }
+                    <th scope="col">#</th>
+                    <th scope="col">UserName</th>
+                    <th scope="col">AdminName</th>
+                    <th scope="col">Problem</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">RoomId</th>
+                    <th scope="col">Connect</th>
+                    <th scope="col">Answered</th>
                 </tr>
-            }
-            </tbody>
+                </thead>
+                <tbody>
+                @foreach (var chatRoom in chatRooms)
+                {
+                    <tr>
+                        <th scope="row">@chatRooms.IndexOf(chatRoom)</th>
+                        <td>@chatRoom.Customer.FullName</td>
+                        <td>@chatRoom.Admin.FullName</td>
+                        <td>@chatRoom.Question</td>
+                        <td>@chatRoom.Status</td>
+                        <td>@chatRoom.Id</td>
+                        <td>
+                            <button type="button" class="btn btn-success" @onclick="async () => await ConnectToRoom(chatRoom.Id)">Connect</button>
+                        </td>
+                        @if (chatRoom.Messages.Any())
+                        {
+                            <td>@chatRoom.Messages[^1].IsAdminMessage</td>
+                        }
+                    </tr>
+                }
+                </tbody>
 
-        </table>
+            </table>
+        }
+        else
+        {
+            <p>No chat rooms</p>
+        }
     }
-    else
+    @if (displayHelpNext)
     {
-        <p>No chat rooms</p>
+        <button @onclick="async () => await HelpNextUser()" type="button" class="btn btn-primary" display="none">Help next user</button>
+
     }
-    <button @onclick="async () => await HelpNextUser()" type="button" class="btn btn-primary" display="none">Help next user</button>
-    <button @onclick="async () => await FetchChatRooms()" type="button" class="btn btn-success" display="none">Refresh</button>
-    <button @onclick="async () => await ExitRoom()" type="button" class="btn btn-warning" display="none">ExitRoom</button>
+    @if (displayRefresh)
+    {
+        <button @onclick="async () => await FetchChatRooms()" type="button" class="btn btn-success" display="none">Refresh</button>
+
+    }
+    @if (displayExitRoom)
+    {
+        <button @onclick="async () => await ExitRoom()" type="button" class="btn btn-warning" display="none">ExitRoom</button>
+
+    }
+    
 
 </AuthorizeView>
 <h4>Status: @notification</h4>
 <div class="row">
-    <button type="button" class="btn btn-success" @onclick="async () => await ConnectToChat()">Connect to chat</button>
-    <button type="button" class="btn btn-secondary" @onclick="async () => await ReconnectToChat()">Reconnect to chat</button>
-    <button type="button" class="btn btn-warning" @onclick="async () => await Disconnect()">Disconnect</button>
-    <button type="button" class="btn btn-warning" @onclick="async () => await AskQuestion()">Ask question</button>
-    <button type="button" class="btn btn-danger" @onclick="async () => await CloseChatRoom()">Close chat room</button>
+    @if (displayConnect)
+    {
+        <button type="button" class="btn btn-success" @onclick="async () => await ConnectToChat()">Connect to chat</button>
 
+    }
+    @if (displayReconnect)
+    {
+        <button type="button" class="btn btn-secondary" @onclick="async () => await ReconnectToChat()">Reconnect to chat</button>
+
+    }
+    @if (displayDisconnect)
+    {
+        <button type="button" class="btn btn-warning" @onclick="async () => await Disconnect()">Disconnect</button>
+
+    }
+    @if (displayAskQuestion)
+    {
+        <button type="button" class="btn btn-warning" @onclick="async () => await AskQuestion()">Ask question</button>
+
+    }
+    @if (displayCloseRoom)
+    {
+        <button type="button" class="btn btn-danger" @onclick="async () => await CloseChatRoom()">Close chat room</button>
+
+    }
 </div>
 <div class="row">
-    <textarea class="form-control" aria-label="Message"  @bind="message"></textarea>
-    <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">Send Message</button>
-</div>
-<h3>Messages:</h3>
+    @if (displayInputField)
+        {
+            <textarea class="form-control" aria-label="Message"  @bind="message"></textarea>
+        }
+    @if (displaySendMessage)
+    {
+        <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">Send Message</button>
+
+    }
+    </div>
 <ul class="list-group" id="messagesList">
     @if (messages != null)
     {
+        <h3>Messages:</h3>
         foreach (var item in messages)
         {
             <li class="list-group-item">@item.Body</li>
@@ -97,7 +139,8 @@
     //used for repeatedly updating the user status
     // public int RecursiveUpdate = 1;
     //used to keep track number of this page updates
-    public int update;
+    // public int update;
+
     //uset to store the current connected user
     User currentUser;
     // private string connectionCoockie = "connectionC";
@@ -110,31 +153,206 @@
     // private ChatRoom room;
     IList<Message> messages = null;
     IList<ChatRoom> chatRooms = null;
+    private int userStatus;
+    private bool displayHelpNext;
+    private bool displayRefresh;
+    private bool displayExitRoom;
+    private bool displayConnect;
+    private bool displayReconnect;
+    private bool displayDisconnect;
+    private bool displayAskQuestion;
+    private bool displayCloseRoom;
+    private bool displaySendMessage;
+    private bool displayInputField;
+    private bool displayRooms;
+    private int updateStatusDelay =1 ; // in 100 msseconds => 10 = 1 second = 1000ms
     // private bool started;
     // private bool disposed;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
+        await JSRuntime.InvokeVoidAsync("EstablishConnection");
+        Console.WriteLine("initialised  user status" + userStatus);
+    /*if (currentUser.SecurityLevel == 2)
+        {
+            chatRooms = await ChatService.GetChatRooms();
+        }*/
+    /*GetUpdates();
+    // started = await localStorage.GetItemAsync<bool>("startedChat");
+        if (currentUser.SecurityLevel == 2 && !started)
+        {
+            ButtonValue = "Send message";
+            chatRooms = await ChatService.GetChatRooms();
+            if (chatRooms != null)
+            {
+                Console.WriteLine("got rooms");
+                Console.WriteLine(JsonSerializer.Serialize(chatRooms));
+            }
+            StateHasChanged();
+        }
+        else
+        {
+            ButtonValue = "Ask question";
+        }
+        if (started)
+        {
+            await JSRuntime.InvokeVoidAsync("ReconnectJS", currentUser.id, currentUser.SecurityLevel == 2);
+            await ConnectToChat();
+            CountDownRetry();
+        }
+        StateHasChanged();*/
+        await UpdateUserStatus();
+    }
 
     public async Task ReconnectToChat()
     {
         await JSRuntime.InvokeVoidAsync("ReconnectToChatJS", currentUser.id);
         Console.WriteLine("reconnect to chat");
+        await UpdateUserStatus();
+    }
+
+    public async Task UpdateUserStatus()
+    {
+        while (updateStatusDelay > 0)
+        {
+            updateStatusDelay--;
+            StateHasChanged();
+            await Task.Delay(100);
+        }
+        // await UpdateUserStatus();
+        userStatus = await ChatService.GetUserStatus(currentUser.id);
+        Console.WriteLine("updated status: " + userStatus);
+        await UpdateUI();
+        updateStatusDelay = 1;
+    }
+
+    
+    /*
+    displayHelpNext =
+    displayRefresh =
+    displayExitRoom =
+    displayReconnect =
+    displayDisconnect =
+    displayAskQuestion =
+    displayCloseRoom =
+    displayInputField =
+    displaySendMessage = 
+    displayConnect =
+    displayRooms =
+    */
+    
+    public async Task UpdateUI()
+    {
+        
+        if (userStatus == 0)
+        {
+            displayHelpNext =
+                    displayRefresh =
+                        displayExitRoom =
+                                displayReconnect =
+                                    displayDisconnect =
+                                        displayAskQuestion =
+                                            displayCloseRoom =
+                                                displayInputField =
+                                                    displaySendMessage = false;
+            displayConnect = true;
+
+        }
+        else if (userStatus == 1)
+        {
+            displayAskQuestion = displayInputField =displayDisconnect= true;
+            displayHelpNext =
+                displayRefresh =
+                    displayExitRoom =
+                        displayReconnect =
+                            displayDisconnect =
+                                displayCloseRoom =
+                                    displaySendMessage =
+                                        displayConnect = false;
+        }
+        else if (userStatus == 2)
+        {
+            displaySendMessage = displayInputField =displayDisconnect= displayCloseRoom = true;
+            displayHelpNext =
+                displayRefresh =
+                    displayExitRoom =
+                        displayReconnect =
+                            displayConnect = 
+                                displayAskQuestion = false;
+        }
+        else if (userStatus == 3)
+        {
+            displayReconnect = true;
+            displayHelpNext =
+                displayRefresh =
+                    displayExitRoom =
+                        displayDisconnect =
+                                displayAskQuestion =
+                                    displayCloseRoom =
+                                        displayInputField =
+                                            displaySendMessage =
+                                                displayConnect = false;
+        }
+        else if (userStatus == 4)
+        {
+            displayRooms = displayHelpNext = displayDisconnect = displayRefresh = true;
+            displayExitRoom =
+                    displayReconnect =
+                        displayAskQuestion =
+                            displayCloseRoom =
+                                displayInputField =
+                                    displaySendMessage =
+                                        displayConnect = false;
+        }
+        else if (userStatus == 5)
+        {
+            displaySendMessage = displayInputField =displayDisconnect= displayExitRoom =true;
+            displayHelpNext =
+                displayRefresh =
+                    displayReconnect =
+                        displayAskQuestion =
+                            displayCloseRoom =
+                                displayConnect =
+                                    displayRooms = false;
+        }
+        else if (userStatus == 6)
+        {
+            displayReconnect = true;
+            displayHelpNext =
+                displayRefresh =
+                    displayExitRoom =
+                        displayReconnect =
+                            displayDisconnect =
+                                displayAskQuestion =
+                                    displayCloseRoom =
+                                        displayInputField =
+                                            displaySendMessage =
+                                                displayConnect =
+                                                    displayRooms = false;
+        }
+        StateHasChanged();
     }
 
     public async Task ConnectToRoom(string roomId)
     {
         await JSRuntime.InvokeVoidAsync("ConnectToRoomJS", roomId);
         Console.WriteLine("connect to room " + roomId);
+        await UpdateUserStatus();
     }
 
     public async Task CloseChatRoom()
     {
         await JSRuntime.InvokeVoidAsync("CloseChatRoomJS");
         Console.WriteLine("CLOSE CHAT ROOM");
+        await UpdateUserStatus();
     }
 
     public async Task ExitRoom()
     {
         await JSRuntime.InvokeVoidAsync("ExitRoomJS");
         Console.WriteLine("EXIT CHAT ROOM");
+        await UpdateUserStatus();
     }
 
     // gets called when page is reloaded to get old connection
@@ -167,7 +385,7 @@
     }
 
     // calls itself recursively to update user status after page initialisation
-    public async Task GetUpdates()
+    /*public async Task GetUpdates()
     {
         Console.WriteLine("get updates  ");
 
@@ -183,44 +401,10 @@
             notification = await ChatService.GetUpdates(currentUser.id, currentUser.SecurityLevel == 2);
             Console.WriteLine("get updates " + update++);
             await GetUpdates();
-        }*/
-    }
+        }#1#
+    }*/
 
     // called on page load
-    protected override async Task OnInitializedAsync()
-    {
-        Console.WriteLine("initialised  ");
-        currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
-        await JSRuntime.InvokeVoidAsync("EstablishConnection");
-    /*if (currentUser.SecurityLevel == 2)
-        {
-            chatRooms = await ChatService.GetChatRooms();
-        }*/
-    /*GetUpdates();
-    // started = await localStorage.GetItemAsync<bool>("startedChat");
-        if (currentUser.SecurityLevel == 2 && !started)
-        {
-            ButtonValue = "Send message";
-            chatRooms = await ChatService.GetChatRooms();
-            if (chatRooms != null)
-            {
-                Console.WriteLine("got rooms");
-                Console.WriteLine(JsonSerializer.Serialize(chatRooms));
-            }
-            StateHasChanged();
-        }
-        else
-        {
-            ButtonValue = "Ask question";
-        }
-        if (started)
-        {
-            await JSRuntime.InvokeVoidAsync("ReconnectJS", currentUser.id, currentUser.SecurityLevel == 2);
-            await ConnectToChat();
-            CountDownRetry();
-        }
-        StateHasChanged();*/
-    }
 
     // called when user presses on connect
     private async Task ConnectToChat()
@@ -233,6 +417,7 @@
         StateHasChanged();
         started = true;
         await localStorage.SetItemAsync("startedChat", started);*/
+        await UpdateUserStatus();
     }
 
     // called when user press on send message
@@ -240,6 +425,7 @@
     {
         Console.WriteLine("send message");
         await JSRuntime.InvokeVoidAsync("SendMessageJS", message);
+        await UpdateUserStatus();
 
     /*if (started)
         {
@@ -252,12 +438,14 @@
         Console.WriteLine(" help next");
 
         await JSRuntime.InvokeVoidAsync("HelpNextUserJS");
+        await UpdateUserStatus();
     }
 
     private async Task FetchChatRooms()
     {
         Console.WriteLine(" fetch rooms");
         chatRooms = await ChatService.GetChatRooms();
+        await UpdateUserStatus();
 
 
     /*await JSRuntime.InvokeVoidAsync("HelpNextUser");*/
@@ -267,6 +455,8 @@
     {
         await JSRuntime.InvokeVoidAsync("AskQuestionJS", message);
         Console.WriteLine("ask question");
+        await UpdateUserStatus();
+
 
     /*await JSRuntime.InvokeVoidAsync("HelpNextUser");*/
     }
@@ -276,6 +466,7 @@
     {
         Console.WriteLine(" disconnect");
         await JSRuntime.InvokeVoidAsync("DisconnectJS");
+        await UpdateUserStatus();
 
     /*await JSRuntime.InvokeVoidAsync("DisconnectJS", currentUser.id);
         connectButton = "Press To Connect";
@@ -290,9 +481,11 @@
     }*/
 
     // called when user leaves page
-    public void Dispose()
+    public async void Dispose()
     {
         Console.WriteLine("Exit chat page ");
+        await Disconnect();
+        await UpdateUserStatus();
     // disposed = true;
     }
 

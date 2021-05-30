@@ -19,7 +19,8 @@ namespace WebApp.Data
         bool IsUserOnline(string connectionId);
         Task<string> GetUpdates(long userId,bool isAdmin);
         Task<ChatUser> GetUser(string connectionId);
-        Task<ChatUser> GetUserById(int userId);
+        Task<int> GetUserStatus(long userId);
+        Task<ChatUser> GetUserById(long userId);
         bool IsUserConnected(long userId);
         bool IsAdminConnected(long userId);
         Task<ChatRoom> AskQuestion(string question,string connectionId);
