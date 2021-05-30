@@ -22,3 +22,10 @@ This repository contains Source Code for *GodEats* , a project developed by **Di
  ## Tips
  - Finish your functionality before making a pull request to master.
  - If you want to update your branch , create another one and bring uncommited changes with you. (Commited changes can be undone with 1st useful git command).
+
+ ## Documentation
+ These are the step to make to get the documentation of each solution.
+ - Build the solution. (Ctrl + Shift + B)
+ - Run this line in terminal: docfx "*absolute path*\docfx.json" --serve
+ - The documentation site now will be live on http://localhost:8080
+ - Press anything in terminal to stop the hosting
