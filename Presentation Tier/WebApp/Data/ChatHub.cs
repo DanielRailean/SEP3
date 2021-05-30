@@ -18,7 +18,7 @@ namespace WebApp.Data
         }
         public async Task ConnectAdminHub(int userId, string name)
         {
-            ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId,name);
+            ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId);
             if(room!=null)
             {
                 await AddUserToHub(Context.ConnectionId, room.Id);
@@ -41,16 +41,16 @@ namespace WebApp.Data
                 await NotifyClient(Context.ConnectionId, "ClearLocalKeys", null);
                 await SendConnectionId(Context.ConnectionId);
             } 
-            if(isAdmin)
+            /*if(isAdmin)
             {
                 await SendChatRoom(Context.ConnectionId, "none");
-            }
+            }*/
             Debug("Go online");
         }
 
         public async Task ConnectUserHub(int userId, string name)
         {
-            ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId,name);
+            ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId);
             if (!Context.ConnectionId.Equals(room.Id))
             {
                 await AddUserToHub(Context.ConnectionId, room.Id);
@@ -63,23 +63,28 @@ namespace WebApp.Data
 
         }
         
-        public async Task SendMessage(int userId,bool isAdmin,string message,string name)
+        public async Task SendMessage(int userId,bool isAdmin,string message)
         {
-            var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId,name);
+            var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId);
             if(current!=null)
             {
-                var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=name};
-                await ChatService.AddMessage(newMessage, current.Id);
-                if(isAdmin)
+                if (message != null)
                 {
-                    newMessage.IsAdminMessage = true;
-                    await SendToGroup(current.Id,current.Admin.FullName, message);
+                    if(isAdmin)
+                    {
+                        var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=current.Admin.FullName};
+                        newMessage.IsAdminMessage = true;
+                        await ChatService.AddMessage(newMessage, current.Id);
+                        await SendToGroup(current.Id,current.Admin.FullName, message);
+                    }
+                    else
+                    {
+                        var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=current.Admin.FullName};
+                        newMessage.IsAdminMessage = false;
+                        await ChatService.AddMessage(newMessage, current.Id);
+                        await SendToGroup(current.Id,current.Customer.FullName, message);
+                    }
                 }
-                else
-                {
-                    await SendToGroup(current.Id,current.Customer.FullName, message);
-                }
-
                 await AddUserToHub(current.Customer.ConnectionId, current.Id);
                 await AddUserToHub(current.Admin.ConnectionId, current.Id);
 
@@ -87,6 +92,17 @@ namespace WebApp.Data
             Debug("SendMessage");
         }
 
+
+        public async Task Reconnect(int userId,bool isAdmin)
+        {
+            var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId);
+            if(current!=null)
+            {
+                await AddUserToHub(current.Customer.ConnectionId, current.Id);
+                await AddUserToHub(current.Admin.ConnectionId, current.Id);
+            }
+            Debug("Reconnect");
+        }
         public async Task SendConnectionId(string connectionId)
         {
             await NotifyClient(connectionId, "SetConnection", connectionId);
@@ -132,9 +148,9 @@ namespace WebApp.Data
             await Groups.AddToGroupAsync(connectionId, groupName);
         }
         
-        public async Task GetUpdates(bool isAdmin)
+        public async Task GetUpdates(long userId,bool isAdmin)
         {
-            var update = await ChatService.GetUpdates(Context.ConnectionId,isAdmin);
+            var update = await ChatService.GetUpdates(userId,isAdmin);
             await NotifyClient(Context.ConnectionId, "Notify",update);
         }
         

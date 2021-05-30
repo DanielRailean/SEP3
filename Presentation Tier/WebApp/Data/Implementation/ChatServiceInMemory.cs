@@ -33,10 +33,9 @@ namespace WebApp.Data.Implementation
                 created.Customer = user;
                 ChatRooms.Add(created);
             }
-            
         }
 
-        public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId,string name)
+        public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId)
         {
             // find room where customer id is the same
             ChatRoom find = ChatRooms.FirstOrDefault(r => r.Customer.Id.Equals(userId));
@@ -67,6 +66,12 @@ namespace WebApp.Data.Implementation
                 ChatRooms.Add(created);
                 return created;
 
+        }
+
+        public async Task<ChatRoom> GetRoom(string roomId)
+        {
+            ChatRoom find = ChatRooms.FirstOrDefault(r => r.Id.Equals(roomId));
+            return find;
         }
 
         public async Task DisconnectUser(long userId)
@@ -165,12 +170,50 @@ namespace WebApp.Data.Implementation
         {
             return ChatRooms;
         }
-        
 
-        public async Task<string> GetUpdates(string connectionId,bool isAdmin)
+
+        public async Task<string> GetUpdates(long userId, bool isAdmin)
         {
             ChatRoom room;
             if (isAdmin)
+            {
+                if (IsAdminConnected(userId))
+                {
+                    room = ChatRooms.FirstOrDefault(r => r.Admin.Id == userId);
+                    if (room != null)
+                    {
+                        return ("You are now talking to " + room.Customer.FullName);
+                    }
+
+                    return "You are connected \n" + "There are " + ChatRooms.Count + " users left In queue";;
+
+                }
+
+                return "You are not connected";
+            }
+            else
+            {
+                if (IsUserConnected(userId))
+                {
+                    room = ChatRooms.FirstOrDefault(r => r.Customer.Id == userId);
+                    if (room != null)
+                    {
+                        if (room.Admin.Status != 5)
+                        {
+                            return "You are number " + (ChatRooms.IndexOf(room)+1) + " in the queue";
+                        }
+                        return ("You are now talking to " + room.Admin.FullName);
+                    }
+
+                    return "You are connected";
+
+                }
+
+                return "You are not connected";
+            }
+                
+            
+            /*if (isAdmin)
             {
                 if (IsAdminOnline(connectionId))
                 {
@@ -188,11 +231,12 @@ namespace WebApp.Data.Implementation
                     return "There are no more users to help";
                     
                 }
-                return "You are connected but not yet helping users, press Connect, then help next user to start";
+                return "You are not connected";
                 
             }
             else
             {
+                if(IsUserConnected())
                 room = ChatRooms.FirstOrDefault(u => u.Customer.ConnectionId.Equals(connectionId));
                 if (room == null)
                 {
@@ -203,7 +247,7 @@ namespace WebApp.Data.Implementation
                     return "You are now talking to " + room.Admin.FullName;
                 }
                 return "You are number " + (ChatRooms.IndexOf(room)+1) + " in the queue";
-            }
+            }*/
         }
 
         public async Task<ChatUser> GetUser(string connectionId)
@@ -278,6 +322,7 @@ namespace WebApp.Data.Implementation
                 }
                 
             }
+            GetRoom(userId, isAdmin, connectionId);
         }
 
         public async Task<IList<Message>> GetGroupMessages(string roomId)

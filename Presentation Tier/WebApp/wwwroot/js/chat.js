@@ -1,15 +1,11 @@
 "use strict";
 var connection = null;
-var isAdmin;
-var timeout;
 
 async function start(){
     if(connection==null){
         console.log("connect");
         connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-        await connection.start();
-        clearTimeout(timeout);
-        GetUpdates();
+        connection.start();
         initialise();
     }
 }
@@ -27,8 +23,6 @@ async function ConnectUser(userId,username){
         connection.invoke("ConnectUserHub",userId, username).catch(function (err) {
             return console.error(err.toString());
         });
-        clearTimeout(timeout);
-        GetUpdates();
         console.log("connected as "+userId+username);
     }
 }
@@ -37,35 +31,27 @@ async function ConnectAdmin(userId,username){
         connection.invoke("ConnectAdminHub",userId, username).catch(function (err) {
             return console.error(err.toString());
         });
-        clearTimeout(timeout);
-        GetUpdates();
         console.log("connected as "+userId+username);
     }
 }
 
-async function sendMessage(userId,isAdmin,message,name){
+async function sendMessage(userId,isAdmin,message){
     if(connection!=null){
-        connection.invoke("SendMessage", userId,isAdmin,message,name).catch(function (err) {
+        connection.invoke("SendMessage", userId,isAdmin,message).catch(function (err) {
             return console.error(err.toString());
         });
-        clearTimeout(timeout);
-        GetUpdates();
         console.log("sent message");
     }
 }
 
-async function GetUpdates(){
-    isAdmin = await getSession("isAdmin")==="true";
-    console.log(isAdmin+"update");
-    // do whatever you like here
+async function ReconnectJS(userId,isAdmin,name){
     if(connection!=null){
-        connection.invoke("GetUpdates",isAdmin).catch(function (err) {
+        connection.invoke("Reconnect", userId,isAdmin).catch(function (err) {
             return console.error(err.toString());
         });
+        console.log("reconnect");
     }
-    timeout = setTimeout(GetUpdates, 1000);
 }
-
 
 async function DisconnectJS(userId){
     console.log("null connection");
@@ -76,17 +62,14 @@ async function DisconnectJS(userId){
         });
         document.getElementById("messagesList").innerHTML="";
         console.log("disconnect");
-        clearTimeout(timeout);
     }
-    
 }
+
 async function HelpNextUser(){
     if(connection!=null){
         connection.invoke("Match").catch(function (err) {
             return console.error(err.toString());
         });
-        clearTimeout(timeout);
-        GetUpdates();
         console.log("pressod on help");
     }
 }
@@ -111,11 +94,7 @@ async function initialise(){
             li.textContent = `${user} says ${message}`;
             console.log("receive");
         });
-
-        connection.on("Notify", function (message) {
-            document.getElementById("notification").textContent=message;
-            console.log("notify "+message);
-        });
+        
         connection.on("SetConnection", function (message) {
             saveSession("connectionC",message);
             console.log("connection");
@@ -125,7 +104,7 @@ async function initialise(){
             console.log("room");
         });
         connection.on("ClearLocalKeys", function () {
-            // saveLocal("startedChat",false);
+            saveLocal("startedChat",false);
             /*document.getElementById("connectButton").innerText=;*/
             console.log("clear keys");
         });

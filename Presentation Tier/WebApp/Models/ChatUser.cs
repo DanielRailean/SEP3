@@ -36,14 +36,17 @@
         public int SecurityLevel { get; set; }
         
         /// <summary>
-        /// Only user states
-        /// 1 - online, in user list
-        /// 2 - connected,in room
-        /// 3 - online, left page - room exists
-        /// Only Admin states
-        /// 4 - online  in admin list
-        /// 5-  connected, in room
+        //Only user states
+        // 1 - online, in user list
+        // 2 - connected, in chat page
+        // 3 - online, left page - room exists // NO WAY TO TRACK -> solution disposable
+        
+        //Only Admin states
+        // 4 - online  in admin list
+        // 5-  connected, in chat page
+        // 6- connected , left chat page
         /// </summary>
+
         public int Status { get; set; }
         
         /// <summary>

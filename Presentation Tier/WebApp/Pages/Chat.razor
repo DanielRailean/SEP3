@@ -4,8 +4,10 @@
 @using WebApp.Data
 @using Blazored.SessionStorage
 @using System.Text.Json
+@using System.Timers
 @attribute [Authorize]
 @using Blazored.LocalStorage
+@implements IDisposable;
 
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -19,7 +21,7 @@
 <h3>Chat</h3>
 <div class="container">
     <div class="row">
-        <div class="col-2">Message</div>
+        <div class="col-2">Messages</div>
     </div>
     @if (messages != null)
     {
@@ -28,27 +30,44 @@
             <p>@item.Body</p>
         }
     }
-    else
-    {
-        <p>No previous messages</p>
-    }
-    
-    @if (chatRooms!=null&&!started)
-    {
-        foreach (var chatRoom in chatRooms)
+    <AuthorizeView Policy="Admin">
+        <button type="button" class="btn-dark" @onclick="async () => await UpdateRooms()">Update rooms</button>
+        @if (chatRooms != null)
         {
-            <div class="chatRoom">
-                    <p>@chatRoom.Admin.FullName</p>
-                    <p>@chatRoom.Customer.FullName</p>
-                    <p>@chatRoom.Status</p>
-                </div>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">UserName</th>
+                    <th scope="col">AdminName</th>
+                    <th scope="col">Problem</th>
+                    <th scope="col">Last Message</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var chatRoom in chatRooms)
+                {
+                    <tr>
+                        <th scope="row">@chatRooms.IndexOf(chatRoom)</th>
+                        <td>@chatRoom.Customer.FullName</td>
+                        <td>@chatRoom.Admin.FullName</td>
+                        <td>@chatRoom.Status</td>
+                        @if (chatRoom.Messages.Any())
+                        {
+                            <td>@chatRoom.Messages[^1].Timestamp</td>
+                        }
+                    </tr>
+                }
+                </tbody>
+
+            </table>
+        }
+        else
+        {
+            <p>No chat rooms</p>
         }
 
-    }
-    else
-    {
-        <p>No rooms</p>
-    }
+    </AuthorizeView>
     <p id="notification">@notification</p>
     <div class="row">
         @if (currentUser.SecurityLevel == 2)
@@ -59,7 +78,7 @@
         <div class="col-4">
             <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">@ButtonValue</button>
         </div>
-
+        
         @if (started)
         {
             <div class="col-4">
@@ -92,6 +111,7 @@
 @code {
     public int Time = 1;
     public int Time2 = 1;
+    public int update;
     User currentUser = new User();
     private string connectionCoockie = "connectionC";
     private string connectionId;
@@ -105,7 +125,10 @@
     IList<ChatRoom> chatRooms = null;
     private bool started;
     private bool isBusy;
-
+    private int updatesCount;
+    private int temp;
+    private bool disposed;
+    
     public async Task CountDownRetry()
     {
         while (Time > 0)
@@ -125,12 +148,29 @@
             {
                 await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
             }
-            await localStorage.SetItemAsync("startedChat", true);
+            started = true;
+            await localStorage.SetItemAsync("startedChat", started);
         }
-        started = true;
-        /*connectButton = "connected";
+    /*connectButton = "connected";
         ButtonClass  = "btn btn-success";*/
     StateHasChanged();
+    }
+
+    public async Task GetUpdates()
+    {
+        while (!disposed)
+        {
+            while (Time2 > 0)
+            {
+                Time2--;
+                StateHasChanged();
+                await Task.Delay(1000);
+            }
+            Time2 = 2;
+            notification = await ChatService.GetUpdates(currentUser.id, currentUser.SecurityLevel == 2);
+            Console.WriteLine("get updates "+update++);
+            await GetUpdates();
+        }
     }
     /*
     public async Task CountdownFetchChat(bool admin)
@@ -151,9 +191,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        GetUpdates();
+        started = await localStorage.GetItemAsync<bool>("startedChat");
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
-        if (currentUser.SecurityLevel == 2)
+        if (currentUser.SecurityLevel == 2&&!started)
         {
             ButtonValue = "Send message";
             chatRooms = await ChatService.GetChatRooms();
@@ -168,10 +210,11 @@
         {
             ButtonValue = "Ask question";
         }
-        started = await localStorage.GetItemAsync<bool>("startedChat");
-        if (started)
+        if(started)
         {
-            ConnectToChat();
+            await JSRuntime.InvokeVoidAsync("ReconnectJS", currentUser.id, currentUser.SecurityLevel == 2);
+            await ConnectToChat();
+            CountDownRetry();
         }
         StateHasChanged();
     }
@@ -180,27 +223,19 @@
         Console.WriteLine(started);
         connectionId = await sessionStorage.GetItemAsync<string>(connectionCoockie);
         await JSRuntime.InvokeVoidAsync("GoOnlineJS",currentUser.id,currentUser.SecurityLevel==2,(currentUser.FirstName+" "+currentUser.LastName),connectionId);
-        await FetchChat(currentUser.SecurityLevel==2);
-        if (!started)
-        {
-            CountDownRetry();
-        }
+        await FetchChat(currentUser.SecurityLevel==2,currentUser.id);
         StateHasChanged();
-
+        started = true;
+        await localStorage.SetItemAsync("startedChat", started);
 
     }
 
     private async Task SendMessage()
     {
-        CountDownRetry();
         if(started)
         {
             await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,(currentUser.FirstName+" "+currentUser.LastName));
             
-        }
-        if (currentUser.SecurityLevel == 2)
-        {
-            chatRooms = await ChatService.GetChatRooms();
         }
     }
 
@@ -209,18 +244,35 @@
         await JSRuntime.InvokeVoidAsync("HelpNextUser");
     }
 
-    private async Task Disconnect()
+    private async Task UpdateRooms()
     {
-        await localStorage.SetItemAsync("startedChat", false);
-        await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
-        started = false;
-        connectButton = "Press To Connect";
-        StateHasChanged();
+        if (currentUser.SecurityLevel == 2)
+        {
+            chatRooms = await ChatService.GetChatRooms();
+        }
     }
 
-    private async Task FetchChat(bool admin)
+    private async Task Disconnect()
+    {
+        
+        await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
+        connectButton = "Press To Connect";
+        started = false;
+        await localStorage.SetItemAsync("startedChat", started);
+        StateHasChanged();
+        
+    }
+
+    private async Task FetchChat(bool admin,long userId)
     {
         await sessionStorage.SetItemAsync("isAdmin", admin);
+        await sessionStorage.SetItemAsync("userId", userId);
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine("DISPOSED");
+        disposed = true;
     }
 
 }
