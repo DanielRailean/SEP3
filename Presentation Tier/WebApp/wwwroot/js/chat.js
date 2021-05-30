@@ -55,7 +55,7 @@ async function sendMessage(userId,isAdmin,message,name){
 }
 
 async function GetUpdates(){
-    isAdmin = await getLocally("isAdmin")==="true";
+    isAdmin = await getSession("isAdmin")==="true";
     console.log(isAdmin+"update");
     // do whatever you like here
     if(connection!=null){
@@ -74,6 +74,7 @@ async function DisconnectJS(userId){
         connection.invoke("Disconnect",userId).catch(function (err) {
             return console.error(err.toString());
         });
+        document.getElementById("messagesList").innerHTML="";
         console.log("disconnect");
         clearTimeout(timeout);
     }
@@ -90,11 +91,17 @@ async function HelpNextUser(){
     }
 }
 
-async function saveLocally(key,value){
+async function saveSession(key,value){
     sessionStorage.setItem(key, value);
 }
-async function getLocally(key){
+async function getSession(key){
     return sessionStorage.getItem(key);
+}
+async function saveLocal(key,value){
+    localStorage.setItem(key, value);
+}
+async function getLocal(key){
+    return localStorage.getItem(key);
 }
 async function initialise(){
     if(connection!=null){
@@ -110,15 +117,15 @@ async function initialise(){
             console.log("notify "+message);
         });
         connection.on("SetConnection", function (message) {
-            saveLocally("connectionC",message);
+            saveSession("connectionC",message);
             console.log("connection");
         });
         connection.on("SetChatRoom", function (message) {
-            saveLocally("chatRoom",message);
+            saveLocal("chatRoom",message);
             console.log("room");
         });
         connection.on("ClearLocalKeys", function () {
-            saveLocally("startedChat",false);
+            // saveLocal("startedChat",false);
             /*document.getElementById("connectButton").innerText=;*/
             console.log("clear keys");
         });

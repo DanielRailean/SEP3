@@ -4,13 +4,16 @@
 @using WebApp.Data
 @using Blazored.SessionStorage
 @using System.Text.Json
+@attribute [Authorize]
+@using Blazored.LocalStorage
 
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
 @inject IJSRuntime JSRuntime
-@inject ISessionStorageService LocalStorage;
+@inject ISessionStorageService sessionStorage;
+@inject ILocalStorageService localStorage;
 @inject IChatService ChatService;
 
 <h3>Chat</h3>
@@ -101,6 +104,7 @@
     IList<Message> messages = null;
     IList<ChatRoom> chatRooms = null;
     private bool started;
+    private bool isBusy;
 
     public async Task CountDownRetry()
     {
@@ -108,9 +112,9 @@
         {
             Time--;
             StateHasChanged();
-            await Task.Delay(250);
+            await Task.Delay(450);
         }
-        started = await LocalStorage.GetItemAsync<bool>("startedChat");
+        started = await localStorage.GetItemAsync<bool>("startedChat");
         StateHasChanged();
         if(!started){
             if (currentUser.SecurityLevel == 1)
@@ -121,7 +125,7 @@
             {
                 await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
             }
-            await LocalStorage.SetItemAsync("startedChat", true);
+            await localStorage.SetItemAsync("startedChat", true);
         }
         started = true;
         /*connectButton = "connected";
@@ -147,7 +151,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        StateHasChanged();
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
         if (currentUser.SecurityLevel == 2)
@@ -165,7 +168,7 @@
         {
             ButtonValue = "Ask question";
         }
-        started = await LocalStorage.GetItemAsync<bool>("startedChat");
+        started = await localStorage.GetItemAsync<bool>("startedChat");
         if (started)
         {
             ConnectToChat();
@@ -174,12 +177,14 @@
     }
 
     private async Task ConnectToChat(){
-        StateHasChanged();
         Console.WriteLine(started);
-        connectionId = await LocalStorage.GetItemAsync<string>(connectionCoockie);
+        connectionId = await sessionStorage.GetItemAsync<string>(connectionCoockie);
         await JSRuntime.InvokeVoidAsync("GoOnlineJS",currentUser.id,currentUser.SecurityLevel==2,(currentUser.FirstName+" "+currentUser.LastName),connectionId);
         await FetchChat(currentUser.SecurityLevel==2);
-        CountDownRetry();
+        if (!started)
+        {
+            CountDownRetry();
+        }
         StateHasChanged();
 
 
@@ -187,6 +192,7 @@
 
     private async Task SendMessage()
     {
+        CountDownRetry();
         if(started)
         {
             await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,(currentUser.FirstName+" "+currentUser.LastName));
@@ -195,7 +201,6 @@
         if (currentUser.SecurityLevel == 2)
         {
             chatRooms = await ChatService.GetChatRooms();
-            StateHasChanged();
         }
     }
 
@@ -206,7 +211,7 @@
 
     private async Task Disconnect()
     {
-        await LocalStorage.SetItemAsync("startedChat", false);
+        await localStorage.SetItemAsync("startedChat", false);
         await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
         started = false;
         connectButton = "Press To Connect";
@@ -215,7 +220,7 @@
 
     private async Task FetchChat(bool admin)
     {
-        await LocalStorage.SetItemAsync("isAdmin", admin);
+        await sessionStorage.SetItemAsync("isAdmin", admin);
     }
 
 }
