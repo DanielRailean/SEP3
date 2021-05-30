@@ -19,89 +19,63 @@
 @inject IChatService ChatService;
 
 <h3>Chat</h3>
-<div class="container">
-    <div class="row">
-        <div class="col-2">Messages</div>
-    </div>
+<AuthorizeView Policy="Admin">
+    @if (chatRooms != null)
+    {
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">UserName</th>
+                <th scope="col">AdminName</th>
+                <th scope="col">Problem</th>
+                <th scope="col">Last Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var chatRoom in chatRooms)
+            {
+                <tr>
+                    <th scope="row">@chatRooms.IndexOf(chatRoom)</th>
+                    <td>@chatRoom.Customer.FullName</td>
+                    <td>@chatRoom.Admin.FullName</td>
+                    <td>@chatRoom.Status</td>
+                    @if (chatRoom.Messages.Any())
+                    {
+                        <td>@chatRoom.Messages[^1].Timestamp</td>
+                    }
+                </tr>
+            }
+            </tbody>
+
+        </table>
+    }
+    else
+    {
+        <p>No chat rooms</p>
+    }
+    <button @onclick="() => HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
+</AuthorizeView>
+<h4>Status: @notification</h4>
+<div class="row">
+    <button type="button" class="btn btn-success" @onclick="async () => await ConnectToChat()">Connect to chat</button>
+        <button type="button" class="btn btn-secondary" @onclick="async () => await ReconnectToChat()">Reconnect to chat</button>
+    <button type="button" class="btn btn-warning" @onclick="async () => await Disconnect()">Disconnect</button>
+</div>
+<div class="row">
+<textarea class="form-control" aria-label="Message"  @bind="message"></textarea>
+    <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">Send Message</button>
+</div>
+<h3>Messages:</h3>
+<ul class="list-group" id="messagesList">
     @if (messages != null)
     {
         foreach (var item in messages)
         {
-            <p>@item.Body</p>
+            <li class="list-group-item">@item.Body</li>
         }
     }
-    <AuthorizeView Policy="Admin">
-        @if (chatRooms != null)
-        {
-            <table class="table">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">UserName</th>
-                    <th scope="col">AdminName</th>
-                    <th scope="col">Problem</th>
-                    <th scope="col">Last Message</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var chatRoom in chatRooms)
-                {
-                    <tr>
-                        <th scope="row">@chatRooms.IndexOf(chatRoom)</th>
-                        <td>@chatRoom.Customer.FullName</td>
-                        <td>@chatRoom.Admin.FullName</td>
-                        <td>@chatRoom.Status</td>
-                        @if (chatRoom.Messages.Any())
-                        {
-                            <td>@chatRoom.Messages[^1].Timestamp</td>
-                        }
-                    </tr>
-                }
-                </tbody>
-
-            </table>
-        }
-        else
-        {
-            <p>No chat rooms</p>
-        }
-        <button @onclick="() => HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
-    </AuthorizeView>
-    <p id="notification">@notification</p>
-    <div class="row">
-        <div class="col-4"><input type="text" id="messageInput" @bind="@message"/></div>
-        <div class="col-4">
-            <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">@ButtonValue</button>
-        </div>
-        
-        @if (started)
-        {
-            <div class="col-4">
-                <button type="button" class="btn btn-warning" @onclick="async () => await Disconnect()">Disconnect</button>
-            </div>
-        }
-        else
-        {
-            <div class="col-4">
-                <button type="button" class="@ButtonClass" @onclick="async () => await ConnectToChat()" id="connectButton">@connectButton</button>
-            </div>
-        }
-
-        @*<button @onclick="() => countdownAutoStart()" type="button" class="@ButtonClass" display="none">@ButtonValue</button>*@
-    </div>
-
-</div>
-<div class="row">
-    <div class="col-12">
-        <hr />
-    </div>
-</div>
-<div class="row">
-    <div class="col-6">
-        <ul id="messagesList"></ul>
-    </div>
-</div>
-
+</ul>
 
 @code {
     // used for countdown for reconnection
@@ -123,11 +97,12 @@
     IList<Message> messages = null;
     IList<ChatRoom> chatRooms = null;
     private bool started;
-    private bool isBusy;
-    private int updatesCount;
-    private int temp;
     private bool disposed;
-    
+
+    public async Task ReconnectToChat()
+    {
+    }
+
     // gets called when page is reloaded to get old connection
     public async Task CountDownRetry()
     {
@@ -139,14 +114,15 @@
         }
         started = await localStorage.GetItemAsync<bool>("startedChat");
         StateHasChanged();
-        if(!started){
+        if (!started)
+        {
             if (currentUser.SecurityLevel == 1)
             {
-                await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
+                await JSRuntime.InvokeVoidAsync("ConnectUser", currentUser.id, (currentUser.FirstName + " " + currentUser.LastName));
             }
             if (currentUser.SecurityLevel == 2)
             {
-                await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id,(currentUser.FirstName+" "+currentUser.LastName));
+                await JSRuntime.InvokeVoidAsync("ConnectAdmin", currentUser.id, (currentUser.FirstName + " " + currentUser.LastName));
             }
             started = true;
             await localStorage.SetItemAsync("startedChat", started);
@@ -168,18 +144,19 @@
             }
             RecursiveUpdate = 2;
             notification = await ChatService.GetUpdates(currentUser.id, currentUser.SecurityLevel == 2);
-            Console.WriteLine("get updates "+update++);
+            Console.WriteLine("get updates " + update++);
             await GetUpdates();
         }
     }
+
     // called on page load
     protected override async Task OnInitializedAsync()
     {
         GetUpdates();
-        // started = await localStorage.GetItemAsync<bool>("startedChat");
+    // started = await localStorage.GetItemAsync<bool>("startedChat");
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
-        if (currentUser.SecurityLevel == 2&&!started)
+        if (currentUser.SecurityLevel == 2 && !started)
         {
             ButtonValue = "Send message";
             chatRooms = await ChatService.GetChatRooms();
@@ -194,7 +171,7 @@
         {
             ButtonValue = "Ask question";
         }
-        if(started)
+        if (started)
         {
             await JSRuntime.InvokeVoidAsync("ReconnectJS", currentUser.id, currentUser.SecurityLevel == 2);
             await ConnectToChat();
@@ -204,43 +181,44 @@
     }
 
     // called when user presses on connect
-    private async Task ConnectToChat(){
+    private async Task ConnectToChat()
+    {
         Console.WriteLine(started);
         connectionId = await sessionStorage.GetItemAsync<string>(connectionCoockie);
-        await JSRuntime.InvokeVoidAsync("GoOnlineJS",currentUser.id,currentUser.SecurityLevel==2,(currentUser.FirstName+" "+currentUser.LastName),connectionId);
-        await FetchChat(currentUser.SecurityLevel==2,currentUser.id);
+        await JSRuntime.InvokeVoidAsync("GoOnlineJS", currentUser.id, currentUser.SecurityLevel == 2, (currentUser.FirstName + " " + currentUser.LastName), connectionId);
+        await FetchChat(currentUser.SecurityLevel == 2, currentUser.id);
         StateHasChanged();
         started = true;
         await localStorage.SetItemAsync("startedChat", started);
-
     }
 
     // called when user press on send message
     private async Task SendMessage()
     {
-        if(started)
+        if (started)
         {
-            await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id,currentUser.SecurityLevel==2,message,(currentUser.FirstName+" "+currentUser.LastName));
-            
+            await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id, currentUser.SecurityLevel == 2, message, (currentUser.FirstName + " " + currentUser.LastName));
         }
     }
+
     // called on help next user
     private async Task HelpNext()
     {
         await JSRuntime.InvokeVoidAsync("HelpNextUser");
     }
+
     // called on dissconnect press
     private async Task Disconnect()
     {
-        await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
+        await JSRuntime.InvokeVoidAsync("DisconnectJS", currentUser.id);
         connectButton = "Press To Connect";
         started = false;
         await localStorage.SetItemAsync("startedChat", started);
         StateHasChanged();
-        
     }
+
     // called on page reload ->
-    private async Task FetchChat(bool admin,long userId)
+    private async Task FetchChat(bool admin, long userId)
     {
     }
 

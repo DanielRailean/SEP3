@@ -90,6 +90,7 @@ async function initialise(){
     if(connection!=null){
         connection.on("ReceiveMessage", function (user, message) {
             var li = document.createElement("li");
+            li.className="list-group-item";
             document.getElementById("messagesList").appendChild(li);
             li.textContent = `${user} says ${message}`;
             console.log("receive");
