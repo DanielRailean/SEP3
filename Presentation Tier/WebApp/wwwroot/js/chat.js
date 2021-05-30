@@ -27,6 +27,22 @@ function AskQuestionJS(question){
         
     }
 }
+function ConnectToRoomJS(roomId){
+    if(connection!=null){
+        connection.invoke("ConnectToRoom", roomId).catch(function (err) {
+            return console.error(err.toString());
+        });
+        
+    }
+}
+function CloseChatRoomJS(){
+    if(connection!=null){
+        connection.invoke("CloseChatRoom").catch(function (err) {
+            return console.error(err.toString());
+        });
+        
+    }
+}
 
 async function ConnectUser(userId,username){
     if(connection!=null){
@@ -45,9 +61,9 @@ async function ConnectAdmin(userId,username){
     }
 }
 
-async function sendMessage(userId,isAdmin,message){
+async function SendMessageJS(message){
     if(connection!=null){
-        connection.invoke("SendMessage", userId,isAdmin,message).catch(function (err) {
+        connection.invoke("SendMessage",message).catch(function (err) {
             return console.error(err.toString());
         });
         console.log("sent message");

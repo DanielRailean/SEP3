@@ -29,7 +29,10 @@
                 <th scope="col">UserName</th>
                 <th scope="col">AdminName</th>
                 <th scope="col">Problem</th>
-                <th scope="col">Last Message</th>
+                <th scope="col">Status</th>
+                <th scope="col">RoomId</th>
+                <th scope="col">Connect</th>
+                <th scope="col">Answered</th>
             </tr>
             </thead>
             <tbody>
@@ -39,10 +42,15 @@
                     <th scope="row">@chatRooms.IndexOf(chatRoom)</th>
                     <td>@chatRoom.Customer.FullName</td>
                     <td>@chatRoom.Admin.FullName</td>
+                    <td>@chatRoom.Question</td>
                     <td>@chatRoom.Status</td>
+                    <td>@chatRoom.Id</td>
+                    <td>    
+                        <button type="button" class="btn btn-success" @onclick="async () => await ConnectToRoom(chatRoom.Id)">Connect</button>
+                    </td>
                     @if (chatRoom.Messages.Any())
                     {
-                        <td>@chatRoom.Messages[^1].Timestamp</td>
+                        <td>@chatRoom.Messages[^1].IsAdminMessage</td>
                     }
                 </tr>
             }
@@ -54,7 +62,8 @@
     {
         <p>No chat rooms</p>
     }
-    <button @onclick="() => HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
+    <button @onclick="async () => await HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
+    <button @onclick="async () => await FetchChatRooms()" type="button" class="btn btn-primary" display="none">Refresh</button>
 </AuthorizeView>
 <h4>Status: @notification</h4>
 <div class="row">
@@ -62,6 +71,7 @@
     <button type="button" class="btn btn-secondary" @onclick="async () => await ReconnectToChat()">Reconnect to chat</button>
     <button type="button" class="btn btn-warning" @onclick="async () => await Disconnect()">Disconnect</button>
     <button type="button" class="btn btn-warning" @onclick="async () => await AskQuestion()">Ask question</button>
+    <button type="button" class="btn btn-danger" @onclick="async () => await CloseChatRoom()">Close chat room</button>
 </div>
 <div class="row">
     <textarea class="form-control" aria-label="Message"  @bind="message"></textarea>
@@ -103,6 +113,16 @@
     public async Task ReconnectToChat()
     {
         Console.WriteLine("reconnect to chat");
+    }
+    public async Task ConnectToRoom(string roomId)
+    {
+        await JSRuntime.InvokeVoidAsync("ConnectToRoomJS",roomId);
+        Console.WriteLine("connect to room "+roomId);
+    }
+    public async Task CloseChatRoom()
+    {
+        await JSRuntime.InvokeVoidAsync("CloseChatRoomJS");
+        Console.WriteLine("CLOSE CHAT ROOM");
     }
 
     // gets called when page is reloaded to get old connection
@@ -160,7 +180,10 @@
         Console.WriteLine("initialised  ");
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("EstablishConnection");
-
+        /*if (currentUser.SecurityLevel == 2)
+        {
+            chatRooms = await ChatService.GetChatRooms();
+        }*/
     /*GetUpdates();
     // started = await localStorage.GetItemAsync<bool>("startedChat");
         if (currentUser.SecurityLevel == 2 && !started)
@@ -204,10 +227,10 @@
     private async Task SendMessage()
     {
         Console.WriteLine("send message");
+        await JSRuntime.InvokeVoidAsync("SendMessageJS", message);
 
     /*if (started)
         {
-            await JSRuntime.InvokeVoidAsync("sendMessage", currentUser.id, currentUser.SecurityLevel == 2, message, (currentUser.FirstName + " " + currentUser.LastName));
         }*/
     }
 
@@ -215,6 +238,14 @@
     private async Task HelpNext()
     {
         Console.WriteLine(" help next");
+
+    /*await JSRuntime.InvokeVoidAsync("HelpNextUser");*/
+    }
+    private async Task FetchChatRooms()
+    {
+        Console.WriteLine(" fetch rooms");
+        chatRooms = await ChatService.GetChatRooms();
+
 
     /*await JSRuntime.InvokeVoidAsync("HelpNextUser");*/
     }

@@ -56,7 +56,22 @@ namespace WebApp.Data
         {
             ChatRoom justCreated = await ChatService.AskQuestion(question,Context.ConnectionId);
             await AddUserToHub(justCreated.Customer.ConnectionId, justCreated.Id);
+            await ChatService.ChangeUserStatus(Context.ConnectionId, 2);
+            await ChatService.ChangeUserRoom(Context.ConnectionId, justCreated.Id);
             Debug("ask question");
+        }
+        public async Task ConnectToRoom(string roomId)
+        {
+            ChatRoom roomToConnectTo = await ChatService.ConnectToRoom(Context.ConnectionId, roomId);
+            await AddUserToHub(Context.ConnectionId, roomToConnectTo.Id);
+            await SendToGroup(roomToConnectTo.Id,"admin", "connected");
+            Debug("connect to room");
+        }
+        public async Task CloseChatRoom()
+        {
+            ChatUser currentUser = await ChatService.GetUser(Context.ConnectionId);
+            await ChatService.RemoveRoom(currentUser.CurrentRoom);
+            Debug("connect to room");
         }
         public async Task ConnectUserHub(int userId, string name)
         {
@@ -73,16 +88,21 @@ namespace WebApp.Data
 
         }
         
-        public async Task SendMessage(int userId,bool isAdmin,string message)
+        public async Task SendMessage(string message)
         {
-            var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId);
+            ChatUser sender = await ChatService.GetUser(Context.ConnectionId);
+            await SendToGroup(sender.CurrentRoom,sender.FullName, message);
+            var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=sender.FullName,IsAdminMessage = sender.IsAdmin};
+            await ChatService.AddMessage(newMessage, sender.CurrentRoom);
+            Debug("SendMessage");
+            /*var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId);
             if(current!=null)
             {
                 if (message != null)
                 {
                     if(isAdmin)
                     {
-                        var newMessage = new Message {Body = message, Timestamp = DateTime.Now,Sender=current.Admin.FullName};
+                        
                         newMessage.IsAdminMessage = true;
                         await ChatService.AddMessage(newMessage, current.Id);
                         await SendToGroup(current.Id,current.Admin.FullName, message);
@@ -99,7 +119,7 @@ namespace WebApp.Data
                 await AddUserToHub(current.Admin.ConnectionId, current.Id);
 
             }
-            Debug("SendMessage");
+        */
         }
 
 

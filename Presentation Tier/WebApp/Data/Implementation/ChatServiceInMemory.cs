@@ -31,6 +31,7 @@ namespace WebApp.Data.Implementation
                 admin.SecurityLevel = 2;
                 admin.FullName = name;
                 admin.Status = 4;
+                admin.IsAdmin = true;
                 OnlineAdmins.Add(admin);
                 /*if(!IsAdminConnected(userId))
                 {
@@ -44,6 +45,7 @@ namespace WebApp.Data.Implementation
                 user.SecurityLevel = 1;
                 user.FullName = name;
                 user.Status = 1;
+                user.IsAdmin = false;
                 OnlineUsers.Add(user);
                 /*if(!IsUserConnected(userId))
                 {
@@ -91,6 +93,45 @@ namespace WebApp.Data.Implementation
         //     }
         // }
 
+        public async Task ChangeUserRoom(string userConnectionId, string roomId)
+        {
+            ChatUser user = await GetUser(userConnectionId);
+            if (user != null)
+            {
+                user.CurrentRoom = roomId;
+            }
+        }
+
+       
+
+        public async Task RemoveRoom(string roomId)
+        {
+            ChatRoom toRemove = await GetRoom(roomId);
+            toRemove.Admin.Status = 4;
+            toRemove.Customer.Status = 1;
+            toRemove.Admin.CurrentRoom = "";
+            toRemove.Customer.CurrentRoom = "";
+            ChatRooms.Remove(toRemove);
+        }
+        public async Task<ChatRoom> ConnectToRoom(string userConnectionId, string roomId)
+        {
+            ChatUser existingUser = await GetUser(userConnectionId);
+            ChatRoom toGetIn = await GetRoom(roomId);
+            if (existingUser.IsAdmin)
+            {
+                existingUser.CurrentRoom = roomId;
+                existingUser.Status = 5;
+                toGetIn.Admin = existingUser;
+            }
+            else
+            {
+                existingUser.CurrentRoom = roomId;
+                existingUser.Status = 2;
+                toGetIn.Customer = existingUser;
+            }
+
+            return toGetIn;
+        }
         public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId)
         {
             // find room where customer id is the same
@@ -203,7 +244,6 @@ namespace WebApp.Data.Implementation
         {
             throw new NotImplementedException();
         }
-
         public Task GoOffline(long userId, bool isAdmin, string connectionId, string name)
         {
             throw new NotImplementedException();

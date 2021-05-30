@@ -10,14 +10,14 @@
             ConnectionId = connectionId;
         }
 
-        public ChatUser(long id, string fullName, int securityLevel, int status, string connectionId, string roomId)
+        public ChatUser(long id, string fullName, int securityLevel, int status, string connectionId, string currentRoom)
         {
             Id = id;
             FullName = fullName;
             SecurityLevel = securityLevel;
             Status = status;
             ConnectionId = connectionId;
-            RoomId = roomId;
+            currentRoom = currentRoom;
         }
 
         /// <summary>
@@ -38,12 +38,12 @@
         /// <summary>
         //Only user states
         // 1 - online, in user list
-        // 2 - connected, in chat page
+        // 2 - online, in room
         // 3 - online, left page - room exists // NO WAY TO TRACK -> solution disposable
         
         //Only Admin states
         // 4 - online  in admin list
-        // 5-  connected, in chat page
+        // 5-  online, in room
         // 6- connected , left chat page
         /// </summary>
 
@@ -57,6 +57,10 @@
         /// <summary>
         /// Id of the chat room.
         /// </summary>
-        public string RoomId { get; set; }
+        public string CurrentRoom { get; set; }
+        /// <summary>
+        /// Wether this user is admin
+        /// </summary>
+        public bool IsAdmin { get; set; }
     }
 }

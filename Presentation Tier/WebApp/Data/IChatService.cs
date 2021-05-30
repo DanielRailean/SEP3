@@ -32,10 +32,13 @@ namespace WebApp.Data
 
         //Update
         Task ChangeUserStatus(string connectionId, int status);
+        Task ChangeUserRoom(string userConnectionId, string roomId);
+        Task<ChatRoom> ConnectToRoom(string userConnectionId, string roomId);
         
         //Delete
         Task DisconnectUser(long userId);
         Task StopChat(string connectionId);
+        Task RemoveRoom(string roomId);
 
     }
 }
