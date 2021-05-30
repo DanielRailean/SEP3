@@ -61,9 +61,20 @@ namespace WebApp.Data.Implementation
             // else create a new room and add the online user there
             ChatRoom created = new ChatRoom();
                 created.Id = connectionId;
-                ChatUser user = OnlineUsers.First(u => u.Id.Equals(userId));
-                created.Customer = user;
-                ChatRooms.Add(created);
+                ChatUser user = OnlineUsers.FirstOrDefault(u => u.Id.Equals(userId));
+                if (user != null)
+                {
+                    created.Customer = user;
+                    ChatRooms.Add(created);
+                }
+                else
+                {
+                    await ConnectToChat(userId, isAdmin, connectionId, "Please reconnect");
+                    ChatUser newUser = OnlineUsers.First(u => u.Id.Equals(userId));
+                    created.Customer = newUser;
+                    ChatRooms.Add(created);
+
+                }
                 return created;
 
         }

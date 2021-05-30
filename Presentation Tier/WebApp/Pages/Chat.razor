@@ -31,7 +31,6 @@
         }
     }
     <AuthorizeView Policy="Admin">
-        <button type="button" class="btn-dark" @onclick="async () => await UpdateRooms()">Update rooms</button>
         @if (chatRooms != null)
         {
             <table class="table">
@@ -66,14 +65,10 @@
         {
             <p>No chat rooms</p>
         }
-
+        <button @onclick="() => HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
     </AuthorizeView>
     <p id="notification">@notification</p>
     <div class="row">
-        @if (currentUser.SecurityLevel == 2)
-        {
-            <button @onclick="() => HelpNext()" type="button" class="btn btn-primary" display="none">Help next user</button>
-        }
         <div class="col-4"><input type="text" id="messageInput" @bind="@message"/></div>
         <div class="col-4">
             <button type="button" class="btn btn-primary" @onclick="async () => await SendMessage()">@ButtonValue</button>
@@ -109,10 +104,14 @@
 
 
 @code {
-    public int Time = 1;
-    public int Time2 = 1;
+    // used for countdown for reconnection
+    public int reconnectRetry = 1;
+    //used for repeatedly updating the user status
+    public int RecursiveUpdate = 1;
+    //used to keep track number of this page updates
     public int update;
-    User currentUser = new User();
+    //uset to store the current connected user
+    User currentUser;
     private string connectionCoockie = "connectionC";
     private string connectionId;
     private string message;
@@ -129,11 +128,12 @@
     private int temp;
     private bool disposed;
     
+    // gets called when page is reloaded to get old connection
     public async Task CountDownRetry()
     {
-        while (Time > 0)
+        while (reconnectRetry > 0)
         {
-            Time--;
+            reconnectRetry--;
             StateHasChanged();
             await Task.Delay(450);
         }
@@ -151,48 +151,32 @@
             started = true;
             await localStorage.SetItemAsync("startedChat", started);
         }
-    /*connectButton = "connected";
-        ButtonClass  = "btn btn-success";*/
-    StateHasChanged();
+        await CountDownRetry();
+        StateHasChanged();
     }
 
+    // calls itself recursively to update user status after page initialisation
     public async Task GetUpdates()
     {
         while (!disposed)
         {
-            while (Time2 > 0)
+            while (RecursiveUpdate > 0)
             {
-                Time2--;
+                RecursiveUpdate--;
                 StateHasChanged();
                 await Task.Delay(1000);
             }
-            Time2 = 2;
+            RecursiveUpdate = 2;
             notification = await ChatService.GetUpdates(currentUser.id, currentUser.SecurityLevel == 2);
             Console.WriteLine("get updates "+update++);
             await GetUpdates();
         }
     }
-    /*
-    public async Task CountdownFetchChat(bool admin)
-    {
-        while (Time2 > 0)
-        {
-            Time2--;
-            StateHasChanged();
-            await Task.Delay(1000);
-        }
-        await FetchChat(admin);
-        ButtonClass = "btn btn-primary";
-        ButtonValue = "Connected";
-        isChatting = true;
-
-    }
-    */
-
+    // called on page load
     protected override async Task OnInitializedAsync()
     {
         GetUpdates();
-        started = await localStorage.GetItemAsync<bool>("startedChat");
+        // started = await localStorage.GetItemAsync<bool>("startedChat");
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("start");
         if (currentUser.SecurityLevel == 2&&!started)
@@ -219,6 +203,7 @@
         StateHasChanged();
     }
 
+    // called when user presses on connect
     private async Task ConnectToChat(){
         Console.WriteLine(started);
         connectionId = await sessionStorage.GetItemAsync<string>(connectionCoockie);
@@ -230,6 +215,7 @@
 
     }
 
+    // called when user press on send message
     private async Task SendMessage()
     {
         if(started)
@@ -238,23 +224,14 @@
             
         }
     }
-
+    // called on help next user
     private async Task HelpNext()
     {
         await JSRuntime.InvokeVoidAsync("HelpNextUser");
     }
-
-    private async Task UpdateRooms()
-    {
-        if (currentUser.SecurityLevel == 2)
-        {
-            chatRooms = await ChatService.GetChatRooms();
-        }
-    }
-
+    // called on dissconnect press
     private async Task Disconnect()
     {
-        
         await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
         connectButton = "Press To Connect";
         started = false;
@@ -262,13 +239,12 @@
         StateHasChanged();
         
     }
-
+    // called on page reload ->
     private async Task FetchChat(bool admin,long userId)
     {
-        await sessionStorage.SetItemAsync("isAdmin", admin);
-        await sessionStorage.SetItemAsync("userId", userId);
     }
 
+    // called when user leaves page
     public void Dispose()
     {
         Console.WriteLine("DISPOSED");
