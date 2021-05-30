@@ -1,20 +1,30 @@
 "use strict";
 var connection = null;
 
-async function start(){
+async function EstablishConnection(){
     if(connection==null){
         console.log("connect");
         connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
         connection.start();
-        initialise();
+        await InitialiseMethods();
     }
 }
 
-async function GoOnlineJS(userId,isAdmin,name,connectionId){
+async function GoOnlineJS(userId,isAdmin,name){
     if(connection!=null){
-        connection.invoke("GoOnline", userId,isAdmin,name,connectionId).catch(function (err) {
+        connection.invoke("GoOnline", userId,isAdmin,name).catch(function (err) {
             return console.error(err.toString());
         });
+        
+    }
+}
+
+function AskQuestionJS(question){
+    if(connection!=null){
+        connection.invoke("AskQuestion", question).catch(function (err) {
+            return console.error(err.toString());
+        });
+        
     }
 }
 
@@ -86,7 +96,7 @@ async function saveLocal(key,value){
 async function getLocal(key){
     return localStorage.getItem(key);
 }
-async function initialise(){
+async function InitialiseMethods(){
     if(connection!=null){
         connection.on("ReceiveMessage", function (user, message) {
             var li = document.createElement("li");
@@ -95,8 +105,7 @@ async function initialise(){
             li.textContent = `${user} says ${message}`;
             console.log("receive");
         });
-        
-        connection.on("SetConnection", function (message) {
+        /*connection.on("SetConnection", function (message) {
             saveSession("connectionC",message);
             console.log("connection");
         });
@@ -106,8 +115,8 @@ async function initialise(){
         });
         connection.on("ClearLocalKeys", function () {
             saveLocal("startedChat",false);
-            /*document.getElementById("connectButton").innerText=;*/
+            /!*document.getElementById("connectButton").innerText=;*!/
             console.log("clear keys");
-        });
+        });*/
     }
 }

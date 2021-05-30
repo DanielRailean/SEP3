@@ -39,5 +39,9 @@ namespace WebApp.Models
         /// 1 = user waiting for the admin 2= admin joined the chat 3 - admin was last that responded
         /// </summary>
         public int Status { get; set; }
-    }
+        /// <summary>
+        /// the initial purpose of the room -> user initial question
+        /// </summary>
+        public string Question { get; set; }
+}
 }

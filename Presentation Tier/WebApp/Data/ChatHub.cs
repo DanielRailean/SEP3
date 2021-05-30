@@ -16,6 +16,10 @@ namespace WebApp.Data
         {
             ChatService = chatService;
         }
+        public async Task AddUserToHub(string userConnection, string groupName)
+        {
+            await Groups.AddToGroupAsync(userConnection, groupName);
+        }
         public async Task ConnectAdminHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId);
@@ -33,14 +37,14 @@ namespace WebApp.Data
         {
             Debug();
         }*/
-        public async Task GoOnline(int userId, bool isAdmin , string name,string connectionId)
+        public async Task GoOnline(int userId, bool isAdmin , string name)
         {
             await ChatService.ConnectToChat(userId, isAdmin, Context.ConnectionId, name);
-            if (!Context.ConnectionId.Equals(connectionId))
+            /*if (!Context.ConnectionId.Equals(connectionId))
             {
                 await NotifyClient(Context.ConnectionId, "ClearLocalKeys", null);
                 await SendConnectionId(Context.ConnectionId);
-            } 
+            } */
             /*if(isAdmin)
             {
                 await SendChatRoom(Context.ConnectionId, "none");
@@ -48,6 +52,12 @@ namespace WebApp.Data
             Debug("Go online");
         }
 
+        public async Task AskQuestion(string question)
+        {
+            ChatRoom justCreated = await ChatService.AskQuestion(question,Context.ConnectionId);
+            await AddUserToHub(justCreated.Customer.ConnectionId, justCreated.Id);
+            Debug("ask question");
+        }
         public async Task ConnectUserHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId);
@@ -142,12 +152,7 @@ namespace WebApp.Data
             }
             Debug("Match admin to user");
         }
-        
-        public async Task AddUserToHub(string connectionId, string groupName)
-        {
-            await Groups.AddToGroupAsync(connectionId, groupName);
-        }
-        
+
         public async Task GetUpdates(long userId,bool isAdmin)
         {
             var update = await ChatService.GetUpdates(userId,isAdmin);

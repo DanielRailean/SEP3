@@ -20,20 +20,76 @@ namespace WebApp.Data.Implementation
             OnlineUsers = new List<ChatUser>();
             ChatRooms = new List<ChatRoom>();
         }
-
-        public async Task AddChatUser(ChatUser user)
+        
+        public async Task ConnectToChat(long userId, bool isAdmin, string connectionId, string name)
         {
-            if(user.SecurityLevel==2)
+            // Adding admin if not already connected
+            if(isAdmin&& !IsAdminConnected(userId))
             {
-                OnlineAdmins.Add(user);
-            }else if(user.SecurityLevel==1)
-            {
-                ChatRoom created = new ChatRoom();
-                created.Id = user.RoomId;
-                created.Customer = user;
-                ChatRooms.Add(created);
+                ChatUser admin = new ChatUser(connectionId);
+                admin.Id = userId;
+                admin.SecurityLevel = 2;
+                admin.FullName = name;
+                admin.Status = 4;
+                OnlineAdmins.Add(admin);
+                /*if(!IsAdminConnected(userId))
+                {
+                }*/
             }
+            // Adding user if not already connected
+            if(!isAdmin&&!IsUserConnected(userId))
+            {
+                ChatUser user = new ChatUser(connectionId);
+                user.Id = userId;
+                user.SecurityLevel = 1;
+                user.FullName = name;
+                user.Status = 1;
+                OnlineUsers.Add(user);
+                /*if(!IsUserConnected(userId))
+                {
+                }*/
+            }
+            // GetRoom(userId, isAdmin, connectionId);
         }
+        public async Task<ChatUser> GetUser(string connectionId)
+        {
+            ChatUser find = OnlineUsers.FirstOrDefault(r => r.ConnectionId.Equals(connectionId));
+            if(find!=null)
+            {
+                return find;
+            } 
+            find = OnlineAdmins.FirstOrDefault(r => r.ConnectionId.Equals(connectionId));
+            if(find!=null)
+            {
+                return find;
+            }
+            
+            return null;
+        }
+        public async Task<ChatRoom> AskQuestion(string question,string connectionId)
+        {
+            ChatUser existingUser = await GetUser(connectionId);
+            ChatRoom newRom = new ChatRoom();
+            newRom.Id = connectionId;
+            newRom.Question = question;
+            newRom.Customer = existingUser;
+            ChatRooms.Add(newRom);
+            return newRom;
+        }
+
+        // public async Task AddChatUser(ChatUser user)
+        // {
+        //     if(user.SecurityLevel==2)
+        //     {
+        //         OnlineAdmins.Add(user);
+        //     }else if(user.SecurityLevel==1)
+        //     {
+        //         ChatRoom created = new ChatRoom();
+        //         created.Id = user.RoomId;
+        //         created.Customer = user;
+        //         ChatRooms.Add(created);
+        //     }
+        // }
 
         public async Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId)
         {
@@ -261,22 +317,6 @@ namespace WebApp.Data.Implementation
             }*/
         }
 
-        public async Task<ChatUser> GetUser(string connectionId)
-        {
-            ChatUser find = ChatRooms.FirstOrDefault(r => r.Customer.ConnectionId.Equals(connectionId))?.Customer;
-            if(find!=null)
-            {
-                return find;
-            } 
-            find = OnlineAdmins.FirstOrDefault(r => r.ConnectionId.Equals(connectionId));
-            if(find!=null)
-            {
-                return find;
-            }
-            
-            return null;
-        }
-
         public bool IsUserConnected(long userId)
         {
             return OnlineUsers.FirstOrDefault(u => u.Id==userId) != null;
@@ -302,38 +342,6 @@ namespace WebApp.Data.Implementation
         {
             ChatRoom room = ChatRooms.FirstOrDefault(u=>u.Id.Equals(roomId));
             room?.Messages.Add(message);
-        }
-
-        public async Task ConnectToChat(long userId, bool isAdmin, string connectionId, string name)
-        {
-            // Adding admin if not already connected
-            if(isAdmin&& !IsAdminConnected(userId))
-            {
-                ChatUser admin = new ChatUser(connectionId);
-                admin.Id = userId;
-                admin.SecurityLevel = 2;
-                admin.FullName = name;
-                admin.Status = 4;
-                if(!IsAdminConnected(userId))
-                {
-                    OnlineAdmins.Add(admin);
-                }
-            }
-            // Adding user if not already connected
-            if(!isAdmin&&!IsUserConnected(userId))
-            {
-                ChatUser user = new ChatUser(connectionId);
-                user.Id = userId;
-                user.SecurityLevel = 1;
-                user.FullName = name;
-                user.Status = 1;
-                if(!IsUserConnected(userId))
-                {
-                    OnlineUsers.Add(user);
-                }
-                
-            }
-            GetRoom(userId, isAdmin, connectionId);
         }
 
         public async Task<IList<Message>> GetGroupMessages(string roomId)

@@ -21,9 +21,11 @@ namespace WebApp.Data
         Task<ChatUser> GetUser(string connectionId);
         bool IsUserConnected(long userId);
         bool IsAdminConnected(long userId);
+        Task<ChatRoom> AskQuestion(string question,string connectionId);
+
         
         //Create
-        Task AddChatUser(ChatUser user);
+        // Task AddChatUser(ChatUser user);
         Task AddMessage(Message message, string roomId);
         Task ConnectToChat(long userId, bool isAdmin, string connectionId, string name);
         Task GoOffline(long userId, bool isAdmin, string connectionId, string name);
