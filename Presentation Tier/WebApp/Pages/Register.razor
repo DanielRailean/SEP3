@@ -11,28 +11,29 @@
     <DataAnnotationsValidator/>
     <ValidationSummary/>
     <div class="form-group"> Email:<br/>
-        <InputText @bind-Value="newUserItem.Email"/>
+       
+        <InputText class ="input input is-info" placeholder="Text input"  @bind-Value="newUserItem.Email"/>
     </div>
     <div class="form-group"> Password:<br/>
-        <InputText type="password" rows="4" @bind-Value="newUserItem.Password"/>
+        <InputText class ="input input is-info" placeholder="Text input" rows="4" @bind-Value="newUserItem.Password"/>
     </div>
     <div class="form-group"> First Name:<br/>
-        <InputText @bind-Value="newUserItem.FirstName"/>
+        <InputText class ="input input is-info" placeholder="Text input" @bind-Value="newUserItem.FirstName"/>
     </div>
     <div class="form-group"> Last Name:<br/>
-        <InputText @bind-Value="newUserItem.LastName"/>
+        <InputText class ="input input is-info" placeholder="Text input" @bind-Value="newUserItem.LastName"/>
     </div>
     <div class="form-group"> Phone Number:<br/>
-        <InputNumber @bind-Value="newUserItem.Phone"/>
+        <InputNumber class ="input input is-info" placeholder="Number input" @bind-Value="newUserItem.Phone"/>
     </div>
     <div class="form-group"> Address:<br/>
-        <InputText @bind-Value="newUserItem.Address"/>
+        <InputText class ="input input is-info" id="ex1" placeholder="Text input" @bind-Value="newUserItem.Address"/>
     </div>
     <div class="form-group"> PostalCode:<br/>
-        <InputNumber @bind-Value="newUserItem.PostalCode"/>
+        <InputNumber class ="input input is-info" placeholder="Number input" @bind-Value="newUserItem.PostalCode"/>
     </div>
     <p class="actions">
-        <button class="btn btn-outline-dark"type="submit">Register</button>
+        <button class="button is-link is-light" type="submit">Register</button>
     </p>
 </EditForm>
 

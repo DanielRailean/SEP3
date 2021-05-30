@@ -8,4 +8,21 @@
 
 .item, img{
     width: 100%;
+    border: 1px solid #5c1c69;
+    border-radius: 10px;
+}
+
+.item{
+    border: 5px solid #5c1c69;
+    padding: 10px;
+    margin: 15px;
+    border-radius: 30px;
+    background-color: #e6dbe7;
+}
+
+.recipeDetail{
+    border: 5px solid #5c1c69;
+    padding: 10px;
+    margin: 15px;
+    border-radius: 30px;
 }

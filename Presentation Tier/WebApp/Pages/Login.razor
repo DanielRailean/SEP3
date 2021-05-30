@@ -8,17 +8,39 @@
 <CascadingAuthenticationState>
     <AuthorizeView>
         <NotAuthorized>
+            @* <div class="form-group"> *@
+            @*     <label>E-mail:</label> *@
+            @*     <input type="text" placeholder="E-mail address" @bind-value="email"/> *@
+            @* </div> *@
+            @* <div class="form-group"> *@
+            @*     <label>Password:</label> *@
+            @*     <input type="password" placeholder="Password" @bind-value="password"> *@
+            @* </div> *@
+            @* *@
             <div class="form-group">
-                <label>E-mail:</label>
-                <input type="text" placeholder="E-mail address" @bind-value="email"/>
+              <p class="control has-icons-left has-icons-right">
+                <input class="input" type="email" placeholder="Email" @bind-value="email">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fas fa-check"></i>
+                </span>
+              </p>
             </div>
             <div class="form-group">
-                <label>Password:</label>
-                <input type="password" placeholder="Password" @bind-value="password">
+                <p class="control has-icons-left">
+                    <input class="input" type="password" placeholder="Password" @bind-value="password">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                </p>
             </div>
+            
+            
             <div style="color: red">@errorMessage</div>
 
-            <button href="" @onclick="PerformLogin">
+            <button class="button is-link is-light" href="" @onclick="PerformLogin">
                 Login
             </button>
         </NotAuthorized>

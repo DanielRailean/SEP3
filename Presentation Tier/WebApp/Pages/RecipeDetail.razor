@@ -7,6 +7,7 @@
 @inject IRecipeService RecipeService
 @inject IIngredientService IngredientService
 
+<div class="recipeDetail">
 <h3>@recipeToShow.Name</h3>
 <h6>Food category: @recipeToShow.NutritionType</h6>
 <img src="@recipeToShow.Image" alt="@recipeToShow.Name">
@@ -23,6 +24,7 @@
 <p>Minutes to prepare: @recipeToShow.MinutesToMake</p>
 <p>Calories: @recipeToShow.Calories</p>
 <p>Price: @recipeToShow.Price DKK</p>
+
 
 @code {
     [Parameter]

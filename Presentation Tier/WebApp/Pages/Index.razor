@@ -36,12 +36,12 @@ else
         @foreach (Recipe item in recipesToShow)
         {<div class="item">
              <img src="@item.Image"/>
-                                                      <p>@item.Name</p>
-                                                      <p>@item.Price</p>
+             <p>@item.Name</p>
+             <p>@item.Price</p>
                      
-                                                      <input type="number" @bind="@item.Amount" Label="Amount" Color="Color.Primary"/>
-                                                      <Button @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</Button>
-                                                      <Button @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</Button>
+             <input class="input" type="number" @bind="@item.Amount" Label="Amount" Color="Color.Primary"/>
+             <Button class="button is-link is-light" @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</Button>
+             <Button class="button is-link is-light" @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</Button>
                      
          </div>
                     
