@@ -11,7 +11,6 @@ namespace WebApp.Data
     public class ChatHub : Hub
     {
         private IChatService ChatService;
-        private int Time = 3;
         public ChatHub(IChatService chatService)
         {
             ChatService = chatService;
@@ -24,7 +23,7 @@ namespace WebApp.Data
         {
             await Groups.RemoveFromGroupAsync(userConnection, groupName);
         }
-        public async Task ConnectAdminHub(int userId, string name)
+        /*public async Task ConnectAdminHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, true, Context.ConnectionId);
             if(room!=null)
@@ -35,7 +34,7 @@ namespace WebApp.Data
             }
             await SendConnectionId(Context.ConnectionId);
             Debug("Connect adminHub");
-        }
+        }*/
         
         /*public override async Task OnConnectedAsync()
         {
@@ -60,15 +59,12 @@ namespace WebApp.Data
         {
             ChatRoom justCreated = await ChatService.AskQuestion(question,Context.ConnectionId);
             await AddUserToHub(justCreated.Customer.ConnectionId, justCreated.Id);
-            await ChatService.ChangeUserStatus(Context.ConnectionId, 2);
-            await ChatService.ChangeUserRoom(Context.ConnectionId, justCreated.Id);
             Debug("ask question");
         }
         public async Task ConnectToRoom(string roomId)
         {
             ChatRoom roomToConnectTo = await ChatService.ConnectToRoom(Context.ConnectionId, roomId);
             await AddUserToHub(Context.ConnectionId, roomToConnectTo.Id);
-            await SendToGroup(roomToConnectTo.Id,"admin", "connected");
             Debug("connect to room");
         }
         public async Task CloseChatRoom()
@@ -88,8 +84,7 @@ namespace WebApp.Data
             ChatRoom toReconnectTo = await ChatService.ReconnectToChat(userId,Context.ConnectionId);
             if (toReconnectTo != null)
             {
-                await AddUserToHub(Context.ConnectionId, toReconnectTo.Id);
-                await SendToGroup(toReconnectTo.Id,"admin", "connected");
+                await AddUserToHub(Context.ConnectionId, toReconnectTo.Id); 
             }
             Debug("reconnect room");
 
@@ -98,7 +93,6 @@ namespace WebApp.Data
         {
             ChatRoom nextRoom = await ChatService.NextInQueue(Context.ConnectionId);
             await AddUserToHub(Context.ConnectionId, nextRoom.Id);
-            await SendToGroup(nextRoom.Id,"admin", "connected");
             Debug("next room");
             /*foreach (var item in await ChatService.GetOnlineAdmins())
             {
@@ -114,7 +108,7 @@ namespace WebApp.Data
             }
             Debug("Match admin to user");*/
         }
-        public async Task ConnectUserHub(int userId, string name)
+        /*public async Task ConnectUserHub(int userId, string name)
         {
             ChatRoom room = await ChatService.GetRoom(userId, false, Context.ConnectionId);
             if (!Context.ConnectionId.Equals(room.Id))
@@ -127,7 +121,7 @@ namespace WebApp.Data
             await SendChatRoom(Context.ConnectionId, room.Id);
             Debug("Connect userhub");
 
-        }
+        }*/
         
         public async Task SendMessage(string message)
         {
@@ -164,7 +158,7 @@ namespace WebApp.Data
         }
 
 
-        public async Task Reconnect(int userId,bool isAdmin)
+        /*public async Task Reconnect(int userId,bool isAdmin)
         {
             var current = await ChatService.GetRoom(userId,isAdmin,Context.ConnectionId);
             if(current!=null)
@@ -173,21 +167,21 @@ namespace WebApp.Data
                 await AddUserToHub(current.Admin.ConnectionId, current.Id);
             }
             Debug("Reconnect");
-        }
-        public async Task SendConnectionId(string connectionId)
+        }*/
+        /*public async Task SendConnectionId(string connectionId)
         {
             await NotifyClient(connectionId, "SetConnection", connectionId);
-        }
+        }*/
 
-        public async Task SendChatRoom(string connectionId, string chatRoomId)
+        /*public async Task SendChatRoom(string connectionId, string chatRoomId)
         {
             await NotifyClient(connectionId, "SetChatRoom", chatRoomId);
-        }
+        }*/
 
 
-        public async Task Disconnect()
+        public async Task Disconnect(int userId)
         {
-            ChatRoom disconnectFrom = await ChatService.DisconnectUser(Context.ConnectionId);
+            ChatRoom disconnectFrom = await ChatService.DisconnectUser(userId);
             if (disconnectFrom != null)
             {
                 await RemoveUserFromHub(Context.ConnectionId, disconnectFrom.Id);
@@ -203,16 +197,16 @@ namespace WebApp.Data
         
         
 
-        public async Task GetUpdates(long userId,bool isAdmin)
+        /*public async Task GetUpdates(long userId,bool isAdmin)
         {
             var update = await ChatService.GetUpdates(userId,isAdmin);
             await NotifyClient(Context.ConnectionId, "Notify",update);
-        }
+        }*/
         
-        public async Task NotifyClient(string clientConnectionId,string method, string message)
+        /*public async Task NotifyClient(string clientConnectionId,string method, string message)
         {
             await Clients.Client(clientConnectionId).SendAsync(method,message);
-        }
+        }*/
 
         public async Task SendToGroup(string group,string user, string message)
         {

@@ -5,7 +5,7 @@ async function EstablishConnection(){
     if(connection==null){
         console.log("connect");
         connection = new signalR.HubConnectionBuilder().withUrl("/ChatHub").build();
-        connection.start();
+        await connection.start();
         await InitialiseMethods();
     }
 }
@@ -91,12 +91,13 @@ async function DisconnectJS(userId){
     console.log("null connection");
     // do whatever you like here
     if(connection!=null){
-        connection.invoke("Disconnect").catch(function (err) {
+        connection.invoke("Disconnect",userId).catch(function (err) {
             return console.error(err.toString());
         });
         document.getElementById("messagesList").innerHTML="";
         console.log("disconnect");
     }
+    return true;
 }
 
 async function HelpNextUserJS(){

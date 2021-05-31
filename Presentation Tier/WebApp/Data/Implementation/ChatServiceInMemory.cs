@@ -103,6 +103,8 @@ namespace WebApp.Data.Implementation
             newRom.Id = connectionId;
             newRom.Question = question;
             newRom.Customer = existingUser;
+            newRom.Customer.Status = 2;
+            newRom.Customer.CurrentRoom = newRom.Id;
             ChatRooms.Add(newRom);
             return newRom;
         }
@@ -181,21 +183,25 @@ namespace WebApp.Data.Implementation
         public async Task<ChatRoom> ReconnectToChat(int userId, string userConnectionId)
         {
             ChatUser beforeDisconnect = await GetUserById(userId);
-            Console.WriteLine(beforeDisconnect.Id);
-            beforeDisconnect.ConnectionId = userConnectionId;
-            ChatRoom roomBeforeDisconnect = await GetRoom(beforeDisconnect.CurrentRoom);
-            if (roomBeforeDisconnect != null)
+            if (beforeDisconnect!=null)
             {
-                if (beforeDisconnect.IsAdmin)
+                ChatRoom roomBeforeDisconnect = await GetRoom(beforeDisconnect.CurrentRoom);
+                if (roomBeforeDisconnect != null)
                 {
-                    roomBeforeDisconnect.Admin.Status = 5;
+                    beforeDisconnect.ConnectionId = userConnectionId;
+                    if (beforeDisconnect.IsAdmin)
+                    {
+                        roomBeforeDisconnect.Admin.Status = 5;
+                    }
+                    else
+                    {
+                        roomBeforeDisconnect.Customer.Status = 2;
+                    }
                 }
-                else
-                {
-                    roomBeforeDisconnect.Customer.Status = 2;
-                }
+                return roomBeforeDisconnect;
             }
-            return roomBeforeDisconnect;
+
+            return null;
         }
 
         public async Task<ChatRoom> NextInQueue(string adminConnectionId)
@@ -257,9 +263,9 @@ namespace WebApp.Data.Implementation
             return find;
         }
 
-        public async Task<ChatRoom> DisconnectUser(string userConnectionId)
+        public async Task<ChatRoom> DisconnectUser(int userId)
         {
-            ChatUser userToDisconnect = await GetUser(userConnectionId);
+            ChatUser userToDisconnect = await GetUserById(userId);
             ChatRoom roomToDisconnectFrom = await GetRoom(userToDisconnect.CurrentRoom);
             if (roomToDisconnectFrom != null)
             {

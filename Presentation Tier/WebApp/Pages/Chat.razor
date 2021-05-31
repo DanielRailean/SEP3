@@ -123,12 +123,12 @@
     }
     </div>
 <ul class="list-group" id="messagesList">
-    @if (messages != null)
+    @if (currentRoom!=null)
     {
         <h3>Messages:</h3>
-        foreach (var item in messages)
+        foreach (var item in currentRoom.Messages)
         {
-            <li class="list-group-item">@item.Body</li>
+            <li class="list-group-item">@item.Sender said @item.Body</li>
         }
     }
 </ul>
@@ -153,6 +153,8 @@
     // private ChatRoom room;
     IList<Message> messages = null;
     IList<ChatRoom> chatRooms = null;
+    ChatUser chatUser;
+    ChatRoom currentRoom;
     private int userStatus;
     private bool displayHelpNext;
     private bool displayRefresh;
@@ -173,6 +175,11 @@
     {
         currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
         await JSRuntime.InvokeVoidAsync("EstablishConnection");
+        if (await localStorage.GetItemAsync<bool>("started"))
+        {
+            Console.WriteLine("Started");
+            await ReconnectToChat();
+        }
         Console.WriteLine("initialised  user status" + userStatus);
     /*if (currentUser.SecurityLevel == 2)
         {
@@ -203,6 +210,7 @@
         }
         StateHasChanged();*/
         await UpdateUserStatus();
+        StateHasChanged();
     }
 
     public async Task ReconnectToChat()
@@ -217,7 +225,6 @@
         while (updateStatusDelay > 0)
         {
             updateStatusDelay--;
-            StateHasChanged();
             await Task.Delay(100);
         }
         // await UpdateUserStatus();
@@ -266,8 +273,7 @@
                 displayRefresh =
                     displayExitRoom =
                         displayReconnect =
-                            displayDisconnect =
-                                displayCloseRoom =
+                            displayCloseRoom =
                                     displaySendMessage =
                                         displayConnect = false;
         }
@@ -322,8 +328,7 @@
             displayHelpNext =
                 displayRefresh =
                     displayExitRoom =
-                        displayReconnect =
-                            displayDisconnect =
+                        displayDisconnect =
                                 displayAskQuestion =
                                     displayCloseRoom =
                                         displayInputField =
@@ -338,6 +343,7 @@
     {
         await JSRuntime.InvokeVoidAsync("ConnectToRoomJS", roomId);
         Console.WriteLine("connect to room " + roomId);
+        await FetchRoom();
         await UpdateUserStatus();
     }
 
@@ -418,6 +424,7 @@
         started = true;
         await localStorage.SetItemAsync("startedChat", started);*/
         await UpdateUserStatus();
+        await localStorage.SetItemAsync("started", true);
     }
 
     // called when user press on send message
@@ -438,6 +445,8 @@
         Console.WriteLine(" help next");
 
         await JSRuntime.InvokeVoidAsync("HelpNextUserJS");
+        await Task.Delay(100);
+        await FetchRoom();
         await UpdateUserStatus();
     }
 
@@ -464,8 +473,9 @@
     // called on dissconnect press
     private async Task Disconnect()
     {
-        Console.WriteLine(" disconnect");
-        await JSRuntime.InvokeVoidAsync("DisconnectJS");
+        Console.WriteLine("disconnect");
+        await localStorage.SetItemAsync("started", false);
+        await JSRuntime.InvokeVoidAsync("DisconnectJS",currentUser.id);
         await UpdateUserStatus();
 
     /*await JSRuntime.InvokeVoidAsync("DisconnectJS", currentUser.id);
@@ -484,9 +494,17 @@
     public async void Dispose()
     {
         Console.WriteLine("Exit chat page ");
-        await Disconnect();
         await UpdateUserStatus();
     // disposed = true;
+    }
+
+    public async Task FetchRoom()
+    {
+        chatUser = await ChatService.GetUserById(currentUser.id);
+        if (chatUser != null)
+        {
+            currentRoom = await ChatService.GetRoom(chatUser.CurrentRoom);
+        }
     }
 
 }
