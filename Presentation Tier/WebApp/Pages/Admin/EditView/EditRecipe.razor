@@ -7,25 +7,26 @@
 
 @inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
-
+<h3></h3>
 <h3>Edit Recipe</h3>
+<h3></h3>
 <EditForm Model="@recipeToEdit" OnValidSubmit="@Save">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
     <div class="form-group">
         Name:<br/>
-        <InputText rows="10" @bind-Value="@recipeToEdit.Name"/>
+        <InputText class ="input input is-info"  rows="10" @bind-Value="@recipeToEdit.Name"/>
     </div>
     <div class="form-group">
         Picture (URL):<br/>
-        <InputText rows="10" @bind-Value="@recipeToEdit.Image"/>
+        <InputText class ="input input is-info"  rows="10" @bind-Value="@recipeToEdit.Image"/>
     </div>
     <div class="form-group">
         Price:<br/>
-        <InputNumber rows="4" @bind-Value="@recipeToEdit.Price"/>
+        <InputNumber class ="input input is-info"  rows="4" @bind-Value="@recipeToEdit.Price"/>
     </div>
     <div class="form-group"> Type:<br/>
-        <InputSelect @bind-Value="recipeToEdit.NutritionType">
+        <InputSelect class ="input input is-info"  @bind-Value="recipeToEdit.NutritionType">
             @foreach (var type in Enum.GetValues(typeof(NutritionType)))
             {
                 <option value="@type">@type</option>
@@ -34,10 +35,10 @@
     </div>
     <div class="form-group">
         Minutes to make:<br/>
-        <InputNumber rows="2" @bind-Value="@recipeToEdit.MinutesToMake"/>
+        <InputNumber class ="input input is-info"  rows="2" @bind-Value="@recipeToEdit.MinutesToMake"/>
     </div>
     <p class="actions">
-        <button class="btn btn-outline-dark" type="submit">Save</button>
+        <button class="button is-link is-light" type="submit">Save</button>
     </p>
 </EditForm>
 

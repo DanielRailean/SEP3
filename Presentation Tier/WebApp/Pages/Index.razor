@@ -34,16 +34,40 @@ else
 
     <div class="allItems">
         @foreach (Recipe item in recipesToShow)
-        {<div class="item">
-             <img src="@item.Image"/>
-             <p>@item.Name</p>
-             <p>@item.Price</p>
-                     
-             <input class="input" type="number" @bind="@item.Amount" Label="Amount" Color="Color.Primary"/>
-             <Button class="button is-link is-light" @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</Button>
-             <Button class="button is-link is-light" @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</Button>
-                     
-         </div>
+        {
+           
+            <div class="card">
+                <div class="card-image"  style="background-image: url('@item.Image'); background-repeat:no-repeat; background-size:cover; width:100% ; height: 25rem " >
+                    
+                    <div ></div> 
+                       
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="@item.Image" alt="@item.Name">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">@item.Name</p>
+                            <p class="subtitle is-6"></p>
+                        </div>
+                    </div>
+
+                    <div class="content">
+                           <div class="item">
+                               <p>@item.Price DKK</p>
+                                             
+                                     <input class="input" type="number" @bind="@item.Amount" Label="Amount" Color="Color.Primary"/>
+                                     <Button class="button is-link is-light" @onclick="() => ShowRecipeDetails(item)" Variant="Variant.Filled" Color="Color.Tertiary">More</Button>
+                                     <Button class="button is-link is-light" @onclick="async() => await AddToBasket(item)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</Button>
+                                             
+                                 </div>
+                      
+                    </div>
+                </div>
+            </div>
                     
                  }
     </div>

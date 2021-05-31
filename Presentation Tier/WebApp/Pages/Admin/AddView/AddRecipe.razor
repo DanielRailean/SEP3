@@ -8,27 +8,28 @@
 @inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
 @inject IIngredientService IngredientService
-
+<h3></h3>
 <div id="container">
 <div id="leftblock">
     <h3>Add Recipe</h3>
+    <h3></h3>
     <EditForm Model="@newRecipe" OnValidSubmit="@AddNewRecipe">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
         <div class="form-group"> Name:<br/>
-            <InputText @bind-Value="newRecipe.Name"/>
+            <InputText class ="input input is-info" @bind-Value="newRecipe.Name"/>
         </div>
         <div class="form-group"> Picture (URL):<br/>
-            <InputText @bind-Value="newRecipe.Image"/>
+            <InputText class ="input input is-info" @bind-Value="newRecipe.Image"/>
         </div>
         <div class="form-group"> Description:<br/>
-            <InputTextArea @bind-Value="newRecipe.Description"/>
+            <InputTextArea class ="input input is-info" @bind-Value="newRecipe.Description"/>
         </div>
         <div class="form-group"> Minutes to make:<br/>
-            <InputNumber @bind-Value="newRecipe.MinutesToMake"/>
+            <InputNumber class ="input input is-info" @bind-Value="newRecipe.MinutesToMake"/>
         </div>
         <div class="form-group"> Type:<br/>
-            <InputSelect @bind-Value="newRecipe.NutritionType">
+            <InputSelect class ="input input is-info" @bind-Value="newRecipe.NutritionType">
                 @foreach (var type in Enum.GetValues(typeof(NutritionType)))
                 {
                     <option value="@type">@type</option>
@@ -36,10 +37,10 @@
             </InputSelect>
         </div>
         <div class="form-group"> Price:<br/>
-            <InputNumber @bind-Value="newRecipe.Price"/>
+            <InputNumber class ="input input is-info" @bind-Value="newRecipe.Price"/>
         </div>
         <p class="actions">
-            <button class="btn btn-outline-dark" type="submit">Add recipe</button>
+            <button class="button is-link is-light" type="submit">Add recipe</button>
         </p>
     </EditForm>
 </div>
@@ -71,7 +72,7 @@
             <DataAnnotationsValidator/>
             <ValidationSummary/>
             <div class="form-group"> Ingredients: <br/>
-                <InputSelect @bind-Value="ingredientName">
+                <InputSelect class ="input input is-info" @bind-Value="ingredientName">
                     @foreach (Ingredient item in ingredients)
                     {
                         <option value="@item">@item.Name - (@item.UnitOfMeasure)</option>
@@ -79,10 +80,10 @@
                 </InputSelect>
             </div>
             <div class="form-group"> Quantity:<br/>
-                <InputNumber @bind-Value="ingredientQuantity"/>
+                <InputNumber class ="input input is-info" @bind-Value="ingredientQuantity"/>
             </div>
             <p class="actions">
-                <button class="btn btn-outline-dark" type="submit">Add</button>
+                <button class="button is-link is-light" type="submit">Add</button>
             </p>
         </EditForm>
     </div>

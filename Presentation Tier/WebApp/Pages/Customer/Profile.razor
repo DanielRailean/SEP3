@@ -9,19 +9,22 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
-
+ <h3></h3>
+    <h3></h3>
 <h3>Edit your profile:</h3>
 <h4 style="color: red">@errorMessage</h4>
 <EditForm Model="@userToEdit" OnValidSubmit="@Save">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
+    <h3></h3>
+       <h3></h3>
     <div class="form-group">
         First name:<br/>
-        <InputText rows="4" @bind-Value="@userToEdit.FirstName"/>
+        <InputText class ="input input is-info"  @bind-Value="@userToEdit.FirstName"/>
     </div>
     <div class="form-group">
         Last name:<br/>
-        <InputText rows="4" @bind-Value="@userToEdit.LastName"/>
+        <InputText class ="input input is-info"  @bind-Value="@userToEdit.LastName"/>
     </div>
     <div class="form-group">
         E-mail:<br/>
@@ -29,30 +32,30 @@
     </div>
     <div class="form-group">
         Optional:<br/>
-        <input type="password" placeholder="New Password" @bind-value="@newPassword">
+        <input class ="input input is-info"  type="password" placeholder="New Password" @bind-value="@newPassword">
     </div>
     <div class="form-group">
         Optional:<br/>
-       <input type="password" placeholder="Confirm New Password" @bind-value="@confirmNewPassword">
+       <input class ="input input is-info" type="password" placeholder="Confirm New Password" @bind-value="@confirmNewPassword">
     </div>
     <div class="form-group">
         Address:<br/>
-        <InputText rows="4" @bind-Value="@userToEdit.Address"/>
+        <InputText class ="input input is-info" rows="4" @bind-Value="@userToEdit.Address"/>
     </div>
     <div class="form-group">
         Postal Code:<br/>
-        <InputNumber rows="4" @bind-Value="@userToEdit.PostalCode"/>
+        <InputNumber class ="input input is-info" rows="4" @bind-Value="@userToEdit.PostalCode"/>
     </div>
     <div class="form-group">
         Phone:<br/>
-        <InputNumber rows="4" @bind-Value="@userToEdit.Phone"/>
+        <InputNumber class ="input input is-info" rows="4" @bind-Value="@userToEdit.Phone"/>
     </div>
     <div class="form-group">
             Input your old password to save changes:<br/>
-            <InputText rows="4" @bind-Value="@password"/>
+            <InputText class ="input input is-info" rows="4" @bind-Value="@password"/>
         </div>
     <p class="actions">
-        <button class="btn btn-outline-dark" type="submit">Save</button>
+        <button class="button is-link is-light" type="submit">Save</button>
     </p>
 </EditForm>
 
