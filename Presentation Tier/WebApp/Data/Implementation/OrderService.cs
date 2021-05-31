@@ -4,16 +4,23 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using API.Models;
 using WebApp.Models;
 
 namespace WebApp.Data.Implementation
 {
+    /// <summary>
+    /// This class is responsible for doing CRUD operations
+    /// on Orders through REST requests.
+    /// </summary>
     public class OrderService : IOrderService
     {
         private const string uri = "https://localhost:5001/order";
         private readonly HttpClient client;
 
+        /// <summary>
+        /// Constructor that initializes the Client
+        /// with the created ClientHandler.
+        /// </summary>
         public OrderService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();

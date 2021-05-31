@@ -2,10 +2,15 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Blazored.LocalStorage" Version="4.1.1" />
+      <PackageReference Include="docfx.console" Version="2.57.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.7" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.5" />
       <PackageReference Include="MudBlazor" Version="5.0.9" />
@@ -15,6 +20,8 @@
       <_ContentIncludedByDefault Remove="Pages\Components\AddEditIngredient.razor" />
       <_ContentIncludedByDefault Remove="Pages\Components\AddEditRecipe.razor" />
       <_ContentIncludedByDefault Remove="Pages\Components\EditUser.razor" />
+      <_ContentIncludedByDefault Remove="_site\manifest.json" />
+      <_ContentIncludedByDefault Remove="_site\search-stopwords.json" />
     </ItemGroup>
 
 </Project>
