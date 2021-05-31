@@ -25,6 +25,7 @@ This repository contains Source Code for *GodEats* , a project developed by **Di
 
  ## Documentation
  These are the step to make to get the documentation of each solution.
+ - Install nuget package 'docfx.console'
  - Build the solution. (Ctrl + Shift + B)
  - Run this line in terminal: docfx "*absolute path*\docfx.json" --serve
  - The documentation site now will be live on http://localhost:8080
