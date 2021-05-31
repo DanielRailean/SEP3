@@ -2,32 +2,53 @@
 @using WebApp.Models
 @using WebApp.Data
 @using global::Models
+@using System.Text.Json
 @using System.Diagnostics
 
 @inject IRecipeService RecipeService
 @inject IIngredientService IngredientService
+@inject IBasketService BasketService
 
-<h3>@recipeToShow.Name</h3>
-<h6>Food category: @recipeToShow.NutritionType</h6>
-<img src="@recipeToShow.Image" alt="@recipeToShow.Name">
-<br>
-<p>Ingredients:</p>
-<ul>
-    @foreach (var item in ingredientsInRecipe)
-    {
-        <li>@item.Quantity @item.UnitOfMeasure @item.Name</li>
-    }
-</ul>
-<br>
-<p>@recipeToShow.Description</p>
-<p>Minutes to prepare: @recipeToShow.MinutesToMake</p>
-<p>Calories: @recipeToShow.Calories</p>
-<p>Price: @recipeToShow.Price DKK</p>
+<div class="card" >
+    <div class="card-image"  style="background-image: url('@recipeToShow.Image'); background-repeat:no-repeat; background-size:cover; width:75% ; height: 30rem; 
+          margin: 0 auto;  " >
+                    
+                    <div ></div> 
+                       
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            <h3>@recipeToShow.Name</h3>
+                            <h6>Type: @recipeToShow.NutritionType</h6>
+                            <figure class="image is-48x48">
+                                <img src="@recipeToShow.Image" alt="@recipeToShow.Name">
+                            </figure>
+                        </div>
+                      
+                    </div>
+                    
+                      <p>Ingredients:</p>
+                        <ul>
+                            @foreach (var item in ingredientsInRecipe)
+                            {
+                                <li>@item.Name @item.Calories</li>
+                            }
+                        </ul>
+                        <p>@recipeToShow.Description</p>
+                        <p>Minutes to prepare: @recipeToShow.MinutesToMake</p>
+                        <p>Calories: @recipeToShow.Calories</p>
+                    <p>Price: @recipeToShow.Price DKK</p>
+                      <Button class="button is-link is-light" @onclick="async() => await AddToBasket(recipeToShow)" Variant="Variant.Filled" Color="Color.Primary">Add to basket</Button>
+                    </div>
+                
+            </div>
 
 @code {
     [Parameter]
     public int id { get; set; }
-
+    private string error;
+    private string cartContents;
     private Recipe recipeToShow = new Recipe();
     private IList<Ingredient> ingredientsInRecipe = new List<Ingredient>();
     private IList<Ingredient> allIngredients = new List<Ingredient>();
@@ -57,5 +78,24 @@
             ingredient.Quantity = item.Amount;
             ingredientsInRecipe.Add(ingredient);
         }
+    }
+    
+    private async Task AddToBasket(Recipe recipe)
+    {
+        try
+        {
+            await BasketService.AddRecipe(recipe);
+        }
+        catch (Exception e)
+        {
+            error = e.Message;
+        }
+        recipe.Amount = 0;
+        await updateBasket();
+    }
+    
+    private async Task updateBasket()
+    {
+        cartContents = JsonSerializer.Serialize(await BasketService.GetAllBasketItems());
     }
 }
