@@ -9,10 +9,6 @@ using WebApp.Models;
 
 namespace WebApp.Data.Implementation
 {
-    /// <summary>
-    /// This class is responsible for doing CRUD operations
-    /// on BasketItems in the LocalStorage.
-    /// </summary>
     public class BasketService : IBasketService
     {
         private ILocalStorageService localStorage;
@@ -21,11 +17,6 @@ namespace WebApp.Data.Implementation
         private string BasketCookieName = "basketItems";
         private string RecipesCookieName = "addedRecipes";
 
-        /// <summary>
-        /// Constructor that initializes the LocalStorage and
-        /// fills it up with data if available.
-        /// </summary>
-        /// <param name="localStorage">LocalStorage interface.</param>
         public BasketService(ILocalStorageService localStorage)
         {
             this.localStorage = localStorage;

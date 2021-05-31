@@ -8,19 +8,11 @@ using Models;
 
 namespace WebApp.Data.Implementation
 {
-    /// <summary>
-    /// This class is responsible for doing CRUD operations
-    /// on Recipes through REST requests.
-    /// </summary>
     public class RecipeService : IRecipeService
     {
         private const string uri = "https://localhost:5001/recipe";
         private readonly HttpClient client;
 
-        /// <summary>
-        /// Constructor that initializes the Client
-        /// with the created ClientHandler.
-        /// </summary>
         public RecipeService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();

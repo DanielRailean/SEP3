@@ -7,19 +7,11 @@ using WebApp.Models;
 
 namespace WebApp.Data.Implementation
 {
-    /// <summary>
-    /// This class is responsible for doing CRUD operations
-    /// on Users through REST requests.
-    /// </summary>
     public class UserService : IUserService
     {
         private const string uri = "http://localhost:5000/user";
         private readonly HttpClient client;
-
-        /// <summary>
-        /// Constructor that initializes the Client
-        /// with the created ClientHandler.
-        /// </summary>
+        private User currentUser;
         public UserService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();

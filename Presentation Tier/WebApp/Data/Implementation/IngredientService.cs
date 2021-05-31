@@ -8,19 +8,11 @@ using WebApp.Models;
 
 namespace WebApp.Data.Implementation
 {
-    /// <summary>
-    /// This class is responsible for doing CRUD operations
-    /// on Ingredients through REST requests.
-    /// </summary>
     public class IngredientService : IIngredientService
     {
         private const string uri = "https://localhost:5001/ingredient";
         private readonly HttpClient client;
         
-        /// <summary>
-        /// Constructor that initializes the Client
-        /// with the created ClientHandler.
-        /// </summary>
         public IngredientService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -113,6 +105,7 @@ namespace WebApp.Data.Implementation
         /// <exception cref="Exception">Response phrase.</exception>
         public async Task UpdateIngredientAsync(Ingredient ingredient)
         {
+            // TODO
             var ingredientAsJson = JsonSerializer.Serialize(ingredient);
             HttpContent content = new StringContent(ingredientAsJson,
                 Encoding.UTF8,
