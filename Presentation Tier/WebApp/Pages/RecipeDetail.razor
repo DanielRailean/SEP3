@@ -3,8 +3,10 @@
 @using WebApp.Data
 @using global::Models
 @using System.Text.Json
+@using System.Diagnostics
 
 @inject IRecipeService RecipeService
+@inject IIngredientService IngredientService
 @inject IBasketService BasketService
 
 <div class="card" >
@@ -30,7 +32,7 @@
                         <ul>
                             @foreach (var item in ingredientsInRecipe)
                             {
-                                <li>@item.Amount @item.IngredientId</li>
+                                <li>@item.Name @item.Calories</li>
                             }
                         </ul>
                         <p>@recipeToShow.Description</p>
