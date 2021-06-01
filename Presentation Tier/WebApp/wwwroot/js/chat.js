@@ -87,6 +87,10 @@ async function ReconnectToChatJS(userId){
     }
 }
 
+function clearChat(){
+    document.getElementById("messagesList").innerHTML="";
+}
+
 async function DisconnectJS(userId){
     console.log("null connection");
     // do whatever you like here
@@ -94,7 +98,6 @@ async function DisconnectJS(userId){
         connection.invoke("Disconnect",userId).catch(function (err) {
             return console.error(err.toString());
         });
-        document.getElementById("messagesList").innerHTML="";
         console.log("disconnect");
     }
     return true;

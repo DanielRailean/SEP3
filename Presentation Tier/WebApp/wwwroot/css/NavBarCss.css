@@ -126,7 +126,7 @@ body::-webkit-scrollbar-thumb{
   }
 
   /*small screens*/
-  @media only screen and (max-width:600px){
+  @media only screen and (max-width:960px){
       .navbar{
           bottom: 0;
           width: 100vw;
@@ -148,10 +148,16 @@ body::-webkit-scrollbar-thumb{
       .main{
           margin: 0;
       }
+
+      .allItems{
+          grid-template-columns: repeat(1,1fr);
+          grid-gap: 1rem;
+      }
+
   }
 
    /*large screens*/
-   @media only screen and (min-width:600px){
+   @media only screen and (min-width:960px){
        .navbar{
            top:0;
            width: 5rem;
@@ -178,4 +184,64 @@ body::-webkit-scrollbar-thumb{
 .control.has-icons-left .icon.is-left {
     width: 2rem;
     padding: 0.2rem;
+}
+
+.chatPage{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.chatRooms{
+    grid-area: 1 / 2 / 4 / 3;
+    width:100%;
+    height: 100%;
+}
+.adminControls{
+    grid-area: 4 / 2 / 5 / 3;
+    width:100%;
+    height: 100%;
+}
+
+.commonControls{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    grid-area: 4 / 1 / 5 / 2;
+    width:100%;
+    height: 10vh;
+    margin: auto;
+
+}
+
+.chatMessages{
+    grid-area: 1 / 1 / 4 / 2;
+    width:100%;
+    min-height: 60vh;
+    height: 100%;
+}
+
+.chatControls{
+    width: 2rem;
+}
+
+.inputField{
+    grid-area: 1 / 2 / 3 / 7;
+}
+
+.sendMessage{
+    margin: auto 0;
+    grid-area: 1 / 7 / 3 / 8;
+}
+
+.closeChat{
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.disconnect{
+    grid-area: 2 / 1 / 3 / 2;
 }

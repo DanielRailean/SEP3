@@ -1,19 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider/>
-
 <div class="page">
     <CascadingAuthenticationState>
         <NavMenu/>
     </CascadingAuthenticationState>
 
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="/About" target="_blank">About</a>
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
+<div class="main">
+    @Body
+</div>
 </div>
