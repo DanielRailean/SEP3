@@ -47,8 +47,6 @@
                 <th>Cost</th>
                 <th>Shipped</th>
                 <th>Amount of recipes</th>
-                <th>Remove</th>
-                <th>Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -56,38 +54,9 @@
             {
                 <tr>
                     <td>@item.OrderDate</td>
-                    <td>@item.DeliveryPrice</td>
+                    <td>@item.TotalPrice</td>
                     <td>@item.IsDelivered</td>
                     <td>@item.Items.Count</td>
-                    <td>
-                        <AuthorizeView>
-                            <NotAuthorized>
-                                <button @onclick="@(() => RemoveOrder(item))" disabled>
-                                    <i class="oi oi-trash" style="color: red"/>
-                                </button>
-                            </NotAuthorized>
-                            <Authorized>
-                                <button @onclick="@(() => RemoveOrder(item))">
-                                    <i class="oi oi-trash" style="color: red"/>
-                                </button>
-                            </Authorized>
-                        </AuthorizeView>
-                    </td>
-                    <td>
-                        <AuthorizeView>
-                            <NotAuthorized>
-                                <button @onclick="@(() => EditOrder(item.Id))" disabled>
-                                    <i class="oi oi-pencil" style="color: #1b6ec2"/>
-                                </button>
-                            </NotAuthorized>
-                            <Authorized>
-                                <button @onclick="@(() => EditOrder(item.Id))">
-                                    <i class="oi oi-pencil" style="color: #1b6ec2"/>
-                                </button>
-                            </Authorized>
-                        </AuthorizeView>
-                    </td>
-
                 </tr>
             }
             </tbody>

@@ -73,6 +73,7 @@
     IList<BasketItem> BasketItems = new List<BasketItem>();
     IList<Recipe> Recipes = new List<Recipe>();
     User currentUser;
+    private int deliveryPrice;
 
     JsonSerializerOptions serializeOptions = new JsonSerializerOptions
     {
@@ -101,14 +102,15 @@
     {
         selectedExpress = "    > Selected";
         selectedRegular = "";
-        
-        orderTotal = totalPrice + 69;
+        deliveryPrice = 69;
+        orderTotal = totalPrice + deliveryPrice;
     }
     private void SelectRegular()
     {
         selectedRegular = "    > Selected";
         selectedExpress = "";
-        orderTotal = totalPrice + 29;
+        deliveryPrice = 29;
+        orderTotal = totalPrice + deliveryPrice;
     }
     
     private void InputNewBillingAddress(){}
@@ -129,6 +131,9 @@
         newOrder.IsDelivered = false;
         newOrder.UserId = currentUser.id;
         newOrder.OrderDate = DateTime.Now;
+        newOrder.DeliveryPrice = deliveryPrice;
+        newOrder.ItemPrice = totalPrice;
+        newOrder.TotalPrice = orderTotal;
         newOrder.PostalCode = currentUser.PostalCode;
         Console.WriteLine(JsonSerializer.Serialize(newOrder,serializeOptions));
         await orderService.CreateOrderAsync(newOrder);
