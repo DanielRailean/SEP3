@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
@@ -29,7 +30,16 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"}); });
+            services.AddSwaggerGen(c => { 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "API", 
+                    Version = "v1", 
+                    Description = "API to provide data for GodEats website from the database."
+                });
+                var filePath = Path.Combine(AppContext.BaseDirectory, "API.xml");
+                c.IncludeXmlComments(filePath);
+            });
             services.AddScoped<IUserService,UserServiceREST>();
             services.AddScoped<IIngredientService,IngredientServiceREST>();
             services.AddScoped<IRecipeService,RecipeServiceREST>();
