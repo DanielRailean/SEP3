@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using API.Data;
 using API.Models;
@@ -8,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// Controller for providing endpoints to user services.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase, IUserController
@@ -19,6 +20,11 @@ namespace API.Controllers
             this.userService = userService;
         }
 
+        /// <summary>
+        /// Adding a new user to storage.
+        /// </summary>
+        /// <param name="user">User item to add.</param>
+        /// <returns>HTTP response.</returns>
         [HttpPost]
         public async Task<ActionResult<User>> RegisterUser([FromBody] User user)
         {
@@ -33,6 +39,12 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the user if the parameters are valid.
+        /// </summary>
+        /// <param name="email">E-mail of user.</param>
+        /// <param name="password">Password of user.</param>
+        /// <returns>HTTP response.</returns>
         [HttpGet]
         public async Task<ActionResult<User>> ValidateUser([FromQuery] string email, [FromQuery] string password)
         {
@@ -48,6 +60,13 @@ namespace API.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        
+        /// <summary>
+        /// Updates a specific user if the parameters are valid.
+        /// </summary>
+        /// <param name="user">User item to update.</param>
+        /// <param name="password">Password of user to validate.</param>
+        /// <returns>HTTP response.</returns>
         [HttpPut]
         public async Task<ActionResult<User>> UpdateUser([FromBody]User user,[FromQuery] string password)
         {
@@ -63,6 +82,11 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a specific user.
+        /// </summary>
+        /// <param name="user">User item to delete.</param>
+        /// <returns>HTTP response.</returns>
         [HttpDelete]
         public async Task<ActionResult<User>> RemoveUser(User user)
         {
