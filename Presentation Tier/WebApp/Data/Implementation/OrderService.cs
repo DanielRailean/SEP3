@@ -66,6 +66,25 @@ namespace WebApp.Data.Implementation
             return order;
         }
 
+        public async Task<IList<Order>> GetOrderAdmin(int id, User user)
+        {
+            HttpResponseMessage response = await client.GetAsync(uri+$"/GetOrdersAdmin?id={id}&email={user.Email}&password={user.Password}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Error: {response.StatusCode}, {response.ReasonPhrase}");
+            }
+
+            string result = await response.Content.ReadAsStringAsync();
+            IList<Order> order = JsonSerializer.Deserialize<IList<Order>>(result, 
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+            return order; 
+            
+        }
+
         /// <summary>
         /// Posts a new order to the REST endpoint,
         /// in JSON format.

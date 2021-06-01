@@ -126,6 +126,7 @@ body::-webkit-scrollbar-thumb{
   }
 
   /*small screens*/
+
   @media only screen and (max-width:960px){
       .navbar{
           bottom: 0;
@@ -158,6 +159,7 @@ body::-webkit-scrollbar-thumb{
 
    /*large screens*/
    @media only screen and (min-width:960px){
+
        .navbar{
            top:0;
            width: 5rem;
@@ -184,6 +186,7 @@ body::-webkit-scrollbar-thumb{
 .control.has-icons-left .icon.is-left {
     width: 2rem;
     padding: 0.2rem;
+
 }
 
 .chatPage{

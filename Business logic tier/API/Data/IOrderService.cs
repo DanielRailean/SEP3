@@ -13,6 +13,7 @@ namespace API.Data
         Task<Order> RemoveOrder(Order order);
 
         Task<IList<Order>> GetUserOrders(string email, string password);
+        Task<IList<Order>> GetOrdersAdmin(int id,string email, string password);
 
         Order DataToBusiness(DataOrder dataOrder);
         DataOrder BusinessToData(Order order);

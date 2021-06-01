@@ -12,6 +12,9 @@ namespace API.Data
         Task<ActionResult<IList<Order>>> GetUserOrders([FromBody] string email, string password);
         Task<ActionResult<Order>> UpdateOrder([FromBody] Order order);
         Task<ActionResult<Order>> RemoveOrder([FromBody] Order order);
+        Task<ActionResult<IList<Order>>> GetOrdersAdmin([FromQuery] int id, [FromQuery]string email, [FromQuery]string password );
+        
+            
         
     }
 }

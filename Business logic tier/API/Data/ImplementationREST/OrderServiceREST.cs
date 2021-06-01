@@ -138,6 +138,32 @@ namespace API.Data.ImplementationREST
             return userOrders;
         }
 
+        public async Task<IList<Order>> GetOrdersAdmin(int id, string email, string password)
+        {
+            User check = await userService.ValidateUser(email, password);
+            if (check == null) throw new Exception("Wrong email or password");
+            HttpResponseMessage response = await client.GetAsync(uri+$"/GetUserOrders?userId={id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                APIError apiError = JsonSerializer.Deserialize<APIError>(await response.Content.ReadAsStringAsync());
+                throw new Exception($@"Error: {apiError.message}");
+            }
+
+            string result = await response.Content.ReadAsStringAsync();
+            List<DataOrder> gotOrders = JsonSerializer.Deserialize<List<DataOrder>>(result,
+                new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            List<Order> userOrders = new List<Order>();
+            foreach (var item in gotOrders)
+            {
+                userOrders.Add(DataToBusiness(item));
+            }
+            Console.WriteLine("result"+result);
+            return userOrders;
+            
+        }
+        
+        
+
         public Order DataToBusiness(DataOrder dataOrder)
         {
             Order returned = new Order();
