@@ -24,7 +24,7 @@ namespace API.Controllers
         /// <summary>
         /// For adding a new ingredient.
         /// </summary>
-        /// <param name="ingredient">Ingredient item to update, in JSON.</param>
+        /// <param name="ingredient">Ingredient item to add.</param>
         /// <returns>HTTP response.</returns>
         [HttpPost]
         public async Task<ActionResult<Ingredient>> AddIngredient(Ingredient ingredient)

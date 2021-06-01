@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// Controller that provides endpoint for order services.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
-
     public class OrderController : ControllerBase, IOrderController
     {
         private IOrderService orderService;
@@ -19,6 +21,11 @@ namespace API.Controllers
             this.orderService = orderService;
         }
         
+        /// <summary>
+        /// For adding a new order.
+        /// </summary>
+        /// <param name="order">Order to add.</param>
+        /// <returns>HTTP response.</returns>
         [HttpPost]
         public async Task<ActionResult<Order>> AddOrder([FromBody]Order order)
         {
@@ -34,6 +41,11 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get a specific order by id.
+        /// </summary>
+        /// <param name="id">Id of the order to get.</param>
+        /// <returns>HTTP response.</returns>
         [HttpGet("GetOrder")]
         public async Task<ActionResult<Order>> GetOrder([FromQuery]int id)
         {
@@ -49,6 +61,12 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get orders by user.
+        /// </summary>
+        /// <param name="email">E-mail address of the user.</param>
+        /// <param name="password">Password of the user.</param>
+        /// <returns>HTTP response.</returns>
         [HttpGet("GetUserOrders")]
         public async Task<ActionResult<IList<Order>>> GetUserOrders([FromQuery]string email, [FromQuery]string password)
         {
@@ -64,6 +82,11 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Update a specific order.
+        /// </summary>
+        /// <param name="order">Order item to update.</param>
+        /// <returns>HTTP response.</returns>
         [HttpPut]
         public async Task<ActionResult<Order>> UpdateOrder([FromBody]Order order)
         {
@@ -79,6 +102,11 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a specific order.
+        /// </summary>
+        /// <param name="order">Order item to delete.</param>
+        /// <returns>HTTP response.</returns>
         [HttpDelete]
         public async Task<ActionResult<Order>> RemoveOrder([FromBody]Order order)
         {
