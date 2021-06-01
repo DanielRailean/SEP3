@@ -25,7 +25,9 @@ namespace API.Controllers.Controllers
         /// For adding a new recipe.
         /// </summary>
         /// <param name="recipe">Recipe item to add.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPost]
         public async Task<ActionResult<Recipe>> AddRecipe([FromBody]Recipe recipe)
         {
@@ -45,7 +47,9 @@ namespace API.Controllers.Controllers
         /// Gets a specific recipe item by id.
         /// </summary>
         /// <param name="id">Id of recipe to get.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpGet("GetRecipe")]
         public async Task<ActionResult<Recipe>> GetRecipe([FromQuery]int id)
         {
@@ -64,7 +68,9 @@ namespace API.Controllers.Controllers
         /// <summary>
         /// Get all the recipe items in a list from storage.
         /// </summary>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpGet("GetAllRecipes")]
         public async Task<ActionResult<IList<Recipe>>> GetAllRecipes()
         {
@@ -84,7 +90,9 @@ namespace API.Controllers.Controllers
         /// Update a specific recipe item.
         /// </summary>
         /// <param name="recipe">Recipe item to update.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPut]
         public async Task<ActionResult<Recipe>> UpdateRecipe([FromBody]Recipe recipe)
         {
@@ -104,7 +112,9 @@ namespace API.Controllers.Controllers
         /// Deletes a specific recipe.
         /// </summary>
         /// <param name="recipe">Recipe item to delete.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpDelete]
         public async Task<ActionResult<Recipe>> RemoveRecipe([FromBody]Recipe recipe)
         {
@@ -120,5 +130,4 @@ namespace API.Controllers.Controllers
             }
         }
     }
-
 }
