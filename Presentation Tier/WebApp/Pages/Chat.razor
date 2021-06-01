@@ -123,10 +123,10 @@
     }
     </div>
 <ul class="list-group" id="messagesList">
-    @if (currentRoom!=null)
+    @if (messages!=null)
     {
         <h3>Messages:</h3>
-        foreach (var item in currentRoom.Messages)
+        foreach (var item in messages)
         {
             <li class="list-group-item">@item.Sender said @item.Body</li>
         }
@@ -217,6 +217,7 @@
     {
         await JSRuntime.InvokeVoidAsync("ReconnectToChatJS", currentUser.id);
         Console.WriteLine("reconnect to chat");
+        await FetchRoom();
         await UpdateUserStatus();
     }
 
@@ -504,6 +505,10 @@
         if (chatUser != null)
         {
             currentRoom = await ChatService.GetRoom(chatUser.CurrentRoom);
+            if (currentRoom != null)
+            {
+                messages = JsonSerializer.Deserialize<IList<Message>>(JsonSerializer.Serialize(currentRoom.Messages));
+            }
         }
     }
 
