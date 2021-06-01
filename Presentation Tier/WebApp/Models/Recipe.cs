@@ -23,7 +23,6 @@ namespace Models
         public string Description { get; set; }
         [Required]
         public string Image { get; set; }
-        [JsonIgnore]
         public int Amount { get; set; }
     }
 }

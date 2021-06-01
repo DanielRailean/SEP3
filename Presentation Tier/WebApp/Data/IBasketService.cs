@@ -11,6 +11,8 @@ namespace WebApp.Data
         Task<IList<Recipe>> GetAllBasketRecipes();
         Task AddRecipe(Recipe recipe);
         Task RemoveRecipe(Recipe recipe);
+        Task<int> GetItemsTotal();
+        Task<double> GetPriceTotal();
         Task Clear();
     }
 }

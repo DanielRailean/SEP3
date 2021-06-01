@@ -31,6 +31,10 @@ namespace WebApp.Models
         [JsonPropertyName("postalCode")]
 
         public int PostalCode { get; set; }
+        
+        [Required]
+        [JsonPropertyName("city")]
+        public string City { get; set; }
         [Required]
         [JsonPropertyName("securityLevel")]
 

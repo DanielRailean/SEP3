@@ -13,6 +13,11 @@ namespace WebApp.Data.Implementation
         private const string uri = "https://localhost:5001/recipe";
         private readonly HttpClient client;
 
+        JsonSerializerOptions serializeOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        };
         public RecipeService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -71,7 +76,7 @@ namespace WebApp.Data.Implementation
         /// <exception cref="Exception">Response phrase.</exception>
         public async Task CreateRecipeAsync(Recipe recipe)
         {
-            var recipeAsJson = JsonSerializer.Serialize(recipe);
+            var recipeAsJson = JsonSerializer.Serialize(recipe,serializeOptions);
             HttpContent content = new StringContent(recipeAsJson,
                 Encoding.UTF8,
                 "application/json");
@@ -93,7 +98,7 @@ namespace WebApp.Data.Implementation
             {
                 Method = HttpMethod.Delete,
                 RequestUri = new Uri(uri),
-                Content = new StringContent(JsonSerializer.Serialize(recipe), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(recipe,serializeOptions), Encoding.UTF8, "application/json")
             };
             await client.SendAsync(request);
         }
@@ -110,7 +115,7 @@ namespace WebApp.Data.Implementation
             {
                 Method = HttpMethod.Put,
                 RequestUri = new Uri(uri),
-                Content = new StringContent(JsonSerializer.Serialize(recipe), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(recipe,serializeOptions), Encoding.UTF8, "application/json")
             };
             await client.SendAsync(request);
         }

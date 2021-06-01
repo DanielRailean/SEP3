@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using WebApp.Models;
 
-namespace API.Models
+namespace WebApp.Models
 {
     public class Order
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         
         public DateTime OrderDate { get; set; }
         public IList<BasketItem> Items { get; set; }
