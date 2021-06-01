@@ -52,23 +52,6 @@ function ExitRoomJS(){
     }
 }
 
-async function ConnectUser(userId,username){
-    if(connection!=null){
-        connection.invoke("ConnectUserHub",userId, username).catch(function (err) {
-            return console.error(err.toString());
-        });
-        console.log("connected as "+userId+username);
-    }
-}
-async function ConnectAdmin(userId,username){
-    if(connection!=null){
-        connection.invoke("ConnectAdminHub",userId, username).catch(function (err) {
-            return console.error(err.toString());
-        });
-        console.log("connected as "+userId+username);
-    }
-}
-
 async function SendMessageJS(message){
     if(connection!=null){
         connection.invoke("SendMessage",message).catch(function (err) {
@@ -87,7 +70,7 @@ async function ReconnectToChatJS(userId){
     }
 }
 
-function clearChat(){
+function ClearChatJS(){
     document.getElementById("messagesList").innerHTML="";
 }
 
@@ -112,18 +95,6 @@ async function HelpNextUserJS(){
     }
 }
 
-async function saveSession(key,value){
-    sessionStorage.setItem(key, value);
-}
-async function getSession(key){
-    return sessionStorage.getItem(key);
-}
-async function saveLocal(key,value){
-    localStorage.setItem(key, value);
-}
-async function getLocal(key){
-    return localStorage.getItem(key);
-}
 async function InitialiseMethods(){
     if(connection!=null){
         connection.on("ReceiveMessage", function (user, message) {
@@ -133,18 +104,5 @@ async function InitialiseMethods(){
             li.textContent = `${user} says ${message}`;
             console.log("receive");
         });
-        /*connection.on("SetConnection", function (message) {
-            saveSession("connectionC",message);
-            console.log("connection");
-        });
-        connection.on("SetChatRoom", function (message) {
-            saveLocal("chatRoom",message);
-            console.log("room");
-        });
-        connection.on("ClearLocalKeys", function () {
-            saveLocal("startedChat",false);
-            /!*document.getElementById("connectButton").innerText=;*!/
-            console.log("clear keys");
-        });*/
     }
 }
