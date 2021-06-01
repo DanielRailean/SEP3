@@ -5,11 +5,13 @@ using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers.Controllers
 {
+    /// <summary>
+    /// Controller that provides endpoints for recipe services.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
-
     public class RecipeController : ControllerBase, IRecipeController
     {
         private IRecipeService recipeService;
@@ -19,6 +21,11 @@ namespace API.Controllers
             this.recipeService = recipeService;
         }
         
+        /// <summary>
+        /// For adding a new recipe.
+        /// </summary>
+        /// <param name="recipe">Recipe item to add.</param>
+        /// <returns>HTTP response.</returns>
         [HttpPost]
         public async Task<ActionResult<Recipe>> AddRecipe([FromBody]Recipe recipe)
         {
@@ -34,6 +41,11 @@ namespace API.Controllers
             }
         }
     
+        /// <summary>
+        /// Gets a specific recipe item by id.
+        /// </summary>
+        /// <param name="id">Id of recipe to get.</param>
+        /// <returns>HTTP response.</returns>
         [HttpGet("GetRecipe")]
         public async Task<ActionResult<Recipe>> GetRecipe([FromQuery]int id)
         {
@@ -49,6 +61,10 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all the recipe items in a list from storage.
+        /// </summary>
+        /// <returns>HTTP response.</returns>
         [HttpGet("GetAllRecipes")]
         public async Task<ActionResult<IList<Recipe>>> GetAllRecipes()
         {
@@ -64,6 +80,11 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Update a specific recipe item.
+        /// </summary>
+        /// <param name="recipe">Recipe item to update.</param>
+        /// <returns>HTTP response.</returns>
         [HttpPut]
         public async Task<ActionResult<Recipe>> UpdateRecipe([FromBody]Recipe recipe)
         {
@@ -79,6 +100,11 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a specific recipe.
+        /// </summary>
+        /// <param name="recipe">Recipe item to delete.</param>
+        /// <returns>HTTP response.</returns>
         [HttpDelete]
         public async Task<ActionResult<Recipe>> RemoveRecipe([FromBody]Recipe recipe)
         {
