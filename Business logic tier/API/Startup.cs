@@ -33,7 +33,7 @@ namespace API
             services.AddSwaggerGen(c => { 
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "API", 
+                    Title = "GodEats API", 
                     Version = "v1", 
                     Description = "API to provide data for GodEats website from the database."
                 });

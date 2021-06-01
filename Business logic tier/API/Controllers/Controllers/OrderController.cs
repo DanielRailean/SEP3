@@ -25,7 +25,9 @@ namespace API.Controllers.Controllers
         /// For adding a new order.
         /// </summary>
         /// <param name="order">Order to add.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPost]
         public async Task<ActionResult<Order>> AddOrder([FromBody]Order order)
         {
@@ -45,7 +47,9 @@ namespace API.Controllers.Controllers
         /// Get a specific order by id.
         /// </summary>
         /// <param name="id">Id of the order to get.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpGet("GetOrder")]
         public async Task<ActionResult<Order>> GetOrder([FromQuery]int id)
         {
@@ -66,7 +70,9 @@ namespace API.Controllers.Controllers
         /// </summary>
         /// <param name="email">E-mail address of the user.</param>
         /// <param name="password">Password of the user.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpGet("GetUserOrders")]
         public async Task<ActionResult<IList<Order>>> GetUserOrders([FromQuery]string email, [FromQuery]string password)
         {
@@ -86,7 +92,9 @@ namespace API.Controllers.Controllers
         /// Update a specific order.
         /// </summary>
         /// <param name="order">Order item to update.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPut]
         public async Task<ActionResult<Order>> UpdateOrder([FromBody]Order order)
         {
@@ -106,7 +114,9 @@ namespace API.Controllers.Controllers
         /// Delete a specific order.
         /// </summary>
         /// <param name="order">Order item to delete.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpDelete]
         public async Task<ActionResult<Order>> RemoveOrder([FromBody]Order order)
         {

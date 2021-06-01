@@ -24,7 +24,9 @@ namespace API.Controllers.Controllers
         /// Adding a new user to storage.
         /// </summary>
         /// <param name="user">User item to add.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPost]
         public async Task<ActionResult<User>> RegisterUser([FromBody] User user)
         {
@@ -44,7 +46,9 @@ namespace API.Controllers.Controllers
         /// </summary>
         /// <param name="email">E-mail of user.</param>
         /// <param name="password">Password of user.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpGet]
         public async Task<ActionResult<User>> ValidateUser([FromQuery] string email, [FromQuery] string password)
         {
@@ -66,7 +70,9 @@ namespace API.Controllers.Controllers
         /// </summary>
         /// <param name="user">User item to update.</param>
         /// <param name="password">Password of user to validate.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPut]
         public async Task<ActionResult<User>> UpdateUser([FromBody]User user,[FromQuery] string password)
         {
@@ -86,7 +92,9 @@ namespace API.Controllers.Controllers
         /// Deletes a specific user.
         /// </summary>
         /// <param name="user">User item to delete.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpDelete]
         public async Task<ActionResult<User>> RemoveUser(User user)
         {

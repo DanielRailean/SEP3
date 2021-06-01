@@ -25,7 +25,9 @@ namespace API.Controllers.Controllers
         /// For adding a new ingredient.
         /// </summary>
         /// <param name="ingredient">Ingredient item to add.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPost]
         public async Task<ActionResult<Ingredient>> AddIngredient(Ingredient ingredient)
         {
@@ -45,7 +47,9 @@ namespace API.Controllers.Controllers
         /// Get a specific ingredient by its id.
         /// </summary>
         /// <param name="id">Id of the ingredient to get.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpGet("GetIngredient")]
         public async Task<ActionResult<Ingredient>> GetIngredient(int id)
         {
@@ -64,7 +68,9 @@ namespace API.Controllers.Controllers
         /// <summary>
         /// Get all the ingredients that are stored.
         /// </summary>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpGet("GetAllIngredients")]
         public async Task<ActionResult<IList<Ingredient>>> GetAllIngredients()
         {
@@ -84,7 +90,9 @@ namespace API.Controllers.Controllers
         /// Updates a specific ingredient that is stored.
         /// </summary>
         /// <param name="ingredient">Ingredient item to update.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpPut]
         public async Task<ActionResult<Ingredient>> UpdateIngredient(Ingredient ingredient)
         {
@@ -104,7 +112,9 @@ namespace API.Controllers.Controllers
         /// Deletes a specific ingredient that is passed.
         /// </summary>
         /// <param name="ingredient">Ingredient item to delete.</param>
-        /// <returns>HTTP response.</returns>
+        /// <response code="200">Successful transaction.</response>
+        /// <response code="400">Missing values.</response>
+        /// <response code="500">Server error.</response>
         [HttpDelete]
         public async Task<ActionResult<Ingredient>> RemoveIngredient(Ingredient ingredient)
         {
