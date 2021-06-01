@@ -4,7 +4,7 @@ using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers.Controllers
 {
     /// <summary>
     /// Controller for providing endpoints to user services.

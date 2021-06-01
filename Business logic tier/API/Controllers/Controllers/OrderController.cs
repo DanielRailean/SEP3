@@ -5,7 +5,7 @@ using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers.Controllers
 {
     /// <summary>
     /// Controller that provides endpoint for order services.
