@@ -2,15 +2,22 @@
 @attribute [Authorize(Policy = "Admin")]
 @using WebApp.Models
 @using WebApp.Data
+@using WebApp.Authentication
 @using API.Models
+@using System.Text.Json
 
 @inject IOrderService OrderService
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 
 <h3>Manage Orders</h3>
 <p>
-    Filter by user ID: <input type="number" @oninput="@(arg => FilterByUserId(arg))" style="width: 100px"/>
+    Filter by user ID: <input type="number" @bind="id" style="width: 100px"/>
+</p>
+<p>
+    <button class="button is-link is-light" @onclick="@(async () => await SearchOrdersAdmin())" >Search</button>
 </p>
 <button @onclick="@(() => ExecuteFilter())">
     <i class="oi oi-magnifying-glass" style="color: red"/>
@@ -67,12 +74,13 @@ else
     private IList<Order> orders = new List<Order>();
     private IList<User> users = new List<User>();
     private User user;
+    private int id;
 
     private int? filterByUserId = 0;
 
     protected override async Task OnInitializedAsync()
     {
-        orders = await OrderService.GetOrdersByUserAsync(user);
+        
     }
 
     private void RemoveOrder(int Id)
@@ -110,5 +118,14 @@ else
     private async Task CompletedChange(ChangeEventArgs evt, Order order) {
         order.IsDelivered = (bool) evt.Value;
         await OrderService.UpdateOrderAsync(order);
+    }
+
+    private async Task SearchOrdersAdmin()
+    {
+        user = await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).GetUser();
+        orders =  await OrderService.GetOrderAdmin(id, user);
+        StateHasChanged();
+        Console.WriteLine(JsonSerializer.Serialize(orders));
+        Console.WriteLine(JsonSerializer.Serialize(user));
     }
 }

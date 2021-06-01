@@ -38,7 +38,8 @@ namespace WebApp.Data.Implementation
             }
 
             string result = await response.Content.ReadAsStringAsync();
-            List<Recipe> recipes = JsonSerializer.Deserialize<List<Recipe>>(result, new JsonSerializerOptions
+            List<Recipe> recipes = JsonSerializer.Deserialize<List<Recipe>>(result, 
+                new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase

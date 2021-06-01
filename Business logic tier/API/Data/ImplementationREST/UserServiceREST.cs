@@ -34,7 +34,8 @@ namespace API.Data.ImplementationREST
                 throw new Exception($@"Error: {apiError.message}");
             }
             string result = await response.Content.ReadAsStringAsync();
-            User userReceived = JsonSerializer.Deserialize<User>(result, new JsonSerializerOptions{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            User userReceived = JsonSerializer.Deserialize<User>(result, new JsonSerializerOptions{ PropertyNamingPolicy
+                = JsonNamingPolicy.CamelCase});
             return userReceived;
         }
 

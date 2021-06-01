@@ -93,5 +93,22 @@ namespace API.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        [HttpGet("GetOrdersAdmin")]
+        public async Task<ActionResult<IList<Order>>> GetOrdersAdmin([FromQuery]int id, [FromQuery]string email, [FromQuery]string password)
+        {
+            try
+            {
+                IList<Order> valid = await orderService.GetOrdersAdmin(id,email,password);
+                return Ok(valid);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500, e.Message);
+            }
+        }
+        
+        
+            
     }
 }
