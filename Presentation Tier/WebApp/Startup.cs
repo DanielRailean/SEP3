@@ -1,5 +1,6 @@
 
 using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,7 @@ namespace WebApp
             services.AddScoped<IBasketService, BasketService>();
             services.AddSingleton<IChatService, ChatServiceInMemory>();
             services.AddBlazoredLocalStorage();
+            services.AddBlazoredSessionStorage();
             services.AddBlazoredLocalStorage(config =>
                 config.JsonSerializerOptions.WriteIndented = true);
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

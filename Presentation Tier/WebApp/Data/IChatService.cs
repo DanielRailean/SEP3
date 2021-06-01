@@ -8,31 +8,27 @@ namespace WebApp.Data
     public interface IChatService
     {
         //Read
-        Task<IList<ChatUser>> GetOnlineAdmins();
-        Task<IList<ChatUser>> GetOnlineUsers();
         Task<IList<ChatRoom>> GetChatRooms();
-        Task<ChatRoom> GetRoom(long userId,bool isAdmin,string connectionId,string name);
-        Task<IList<Message>> GetGroupMessages(string roomId);
+        Task<ChatRoom> GetRoom(string roomId);
         Task<ChatRoom> NextInQueue(string adminConnectionId);
-        bool IsAdminOnline(string connectionId);
-        bool IsUserOnline(string connectionId);
-        Task<string> GetUpdates(string connectionId,bool isAdmin);
         Task<ChatUser> GetUser(string connectionId);
-        bool IsUserConnected(long userId);
-        bool IsAdminConnected(long userId);
+        Task<int> GetUserStatus(long userId);
+        Task<ChatUser> GetUserById(long userId);
+        Task<ChatRoom> AskQuestion(string question,string connectionId);
+
         
         //Create
-        Task AddChatUser(ChatUser user);
         Task AddMessage(Message message, string roomId);
         Task ConnectToChat(long userId, bool isAdmin, string connectionId, string name);
-        Task GoOffline(long userId, bool isAdmin, string connectionId, string name);
 
-        //Update
-        Task ChangeUserStatus(string connectionId, int status);
+        //UPDATE
+        Task<ChatRoom> ConnectToRoom(string userConnectionId, string roomId);
+        Task<ChatRoom> ExitRoom(string userConnectionId);
+        Task<ChatRoom> ReconnectToChat(int userId,string userConnectionId);
         
         //Delete
-        Task DisconnectUser(long userId);
-        Task StopChat(string connectionId);
+        Task<ChatRoom> DisconnectUser(int userId);
+        Task RemoveRoom(string roomId);
 
     }
 }

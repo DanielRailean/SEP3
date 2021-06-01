@@ -26,5 +26,14 @@
 .is-small > .fa-primary {
     color: red;
 }
+.page{
+    height: 100vh;
+    width: 100vw;
+}
+.main{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
 
 
