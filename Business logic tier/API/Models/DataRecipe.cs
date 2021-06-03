@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace API.Models
 {
+    /// <summary>
+    /// Model for recipe in the data access tier.
+    /// </summary>
     public class DataRecipe
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]

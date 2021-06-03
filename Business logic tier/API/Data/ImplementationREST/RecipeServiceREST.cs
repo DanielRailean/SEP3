@@ -9,6 +9,9 @@ using API.Models;
 
 namespace API.Data.ImplementationREST
 {
+    /// <summary>
+    /// Consumes REST endpoints and does CRUD operations on Recipes.
+    /// </summary>
     public class RecipeServiceREST : IRecipeService
     {
         private string uri = "http://localhost:8080";

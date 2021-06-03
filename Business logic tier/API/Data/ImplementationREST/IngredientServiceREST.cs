@@ -8,6 +8,9 @@ using API.Models;
 
 namespace API.Data.ImplementationREST
 {
+    /// <summary>
+    /// Consumes REST endpoints and does CRUD operations on Ingredients.
+    /// </summary>
     public class IngredientServiceREST : IIngredientService
     {
         private string uri = "http://localhost:8080";

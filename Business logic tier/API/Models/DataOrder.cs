@@ -6,6 +6,9 @@ using WebApp.Models;
 
 namespace API.Models
 {
+    /// <summary>
+    /// Model for orders in the data access tier.
+    /// </summary>
     public class DataOrder
     {
         public int Id { get; set; }

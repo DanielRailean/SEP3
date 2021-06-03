@@ -10,6 +10,9 @@ using WebApp.Models;
 
 namespace API.Data.ImplementationREST
 {
+    /// <summary>
+    /// Consumes REST endpoints and does CRUD operations on Orders.
+    /// </summary>
     public class OrderServiceREST : IOrderService
     {
         private string uri = "http://localhost:8080";

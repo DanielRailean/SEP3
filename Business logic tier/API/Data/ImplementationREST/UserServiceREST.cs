@@ -8,6 +8,9 @@ using API.Models;
 
 namespace API.Data.ImplementationREST
 {
+    /// <summary>
+    /// Consumes REST endpoints and does CRUD operations on Users.
+    /// </summary>
     public class UserServiceREST : IUserService
     {
         private string uri = "http://localhost:8080";
