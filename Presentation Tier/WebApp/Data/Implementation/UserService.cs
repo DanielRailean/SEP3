@@ -12,6 +12,12 @@ namespace WebApp.Data.Implementation
         private const string uri = "http://localhost:5000/user";
         private readonly HttpClient client;
         private User currentUser;
+        
+        JsonSerializerOptions serializeOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        };
         public UserService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -29,7 +35,7 @@ namespace WebApp.Data.Implementation
         /// <param name="user">User to create.</param>
         public async Task RegisterUserAsync(User user)
         {
-            var userAsJson = JsonSerializer.Serialize(user);
+            var userAsJson = JsonSerializer.Serialize(user,serializeOptions);
             HttpContent content = new StringContent(userAsJson,
                 Encoding.UTF8,
                 "application/json");
@@ -71,7 +77,7 @@ namespace WebApp.Data.Implementation
         /// <exception cref="Exception">Response phrase.</exception>
         public async Task UpdateUserAsync(User user,string password)
         {
-            var userAsJson = JsonSerializer.Serialize(user);
+            var userAsJson = JsonSerializer.Serialize(user,serializeOptions);
             HttpContent content = new StringContent(userAsJson,
                 Encoding.UTF8,
                 "application/json");
@@ -93,7 +99,7 @@ namespace WebApp.Data.Implementation
             {
                 Method = HttpMethod.Delete,
                 RequestUri = new Uri(uri),
-                Content = new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(user,serializeOptions), Encoding.UTF8, "application/json")
             };
             await client.SendAsync(request);
         }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using API.Models;
 using WebApp.Models;
 
 namespace WebApp.Data

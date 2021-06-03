@@ -1,0 +1,144 @@
+﻿@page "/OrderConfirmation"
+@using WebApp.Models
+@using global::Models
+@using WebApp.Authentication
+@using WebApp.Data
+@using System.Text.Json
+
+@inject IBasketService BasketService;
+@inject IOrderService orderService;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager;
+
+<h3>Please confirm your order</h3>
+<h4>Added items</h4>
+<progress class="progress is-success" value="80" max="100">80%</progress>
+<table class="table is-bordered">
+    <thead>
+    <th>Name</th>
+    <th>Amount</th>
+    <th>Total</th>
+    </thead>
+    <tbody>
+    @if (Recipes != null)
+    {
+        @foreach (var item in Recipes)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Amount</td>
+                <td>@item.Price</td>
+            </tr>
+        }
+    }
+    <tr>
+        <th>Total</th>
+        <td>@totalAmount</td>
+        <td>@totalPrice</td>
+    </tr>
+    </tbody>
+</table>
+<h4>Delivery options</h4>
+<div class="box" @onclick="SelectRegular">
+    Regular delivery 29 DKK @selectedRegular
+</div>
+<div class="box" @onclick="SelectExpress">
+  Express delivery 69 DKK @selectedExpress
+</div>
+<h4>Delivery adress</h4>
+<div class="box" >
+    @if (currentUser != null)
+    {
+        <p>@currentUser.Address </p> 
+        <p>@currentUser.PostalCode </p>
+        <p>Denmark</p>
+    }
+    Denmark
+</div>
+
+<h4>Billing Adress</h4>
+<div class="box" >
+    @if (currentUser != null)
+    {
+        <p>@currentUser.Address </p> 
+        <p>@currentUser.PostalCode @currentUser.City</p>
+        <p>Denmark</p>
+    }
+</div>
+<h2>Grant total: @orderTotal DKK <button class="button is-success is-medium" @onclick="async()=>await ConfirmOrder()">Confirm order</button></h2>
+
+@code {
+
+    Order newOrder = new Order();
+    IList<BasketItem> BasketItems = new List<BasketItem>();
+    IList<Recipe> Recipes = new List<Recipe>();
+    User currentUser;
+    private int deliveryPrice;
+
+    JsonSerializerOptions serializeOptions = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true
+    };
+    private int? totalAmount = 0;
+    private double totalPrice = 0;
+    private double orderTotal = 0;
+    private string selectedRegular = "> Selected";
+    private string selectedExpress = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(100);
+        BasketItems = await BasketService.GetAllBasketItems();
+        Recipes = await BasketService.GetAllBasketRecipes();
+        totalAmount = await BasketService.GetItemsTotal();
+        totalPrice = await BasketService.GetPriceTotal();
+        orderTotal = totalPrice + 29;
+        currentUser = await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetUser();
+        currentUser.City = "horsens";
+    }
+
+    private void SelectExpress()
+    {
+        selectedExpress = "    > Selected";
+        selectedRegular = "";
+        deliveryPrice = 69;
+        orderTotal = totalPrice + deliveryPrice;
+    }
+    private void SelectRegular()
+    {
+        selectedRegular = "    > Selected";
+        selectedExpress = "";
+        deliveryPrice = 29;
+        orderTotal = totalPrice + deliveryPrice;
+    }
+    
+    private void InputNewBillingAddress(){}
+
+    private void InputNewDeliveryAddress()
+    {
+        
+    }
+
+    private async Task ConfirmOrder()
+    {
+        newOrder.City = currentUser.City;
+        newOrder.Currency = "DKK";
+        newOrder.Items = BasketItems;
+        newOrder.Status = "Registered";
+        newOrder.DeliveryAddress = currentUser.Address;
+        newOrder.InvoiceAddress = currentUser.Address;
+        newOrder.IsDelivered = false;
+        newOrder.UserId = currentUser.id;
+        newOrder.OrderDate = DateTime.Now;
+        newOrder.DeliveryPrice = deliveryPrice;
+        newOrder.ItemPrice = totalPrice;
+        newOrder.TotalPrice = orderTotal;
+        newOrder.PostalCode = currentUser.PostalCode;
+        Console.WriteLine(JsonSerializer.Serialize(newOrder,serializeOptions));
+        await orderService.CreateOrderAsync(newOrder);
+        await BasketService.Clear();
+        NavigationManager.NavigateTo("/ThankYou");
+    }
+
+}

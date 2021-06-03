@@ -100,6 +100,27 @@ namespace WebApp.Data.Implementation
             basketItems = new List<BasketItem>();
         }
 
+        public async Task<double> GetPriceTotal()
+        {
+            double totalPrice = 0;
+            foreach (var item in addedRecipes)
+            {
+                totalPrice += item.Price * item.Amount;
+            }
+
+            return totalPrice;
+        }
+
+        public async Task<int> GetItemsTotal()
+        {
+            int totalAmount = 0;
+            foreach (var item in addedRecipes)
+            {
+                totalAmount += item.Amount;
+            }
+
+            return totalAmount;
+        }
         /// <summary>
         /// This method is to check if a list has a specific item.
         /// </summary>

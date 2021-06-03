@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using API.Models;
 using WebApp.Models;
 
 namespace WebApp.Data.Implementation
@@ -14,6 +13,11 @@ namespace WebApp.Data.Implementation
         private const string uri = "https://localhost:5001/order";
         private readonly HttpClient client;
 
+        JsonSerializerOptions serializeOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        };
         public OrderService()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -93,7 +97,7 @@ namespace WebApp.Data.Implementation
         /// <exception cref="Exception">Response phrase.</exception>
         public async Task CreateOrderAsync(Order order)
         {
-            var orderAsJson = JsonSerializer.Serialize(order);
+            var orderAsJson = JsonSerializer.Serialize(order,serializeOptions);
             HttpContent content = new StringContent(orderAsJson,
                 Encoding.UTF8,
                 "application/json");
@@ -115,7 +119,7 @@ namespace WebApp.Data.Implementation
             {
                 Method = HttpMethod.Delete,
                 RequestUri = new Uri(uri),
-                Content = new StringContent(JsonSerializer.Serialize(order), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(order,serializeOptions), Encoding.UTF8, "application/json")
             };
             await client.SendAsync(request);
         }
@@ -128,7 +132,7 @@ namespace WebApp.Data.Implementation
         /// <exception cref="Exception">Response phrase.</exception>
         public async Task UpdateOrderAsync(Order order)
         {
-            var orderAsJson = JsonSerializer.Serialize(order);
+            var orderAsJson = JsonSerializer.Serialize(order,serializeOptions);
             HttpContent content = new StringContent(orderAsJson,
                 Encoding.UTF8,
                 "application/json");
