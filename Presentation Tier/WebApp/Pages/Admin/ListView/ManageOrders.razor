@@ -4,7 +4,6 @@
 @using WebApp.Data
 
 @using WebApp.Authentication
-@using API.Models
 @using System.Text.Json
 
 
@@ -40,6 +39,7 @@ else
             <th>User</th>
             <th>Total</th>
             <th>Is Shipped?</th>
+            <th>Order Status</th>
             <th>Remove</th>
             <th>Edit</th>
         </tr>
@@ -53,6 +53,7 @@ else
                 <td>@user.FirstName, @user.LastName, @user.Email</td>
                 <td>@item.TotalPrice</td>
                 <td>@item.IsDelivered</td>
+                <td>@item.Status</td>
                 <td>
                     <input type="checkbox" checked=@item.IsDelivered @onchange="@((arg) => CompletedChange(arg, item))"/>
                 </td>
