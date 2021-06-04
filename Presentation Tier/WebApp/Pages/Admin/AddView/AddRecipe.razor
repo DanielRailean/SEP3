@@ -73,10 +73,6 @@
             <ValidationSummary/>
             <div class="form-group"> Ingredients: <br/>
                 <InputSelect class ="input input is-info" @bind-Value="ingredientName">
-                    @foreach (Ingredient item in ingredients)
-                    {
-                        <option value="@item">@item.Name - (@item.UnitOfMeasure)</option>
-                    }
                 </InputSelect>
             </div>
             <div class="form-group"> Quantity:<br/>
@@ -93,14 +89,13 @@
     private RecipeItem ingredient;
     private int ingredientQuantity;
     private string ingredientName;
-    private IList<Ingredient> ingredients = new List<Ingredient>();
+    private IList<RecipeItem> ingredients = new List<RecipeItem>();
     private IList<RecipeItem> recipeIngredients = new List<RecipeItem>();
 
     protected override async Task OnInitializedAsync()
     {
         SetupIngredient();
         SetupNewRecipe();
-        ingredients = await IngredientService.GetAllIngredientsAsync();
         await base.OnInitializedAsync();
     }
 

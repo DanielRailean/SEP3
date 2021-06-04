@@ -123,10 +123,13 @@ else
 
     private void ExecuteFilter()
     {
-        ingredientsToShow = allIngredients.Where(t =>
-            (!filterByName.Equals("") && t.Name.Contains(filterByName) || filterByName.Equals("")) &&
-            (filterByCalories != 0 && t.Calories == filterByCalories || filterByCalories == null)
-            ).ToList();
+        /*if (allIngredients != null)
+        {
+            ingredientsToShow = allIngredients.Where(t =>
+                (!filterByName.Equals("") && t.Name.Contains(filterByName) || filterByName.Equals("")) &&
+                (filterByCalories != 0 && t.Calories == filterByCalories || filterByCalories == null)
+                ).ToList();
+        }*/
     }
 
     private void EditIngredient(int id)

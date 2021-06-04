@@ -51,7 +51,7 @@ else
                         </div>
                         <div class="media-content">
                             <p class="title is-4">@item.Name</p>
-                            <p class="subtitle is-6"></p>
+                            <p class="subtitle is-6">@item.Description</p>
                         </div>
                     </div>
 
@@ -72,8 +72,7 @@ else
                  }
     </div>
     <h5>
-     Cart contents: @cartContents;
-         <br>
+        <br>
          <br>
      </h5>
 }
@@ -86,7 +85,6 @@ else
     private int counter;
 
     private string error;
-    private string cartContents;
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,7 +93,6 @@ else
         {
             item.Amount = 1;
         }
-        await updateBasket();
     }
 
     private async Task AddToBasket(Recipe recipe)
@@ -109,14 +106,8 @@ else
             error = e.Message;
         }
         recipe.Amount = 1;
-        await updateBasket();
     }
-
-    private async Task updateBasket()
-    {
-        cartContents = JsonSerializer.Serialize(await BasketService.GetAllBasketItems());
-    }
-      
+    
     private void ShowRecipeDetails(Recipe item)
     {
         NavigationManager.NavigateTo($"/recipedetail/{item.Id}");
