@@ -1,24 +1,26 @@
-# GodEats Source Code
-This repository contains Source Code for *GodEats* , a project developed by **Dimitrian, Mark , Satish and Daniel**, during the SEP3 course at **VIA UC**.
+# 🍕 [GodEats](https://github.com/godeats/sep3) Source Code
+This repository contains Source Code for *GodEats* , a project developed by **Dimitrian, Mark , Satish and Daniel**, during the SEP3 2021 course at **VIA UC**.
 
-## Repository rules
-- Any merges are done only into the master. (No merging of master or another branch into yours)
-- Always update the project before starting the work
-- Commits should have a clear commit message, *"small fixes","small update", "update" and similar* are not viable commit messages.
-- Work is done on a separate branch
-- Merging a branch to **master** requires one review.
+## 💫 Abstract:
+There is a need for a healthy food delivery service on the market. The
+“GodEats” project was developed to try to address this issue, a project which
+would supposedly deliver ingredients for healthy food to be cooked at home.
+The three tier architecture was used with a presentation tier for which C# and
+the Blazor Framework was utilized, a business tier, for which C# was used and
+its WebApi functionality, and a data tier, for which Java and the Spring
+framework was used, together with Hibernate ORM and SQLite database.
+The networking technologies used were REST over HTTPS for inter tier
+communication and SignalR for the live-chat functionality.
+The resulting product is a web-application that is able to handle user
+orders and with small improvement would be able to work in production.
+**Interested reader can to find the additional documentation below.**
 
+### 📓  [User Guide](https://github.com/GodEats/SEP3/tree/master/Documentation/UserGuide.pdf)
 
-## Useful git commands
+### 🚀 [Project Description](https://github.com/GodEats/SEP3/tree/master/Documentation/ProjectDescription.pdf)
 
- *git reset --soft HEAD~1* >   **Removes last local commit**
+### 🥇 [Project Report](https://github.com/GodEats/SEP3/tree/master/Documentation/ProjectReport.pdf)
 
- *git rm --cached *filename.extension* >* **Removes already tracked file**
+### ⏰ [Process Report](https://github.com/GodEats/SEP3/tree/master/Documentation/ProcessReport.pdf)
 
- *git reset --hard *commitId* >* **Resets local branch to the given commitId , usually used together with command below**
-
- *git push --force >* **Pushes local branch to remote.**
- 
- ## Tips
- - Finish your functionality before making a pull request to master.
- - If you want to update your branch , create another one and bring uncommited changes with you. (Commited changes can be undone with 1st useful git command).
+### 📝 [Repository rules](https://github.com/GodEats/SEP3/tree/master/Documentation/RepositoryRules.md)
